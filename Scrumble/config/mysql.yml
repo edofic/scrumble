@@ -1,0 +1,24 @@
+Default: &defaults
+  user: Scrumble
+  password: Scrumble
+  host: localhost
+  port: 3306
+  database: Scrumble
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: Scrumble_test
+  <<: *defaults
+
+Staging:
+  database: Scrumble_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: Scrumble_production
+  poolsize: 100
+  <<: *defaults
