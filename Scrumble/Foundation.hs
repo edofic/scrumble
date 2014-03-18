@@ -13,11 +13,9 @@ import qualified Settings
 import Settings.Development (development)
 import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
-import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
+import Settings (Extra (..))
 import Model
 import Text.Jasmine (minifym)
-import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 
 -- | The site argument for your application. This can be a good place to
@@ -33,9 +31,6 @@ data App = App
     , appLogger :: Logger
     }
 
--- Set up i18n messages. See the message folder.
-mkMessage "App" "messages" "en"
-
 -- This is where we define all of the routes in our application. For a full
 -- explanation of the syntax, please see:
 -- http://www.yesodweb.com/book/routing-and-handlers
@@ -44,8 +39,6 @@ mkMessage "App" "messages" "en"
 -- generates the rest of the code. Please see the linked documentation for an
 -- explanation for this split.
 mkYesodData "App" $(parseRoutesFile "config/routes")
-
-type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
@@ -57,30 +50,6 @@ instance Yesod App where
     makeSessionBackend _ = fmap Just $ defaultClientSessionBackend
         (120 * 60) -- 120 minutes
         "config/client_session_key.aes"
-
-    defaultLayout widget = do
-        master <- getYesod
-        mmsg <- getMessage
-
-        -- We break up the default layout into two components:
-        -- default-layout is the contents of the body tag, and
-        -- default-layout-wrapper is the entire page. Since the final
-        -- value passed to hamletToRepHtml cannot be a widget, this allows
-        -- you to use normal widget features in default-layout.
-
-        pc <- widgetToPageContent $ do
-            $(combineStylesheets 'StaticR
-                [ css_normalize_css
-                , css_bootstrap_css
-                ])
-            $(widgetFile "default-layout")
-        giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
-
-    -- This is done to provide an optimization for serving static files from
-    -- a separate domain. Please see the staticRoot setting in Settings.hs
-    urlRenderOverride y (StaticR s) =
-        Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
-    urlRenderOverride _ _ = Nothing
 
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
@@ -96,9 +65,6 @@ instance Yesod App where
         genFileName lbs
             | development = "autogen-" ++ base64md5 lbs
             | otherwise   = base64md5 lbs
-
-    -- Place Javascript at bottom of the body tag so the rest of the page loads first
-    jsLoader _ = BottomOfBody
 
     -- What messages should be logged. The following includes all messages when
     -- in development, and warnings and errors in production.

@@ -24,9 +24,6 @@ import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
-
--- Import all relevant handler modules here.
--- Don't forget to add new modules to your cabal file!
 import Handler.Home
 
 -- This line actually creates our YesodDispatch instance. It is the second half
