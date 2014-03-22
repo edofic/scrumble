@@ -12,6 +12,10 @@ angular.module('scrumbleFrontendApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/meeting', {
+        templateUrl: 'views/meeting.html',
+        controller: 'MeetingCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

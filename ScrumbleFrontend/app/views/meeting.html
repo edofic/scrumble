@@ -1,0 +1,46 @@
+﻿<div class="meeting">
+    <h1>
+        Daily Scrum Meeting
+    </h1>
+    <p>
+        <form ng-submit="" class="row">
+            <div class="form-group col-md-6" ng-repeat="inputObj in inputObjs">
+                <label class="block">
+                    {{ inputObj.name }}
+                    <textArea class="form-control" placeholder="{{ inputObj.name }}" rows="3" ng-model="inputObj.value"></textArea>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <hr>
+
+        <div>
+            <h2>Daily scrum from <span class="label label-info">22.3.2014</span></h2>
+
+            <dl>
+                <dt>Luka Jeran</dt>
+                <dd>
+                    <dl class="dl-horizontal">
+                        <dt>Work done</dt>
+                        <dd>AA</dd>
+                        <dt>Work plan</dt>
+                        <dd>BB</dd>
+                    </dl>
+                </dd>
+                <dt>Luka Zakrajšek</dt>
+                <dd>
+                    <dl class="dl-horizontal">
+                        <dt>Work done</dt>
+                        <dd>AA</dd>
+                        <dt>Work plan</dt>
+                        <dd>BB</dd>
+                        <dt>Issues</dt>
+                        <dd>BB</dd>
+                        <dt>Lessons learned</dt>
+                        <dd>BB</dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </p>
+</div>

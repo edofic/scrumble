@@ -59,3 +59,7 @@ body {
     border-bottom: 0;
   }
 }
+
+.meeting label.block {
+    display: block;
+}
