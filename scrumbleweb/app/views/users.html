@@ -1,0 +1,29 @@
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li class="active"><a ng-href="#/users">Users</a></li>
+  </ul>
+  <h3 class="text-muted">Scrumble</h3>
+</div>
+
+<div class="row users">
+  <div class="col-lg-12">
+    <a href="#" class="btn btn-primary pull-right add-user-btn">Add user</a>
+
+    <h2>Users</h2>
+
+    <br>
+
+    <div class="panel panel-default" ng-repeat="user in users">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ user.firstName }} {{ user.lastName }}</h3>
+      </div>
+
+      <div class="panel-body">
+        <span class="label label-primary pull-right">{{ user.role }}</span>
+
+        <strong>Email:</strong> {{ user.email }}
+      </div>
+    </div>
+
+  </div>
+</div>
