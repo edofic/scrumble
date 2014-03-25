@@ -9,7 +9,7 @@ angular.module('scrumbleFrontendApp')
     ];
   })
   .controller('MeetingCtrl', function ($scope) {
-    var inputNames = ['Work done', 'Work plan', 'Issues', 'Lessons learned'];
+    var inputNames = ['Work done', 'Work plan', 'Issues'];
     $scope.inputObjs = $.map(inputNames, function(name){
         return {name: name, value: ''};
     });
