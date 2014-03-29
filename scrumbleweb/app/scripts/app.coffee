@@ -11,9 +11,9 @@ angular.module('scrumbleApp', [
       .when '/',
         templateUrl: 'views/project.html'
         controller: 'ProjectCtrl'
-      .when '/meetings',
-        templateUrl: 'views/meetings.html'
-        controller: 'MeetingsCtrl'
+      .when '/daily',
+        templateUrl: 'views/daily.html'
+        controller: 'DailyCtrl'
       .when '/users',
         templateUrl: 'views/users.html'
         controller: 'UsersCtrl'
