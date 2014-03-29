@@ -27,8 +27,13 @@ body {
         line-height: 40px;
         padding-bottom: 19px;
     }
-    .logo a{
+    .logo a {
         text-decoration: none;
+
+        img {
+            height: 1.3em;
+            vertical-align: top;
+        }
     }
 }
 
