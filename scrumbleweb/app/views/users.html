@@ -1,10 +1,43 @@
 <div class="users whiteStripe">
   <div class="container">
-    <a href="#" class="btn btn-primary pull-right add-user-btn">Add user</a>
 
     <h2>Users</h2>
 
     <br>
+
+    <form class="panel panel-default" ng-submit="createUser(user); initNewUser();">
+      <div class="panel-heading">
+        <button type="submit" class="btn btn-primary pull-right add-user-btn">Add user</button>
+
+        <h3 class="panel-title row">
+          <span class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Username" ng-model="user.username" required></input>
+          </span>
+          <span class="col-sm-3">
+            <input type="text" class="form-control" placeholder="First name" ng-model="user.firstName" required></input>
+          </span>
+          <span class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Last name" ng-model="user.lastName" required></input>
+          </span>
+        </h3>
+      </div>
+
+      <div class="panel-body">
+        <div class="pull-right btn-group">
+          <button type="button" class="btn btn-default" ng-repeat="role in userRoles"
+            ng-model="user.role" btn-radio="'{{role}}'">
+            {{role}}
+          </button>
+        </div>
+
+        <div class="row">
+          <span class="input-group col-sm-3">
+            <span class="input-group-addon">@</span>
+            <input type="email" class="form-control" placeholder="Email" ng-model="user.email" required></input>
+          </span>
+        </div>
+      </div>
+    </form>
 
     <div class="panel panel-default" ng-repeat="user in users">
       <div class="panel-heading">
