@@ -13,24 +13,35 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 body {
     padding-top: 20px;
     padding-bottom: 20px;
+    background: url('/images/old_moon.png') repeat;
 }
 
 /* Custom page header */
 .header {
     border-bottom: 1px solid #e5e5e5;
-}
 
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
+    /* Make the masthead heading the same height as the navigation */
+    h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 40px;
+        padding-bottom: 19px;
+    }
+    .logo a {
+        text-decoration: none;
+
+        img {
+            height: 1.3em;
+            vertical-align: top;
+        }
+    }
 }
 
 /* Custom page footer */
 .footer {
-    padding-top: 19px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
     color: #777;
     border-top: 1px solid #e5e5e5;
 }
@@ -39,4 +50,31 @@ body {
     margin: 30px 0;
 }
 
+
+.content .whiteStripe {
+    background-color: #fff;
+
+    &.jumbotron {
+        margin-bottom: 0px;
+    }
+}
+
+
+/* Sticky footer */
+/*$footerHeight: 50px;
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: $footerHeight;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: $footerHeight;
+}*/
+
 @import 'users';
+@import 'daily';

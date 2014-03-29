@@ -8,8 +8,14 @@ angular.module('scrumbleApp', [
 ])
   .config ($routeProvider) ->
     $routeProvider
+      .when '/',
+        templateUrl: 'views/project.html'
+        controller: 'ProjectCtrl'
+      .when '/daily',
+        templateUrl: 'views/daily.html'
+        controller: 'DailyCtrl'
       .when '/users',
         templateUrl: 'views/users.html'
         controller: 'UsersCtrl'
       .otherwise
-        redirectTo: '/users'
+        redirectTo: '/'
