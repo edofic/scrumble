@@ -11,3 +11,20 @@ UserAuth
     password Text
     UniqueUserAuth user
     deriving Eq Show
+
+Project json
+    projectName Text
+    deriving Eq Show
+
+Sprint json
+    deriving Eq Show
+
+Story json
+    project ProjectId
+    deriving Eq Show
+
+Task json
+    story StoryId
+    deriving Eq Show
+
+
