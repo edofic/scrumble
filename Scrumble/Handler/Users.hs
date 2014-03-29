@@ -10,5 +10,5 @@ getUsersR = runDB $ do
 
 postUsersR :: Handler Value
 postUsersR = insertUser >>= getUsersUserR where
-  insertUser = runDB $ parseJsonBody_ >>= insert
+  insertUser = runDB $ requireJsonBody >>= insert
     
