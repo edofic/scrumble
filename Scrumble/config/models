@@ -13,7 +13,7 @@ UserAuth
     deriving Eq Show
 
 Project json
-    projectName Text
+    name Text
     deriving Eq Show
 
 Sprint json
@@ -26,5 +26,4 @@ Story json
 Task json
     story StoryId
     deriving Eq Show
-
 
