@@ -4,7 +4,8 @@ angular.module('scrumbleApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'ui.bootstrap'
 ])
   .config ($routeProvider) ->
     $routeProvider
