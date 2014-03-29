@@ -59,22 +59,5 @@ body {
     }
 }
 
-
-/* Sticky footer */
-/*$footerHeight: 50px;
-html {
-    position: relative;
-    min-height: 100%;
-}
-body {
-    margin-bottom: $footerHeight;
-}
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: $footerHeight;
-}*/
-
 @import 'users';
 @import 'daily';

@@ -11,11 +11,25 @@ angular.module('scrumbleApp')
 
     $scope.initNewUser()
 
-    $scope.createUser = (user) ->
+    $scope.createUser = (user, invalid) ->
+      if (invalid)
+        return
       u = new User()
       u.$save(user,
         (data) ->
-          $scope.users.push(data);
+          $scope.users.push(data)
+          $scope.initNewUser()
         (reason) ->
-          console.log('Error occured: ', reason);
+          console.log('Error occured: ', reason)
       )
+
+  .directive 'sameAs', () ->
+    require: 'ngModel',
+    link: (scope, elem, attrs, ctrl) ->
+      ctrl.$parsers.unshift (viewValue) ->
+        if (viewValue == attrs.sameAs)
+          ctrl.$setValidity("sameAs", true)
+          return viewValue
+        else
+          ctrl.$setValidity("sameAs", false)
+          return
