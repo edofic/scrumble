@@ -4,6 +4,8 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/                   HomeR      GET
-/api/users          UsersR     GET POST
-/api/users/#UserId  UsersUserR GET DELETE
+/                            HomeR                GET
+/api/users                   UsersR               GET   POST
+/api/users/#UserId           UsersUserR           GET   DELETE
+/api/projects                ProjectsR            GET   POST
+/api/projects/#ProjectId     ProjectsProjectR     GET   PUT   DELETE 
