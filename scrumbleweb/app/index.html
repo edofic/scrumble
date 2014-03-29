@@ -19,16 +19,15 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="scrumbleApp">
+  <body ng-app="scrumbleApp" ng-controller="RootCtrl">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="header container">
       <ul class="nav nav-pills pull-right">
-        <li><a ng-href="#/meetings">Meeting</a></li>
-        <li><a ng-href="#/sprint">Sprint</a></li>
-        <li><a ng-href="#/product">Product</a></li>
-        <li><a ng-href="#/users">(Users)</a></li>
+        <li ng-repeat="(path, name) in navigationPaths" ng-class="{active: isActivePath(path)}">
+          <a ng-href="#{{path}}">{{name}}</a>
+        </li>
 
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
@@ -43,9 +42,11 @@
         </li>
 
       </ul>
-      <h3 class="logo"><a ng-href="#/" class="text-muted">
-        <img src="/images/logo.png" alt="S" />crumble
-      </a></h3>
+      <h3 class="logo">
+        <a ng-href="#/" ng-class="{'text-muted': !isActivePath('/'), 'text-info': isActivePath('/')}">
+          <img src="/images/logo.png" alt="S" />crumble
+        </a>
+      </h3>
     </div>
 
     <div class="content" ng-view=""></div>
@@ -84,6 +85,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/root.js"></script>
         <script src="scripts/controllers/project.js"></script>
         <script src="scripts/controllers/daily.js"></script>
         <script src="scripts/controllers/users.js"></script>
