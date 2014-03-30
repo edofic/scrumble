@@ -17,9 +17,12 @@ library
                      Foundation
                      Import
                      Model
+                     Model.Role
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     Authorization
+                     Util
                      Handler.Home
                      Handler.Users
                      Handler.UsersUser
@@ -27,6 +30,7 @@ library
                      Handler.ProjectsProject
                      Handler.Authentication
                      Handler.UsersUserPassword
+                     Handler.AuthLogout
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

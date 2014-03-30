@@ -6,6 +6,8 @@ import Control.Monad.Maybe
 import Data.Text.Encoding (encodeUtf8, decodeUtf8)
 import GHC.Generics (Generic)
 
+import qualified Authorization as Auth
+
 data PasswordRequest = PasswordRequest { newPassword :: Text }
                                        deriving Generic
 
@@ -13,6 +15,7 @@ instance FromJSON PasswordRequest
 
 postUsersUserPasswordR :: UserId -> Handler ()
 postUsersUserPasswordR userId = do
+  Auth.assert $ Auth.isAdmin .||. Auth.hasUserId userId
   PasswordRequest newPassword <- requireJsonBody
   hashed <- liftIO $ decodeUtf8 `fmap` makePassword (encodeUtf8 newPassword) 14
   ok <- runDB $ runMaybeT $ do

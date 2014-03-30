@@ -30,6 +30,7 @@ import Handler.UsersUser
 import Handler.Projects
 import Handler.ProjectsProject
 import Handler.Authentication
+import Handler.AuthLogout
 import Handler.UsersUserPassword
 
 -- This line actually creates our YesodDispatch instance. It is the second half

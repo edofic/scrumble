@@ -5,7 +5,7 @@ import Yesod.Auth
 import GHC.Generics (Generic)
 import Crypto.PasswordStore (verifyPassword)
 import Data.Text.Encoding (encodeUtf8)
-import Network.HTTP.Types.Status (unauthorized401)
+import Authorization
 
 data AuthRequest = AuthRequest { username :: Text
                                , password :: Text     
@@ -22,4 +22,4 @@ postAuthenticationR = do
     in  if passOk then 
           setCreds False $ Creds "jsonPost" username []
         else 
-          sendResponseStatus unauthorized401 ()
+          unauthorized
