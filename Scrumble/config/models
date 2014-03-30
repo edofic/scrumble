@@ -3,6 +3,7 @@ User json
     firstName Text
     lastName  Text
     email     Text
+    role      Role
     UniqueUsername username
     deriving Eq Show Typeable
 
