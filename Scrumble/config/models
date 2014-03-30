@@ -7,9 +7,9 @@ User json
     deriving Eq Show Typeable
 
 UserAuth
-    user     UserId
+    username Text
     password Text
-    UniqueUserAuth user
+    UniqueUserAuth username
     deriving Eq Show
 
 Project json

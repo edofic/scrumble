@@ -24,6 +24,8 @@ library
                      Handler.UsersUser
                      Handler.Projects
                      Handler.ProjectsProject
+                     Handler.Authentication
+                     Handler.UsersUserPassword
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -46,6 +48,7 @@ library
                 DeriveDataTypeable
                 FlexibleInstances
                 ScopedTypeVariables
+                DeriveGeneric
 
     build-depends: base                          >= 4          && < 5
                  , yesod                         >= 1.2.5      && < 1.3
@@ -77,6 +80,10 @@ library
                  , fast-logger                   >= 2.1.4      && < 2.2
                  , wai-logger                    >= 2.1        && < 2.2
                  , unordered-containers          >= 0.2        && < 0.3
+                 , pwstore-fast                  >= 2.4        && < 2.5
+                 , http-types                    >= 0.8        && < 0.9
+                 , MaybeT                        >= 0.1.2      && < 0.2
+                 , mtl                           >= 2.1        && < 2.2
 
 executable         Scrumble
     if flag(library-only)
