@@ -16,12 +16,15 @@ import Network.Wai.Middleware.RequestLogger
     )
 import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
 import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
+import Database.Persist.Sql (runMigration, runSqlPool)
 import Network.HTTP.Conduit (newManager, conduitManagerSettings)
 import Control.Monad.Logger (runLoggingT)
+import Control.Monad.Trans.Resource (runResourceT)
 import Control.Concurrent (forkIO, threadDelay)
 import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
+import Crypto.PasswordStore (makePassword)
+import Data.Text.Encoding (encodeUtf8, decodeUtf8)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
 import Handler.Home
@@ -32,6 +35,8 @@ import Handler.ProjectsProject
 import Handler.Authentication
 import Handler.AuthLogout
 import Handler.UsersUserPassword
+import Model.Role
+
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -90,6 +95,15 @@ makeFoundation conf = do
     -- Perform database migration using our application's logging settings.
     runLoggingT
         (Database.Persist.runPool dbconf (runMigration migrateAll) p)
+        (messageLoggerSource foundation logger)
+
+    let addAdminUser = do
+        _ <- insertBy $ User "admin" "Ad" "Min" "admin@example.com" Administrator
+        hashed <- liftIO $ decodeUtf8 `fmap` makePassword (encodeUtf8 "admin") 14
+        insertBy $ UserAuth "admin" hashed
+
+    _ <- runResourceT $ runLoggingT
+        (runSqlPool addAdminUser p)
         (messageLoggerSource foundation logger)
 
     return foundation
