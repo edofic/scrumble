@@ -3,13 +3,14 @@ User json
     firstName Text
     lastName  Text
     email     Text
+    role      Role
     UniqueUsername username
     deriving Eq Show Typeable
 
 UserAuth
-    user     UserId
+    username Text
     password Text
-    UniqueUserAuth user
+    UniqueUserAuth username
     deriving Eq Show
 
 Project json

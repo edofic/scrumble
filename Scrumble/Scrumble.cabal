@@ -12,18 +12,25 @@ Flag library-only
     Default:       False
 
 library
+    hs-source-dirs:  src
     exposed-modules: Application
                      Foundation
                      Import
                      Model
+                     Model.Role
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     Authorization
+                     Util
                      Handler.Home
                      Handler.Users
                      Handler.UsersUser
                      Handler.Projects
                      Handler.ProjectsProject
+                     Handler.Authentication
+                     Handler.UsersUserPassword
+                     Handler.AuthLogout
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -46,10 +53,11 @@ library
                 DeriveDataTypeable
                 FlexibleInstances
                 ScopedTypeVariables
+                DeriveGeneric
 
     build-depends: base                          >= 4          && < 5
                  , yesod                         >= 1.2.5      && < 1.3
-                 , yesod-core                    >= 1.2        && < 1.3
+                 , yesod-core                    >= 1.2.9      && < 1.3
                  , yesod-auth                    >= 1.2        && < 1.3
                  , yesod-static                  >= 1.2        && < 1.3
                  , yesod-form                    >= 1.3        && < 1.4
@@ -77,6 +85,10 @@ library
                  , fast-logger                   >= 2.1.4      && < 2.2
                  , wai-logger                    >= 2.1        && < 2.2
                  , unordered-containers          >= 0.2        && < 0.3
+                 , pwstore-fast                  >= 2.4        && < 2.5
+                 , http-types                    >= 0.8        && < 0.9
+                 , MaybeT                        >= 0.1.2      && < 0.2
+                 , mtl                           >= 2.1        && < 2.2
 
 executable         Scrumble
     if flag(library-only)

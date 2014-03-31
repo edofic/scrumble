@@ -8,6 +8,7 @@ import Data.Text (Text)
 import Database.Persist.Quasi
 import Data.Typeable (Typeable)
 import Control.Applicative 
+import Model.Role
 
 import qualified Data.HashMap.Strict as Hash
 
