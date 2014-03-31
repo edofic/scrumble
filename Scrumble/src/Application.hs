@@ -97,13 +97,13 @@ makeFoundation conf = do
         (Database.Persist.runPool dbconf (runMigration migrateAll) p)
         (messageLoggerSource foundation logger)
 
-    let addAdminUser = do
-        _ <- insertBy $ User "admin" "Ad" "Min" "admin@example.com" Administrator
-        hashed <- liftIO $ decodeUtf8 `fmap` makePassword (encodeUtf8 "admin") 14
-        insertBy $ UserAuth "admin" hashed
+    let addTestUser = do
+        _ <- insertBy $ User "test" "Test" "Test" "test@example.com" Administrator
+        hashed <- liftIO $ decodeUtf8 `fmap` makePassword (encodeUtf8 "test") 14
+        insertBy $ UserAuth "test" hashed
 
     _ <- runResourceT $ runLoggingT
-        (runSqlPool addAdminUser p)
+        (runSqlPool addTestUser p)
         (messageLoggerSource foundation logger)
 
     return foundation
