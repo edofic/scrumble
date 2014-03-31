@@ -24,11 +24,21 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="header container">
-      <ul class="nav nav-pills pull-right">
+      <ul class="nav nav-pills pull-right" ng-if="isLoggedIn">
         <li ng-repeat="(path, name) in navigationPaths" ng-class="{active: isActivePath(path)}">
           <a ng-href="#{{path}}">{{name}}</a>
         </li>
 
+        <li class="dropdown" ng-if="isAdmin">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Admin
+            <strong class="caret"></strong>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#/users">Users</a></li>
+            <li><a href="#/projects">Projects</a></li>
+          </ul>
+        </li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
             Hello, User

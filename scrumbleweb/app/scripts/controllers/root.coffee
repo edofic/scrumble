@@ -6,9 +6,11 @@ angular.module('scrumbleApp')
       '/daily': 'Daily'
       '/sprint': 'Sprint'
       '/product': 'Product'
-      '/users': '(Users)'
 
     $scope.route = $route;
     $scope.isActivePath = (path) ->
       if($route.current && $route.current.$$route)
         path == $route.current.$$route.originalPath
+
+    $scope.isLoggedIn = true
+    $scope.isAdmin = true
