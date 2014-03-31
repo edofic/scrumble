@@ -9,7 +9,7 @@
         <div class="panel-heading">
           <button type="submit" class="btn btn-primary pull-right add-project-btn">Add project</button>
           <h3 class="panel-title row">
-            <span class="col-sm-3">
+            <span class="col-sm-3 col-xs-6">
               <input type="text" class="form-control" placeholder="Project name" ng-model="project.name" required></input>
             </span>
           </h3>
@@ -27,7 +27,7 @@
                 <input type="text" class="form-control" placeholder="Username" ng-model="user.username" typeahead="username for username in allUsernames | filter:$viewValue | limitTo:8" typeahead-editable="false" required></input>
               </span>
 
-              <span class="btn-group">
+              <span class="btn-group col-sm-6">
                 <button type="button" class="btn btn-primary" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user[role]" btn-checkbox>
                   {{ roleName }}
                 </button>
