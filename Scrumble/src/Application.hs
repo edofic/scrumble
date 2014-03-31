@@ -18,6 +18,8 @@ import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
 import qualified Database.Persist
 import Database.Persist.Sql (runMigration, runSqlPool)
 import Network.HTTP.Conduit (newManager, conduitManagerSettings)
+import qualified Network.Wai as W
+import Network.Wai.Internal (Response (..))
 import Control.Monad.Logger (runLoggingT)
 import Control.Monad.Trans.Resource (runResourceT)
 import Control.Concurrent (forkIO, threadDelay)
@@ -37,6 +39,13 @@ import Handler.AuthLogout
 import Handler.UsersUserPassword
 import Model.Role
 
+addCORS :: W.Middleware
+addCORS app = fmap updateHeaders . app
+  where
+    updateHeaders (ResponseFile    status headers fp mpart) = ResponseFile    status (new headers) fp mpart
+    updateHeaders (ResponseBuilder status headers builder)  = ResponseBuilder status (new headers) builder
+    updateHeaders (ResponseSource  status headers src)      = ResponseSource  status (new headers) src
+    new headers = ("Access-Control-Allow-Origin", "*") : headers
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -63,7 +72,7 @@ makeApplication conf = do
     -- Create the WAI application and apply middlewares
     app <- toWaiAppPlain foundation
     let logFunc = messageLoggerSource foundation (appLogger foundation)
-    return (logWare app, logFunc)
+    return (addCORS (logWare app), logFunc)
 
 -- | Loads up any necessary settings, creates your foundation datatype, and
 -- performs some initialization.
