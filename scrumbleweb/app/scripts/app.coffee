@@ -18,5 +18,8 @@ angular.module('scrumbleApp', [
       .when '/users',
         templateUrl: 'views/users.html'
         controller: 'UsersCtrl'
+      .when '/projects',
+        templateUrl: 'views/projects.html'
+        controller: 'ProjectsCtrl'
       .otherwise
         redirectTo: '/'
