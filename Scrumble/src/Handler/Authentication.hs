@@ -1,4 +1,4 @@
-module Handler.Authentication (postAuthenticationR) where
+module Handler.Authentication (postAuthenticationR, getAuthUserR) where
 
 import Import
 import Yesod.Auth 
@@ -23,3 +23,8 @@ postAuthenticationR = do
           setCreds False $ Creds "jsonPost" username []
         else 
           unauthorized
+
+getAuthUserR :: Handler Value
+getAuthUserR = do
+  userEntity <- currentUser
+  return . toJSON $ FlatEntity userEntity

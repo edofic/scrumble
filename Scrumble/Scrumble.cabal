@@ -89,6 +89,7 @@ library
                  , http-types                    >= 0.8        && < 0.9
                  , MaybeT                        >= 0.1.2      && < 0.2
                  , mtl                           >= 2.1        && < 2.2
+                 , resourcet                     >= 0.4        && < 0.5
 
 executable         Scrumble
     if flag(library-only)

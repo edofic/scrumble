@@ -4,7 +4,7 @@ import Prelude
 import Yesod
 import GHC.Generics
 
-data Role = ReqularUser | Administrator 
+data Role = RegularUser | Administrator 
             deriving (Eq, Show, Read, Enum, Generic)
 
 derivePersistField "Role"
