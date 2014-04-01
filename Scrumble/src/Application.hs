@@ -38,6 +38,7 @@ import Handler.ProjectsProject
 import Handler.Authentication
 import Handler.AuthLogout
 import Handler.UsersUserPassword
+import Handler.AuthUser
 import Model.Role
 
 addCORS :: W.Middleware
