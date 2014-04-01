@@ -41,18 +41,23 @@ import Handler.UsersUserPassword
 import Model.Role
 
 addCORS :: W.Middleware
-addCORS app = fmap updateHeaders . app
+addCORS app env = fmap updateHeaders (app env)
   where
     updateHeaders (ResponseFile    status headers fp mpart) = ResponseFile    status (new headers) fp mpart
     updateHeaders (ResponseBuilder status headers builder)  = ResponseBuilder status (new headers) builder
     updateHeaders (ResponseSource  status headers src)      = ResponseSource  status (new headers) src
-    new headers = ("Access-Control-Allow-Origin", "*") : headers
+    new headers = case lookup "Origin" (W.requestHeaders env) of
+                Just origin -> [("Access-Control-Allow-Origin", origin), ("Access-Control-Allow-Credentials", "true")] ++ headers
+                Nothing     -> headers
 
 handleOptions :: W.Middleware
 handleOptions app env =
     if W.requestMethod env == "OPTIONS"
-        then return $ W.responseLBS status200 [] ""
+        then return $ W.responseLBS status200 corsHeaders ""
         else app env
+
+    where
+        corsHeaders = [("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")]
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
