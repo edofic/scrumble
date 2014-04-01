@@ -7,7 +7,7 @@ angular.module('scrumbleApp', [
   'ngRoute',
   'ui.bootstrap'
 ])
-  .config ($routeProvider) ->
+  .config ($routeProvider, $httpProvider) ->
     $routeProvider
       .when '/',
         templateUrl: 'views/project.html'
@@ -23,3 +23,8 @@ angular.module('scrumbleApp', [
         controller: 'ProjectsCtrl'
       .otherwise
         redirectTo: '/'
+
+    # comment this out to use apiary
+    $httpProvider.defaults.withCredentials = true
+    $httpProvider.defaults.useXDomain = true
+    delete $httpProvider.defaults.headers.common['X-Requested-With']

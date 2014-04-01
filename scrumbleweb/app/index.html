@@ -41,7 +41,7 @@
         </li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
-            Hello, User
+            Hello, {{ user.firstName }}
             <strong class="caret"></strong>
           </a>
           <ul class="dropdown-menu">
@@ -102,6 +102,7 @@
         <script src="scripts/controllers/users.js"></script>
         <script src="scripts/controllers/projects.js"></script>
         <script src="scripts/services/user.js"></script>
+        <script src="scripts/services/auth.js"></script>
         <!-- endbuild -->
 </body>
 </html>
