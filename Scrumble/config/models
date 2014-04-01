@@ -28,3 +28,9 @@ Task json
     story StoryId
     deriving Eq Show
 
+ProjectMember json
+    user    UserId
+    project ProjectId
+    role    ProjectRole
+    UniqueMember user project
+    deriving Eq Show

@@ -1,13 +1,22 @@
 module Handler.Projects where
 
-import Import
+import Import hiding ((==.))
 import Handler.ProjectsProject (getProjectsProjectR)
+import Database.Esqueleto hiding (Value)
 import qualified Authorization as Auth
 
 getProjectsR :: Handler Value
-getProjectsR =  do
-    projects :: [Entity Project] <- runDB $ selectList [] []
-    return $ array $ (toJSON . FlatEntity) `fmap` projects
+getProjectsR = do
+  Entity userId _  <- Auth.currentUser
+  projects <- runDB $ getProjectsQ userId
+  return $ array $ (toJSON . FlatEntity) `fmap` projects
+  where
+    getProjectsQ userId = 
+      select $
+      from $ \(member `InnerJoin` project) -> do
+        on (member ^. ProjectMemberProject ==. project ^. ProjectId)
+        where_ (member ^. ProjectMemberUser ==. val userId)
+        return project
 
 postProjectsR :: Handler Value 
 postProjectsR = do

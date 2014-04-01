@@ -18,6 +18,7 @@ library
                      Import
                      Model
                      Model.Role
+                     Model.ProjectRole
                      Settings
                      Settings.StaticFiles
                      Settings.Development

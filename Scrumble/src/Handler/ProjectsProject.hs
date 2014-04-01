@@ -1,12 +1,26 @@
 module Handler.ProjectsProject where
 
-import Import
+import Import hiding ((==.))
+import Database.Esqueleto hiding (Value, delete)
+import Data.Maybe (listToMaybe)
 import qualified Authorization as Auth
 
 getProjectsProjectR :: ProjectId -> Handler Value
 getProjectsProjectR projectId = do
-    projectEntity <- runDB $ selectFirst [ProjectId ==. projectId] []
-    maybe notFound (return . toJSON . FlatEntity) projectEntity
+  Entity userId _ <- Auth.currentUser
+  project <- runDB $ getProjectQ userId
+  maybe notFound (return . toJSON . FlatEntity) project 
+  where
+    getProjectQ userId = listToMaybe `fmap` do
+      select $
+        from $ \(member `InnerJoin` project) -> do
+        on (member ^. ProjectMemberProject ==. project ^. ProjectId)
+        where_ 
+          ((member ^. ProjectMemberUser ==. val userId) 
+            &&.
+          (project ^. ProjectId ==. val projectId))
+        return project
+
 
 deleteProjectsProjectR :: ProjectId -> Handler ()
 deleteProjectsProjectR projectId = do
