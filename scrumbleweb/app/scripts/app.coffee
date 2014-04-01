@@ -21,6 +21,12 @@ angular.module('scrumbleApp', [
       .when '/projects',
         templateUrl: 'views/projects.html'
         controller: 'ProjectsCtrl'
+      .when '/login',
+        templateUrl: 'views/login.html'
+        controller: 'LoginCtrl'
+      .when '/logout',
+        templateUrl: 'views/logout.html'
+        controller: 'LogoutCtrl'
       .otherwise
         redirectTo: '/'
 

@@ -1,12 +1,12 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .factory 'User', ($resource) ->
-    $resource('http://scrumble.lukazakrajsek.com/api/users/:userId', {},
+  .factory 'User', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/users/:userId', {},
       query:
         method: 'GET'
         isArray: true
     )
 
-  .factory 'UserPassword', ($resource) ->
-    $resource('http://scrumble.lukazakrajsek.com/api/users/:userId/password', {})
+  .factory 'UserPassword', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/users/:userId/password', {})

@@ -12,5 +12,5 @@ angular.module('scrumbleApp')
       if($route.current && $route.current.$$route)
         path == $route.current.$$route.originalPath
 
-    $scope.isLoggedIn = true
-    $scope.isAdmin = true
+    $scope.canShowNav = -> $scope.currentUser
+    $scope.isAdmin = -> $scope.currentUser.role == 'Administrator'

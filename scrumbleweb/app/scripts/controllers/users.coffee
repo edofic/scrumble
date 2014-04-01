@@ -23,7 +23,9 @@ angular.module('scrumbleApp')
 
         $scope.users.push(data)
         $scope.initNewUser()
+        $scope.error = ''
       , (reason) ->
+        $scope.error = 'User cannot be saved.'
         console.log('Error occured: ', reason)
 
   .directive 'sameAs', ->

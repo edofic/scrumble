@@ -5,7 +5,11 @@
 
       <br>
 
-      <form class="panel panel-default" name="createUserForm" ng-submit="createUser(user, createUserForm.$invalid);">
+      <p ng-if="currentUser.role != 'Administrator'">You can't manage users.</p>
+
+      <div class="alert alert-danger" ng-if="error">{{ error }}</div>
+
+      <form class="panel panel-default" name="createUserForm" ng-submit="createUser(user, createUserForm.$invalid);" ng-if="currentUser.role == 'Administrator'">
         <div class="panel-heading">
           <button type="submit" class="btn btn-primary pull-right add-user-btn">Add user</button>
 

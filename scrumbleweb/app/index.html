@@ -24,12 +24,12 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="header container">
-      <ul class="nav nav-pills pull-right" ng-if="isLoggedIn">
+      <ul class="nav nav-pills pull-right" ng-if="canShowNav()">
         <li ng-repeat="(path, name) in navigationPaths" ng-class="{active: isActivePath(path)}">
           <a ng-href="#{{path}}">{{name}}</a>
         </li>
 
-        <li class="dropdown" ng-if="isAdmin">
+        <li class="dropdown" ng-if="isAdmin()">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
             Admin
             <strong class="caret"></strong>
@@ -41,7 +41,7 @@
         </li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
-            Hello, {{ user.firstName }}
+            Hello, {{ currentUser.firstName }}
             <strong class="caret"></strong>
           </a>
           <ul class="dropdown-menu">
@@ -103,6 +103,9 @@
         <script src="scripts/controllers/projects.js"></script>
         <script src="scripts/services/user.js"></script>
         <script src="scripts/services/auth.js"></script>
+        <script src="scripts/controllers/login.js"></script>
+        <script src="scripts/controllers/logout.js"></script>
+        <script src="scripts/services/apiroot.js"></script>
         <!-- endbuild -->
 </body>
 </html>
