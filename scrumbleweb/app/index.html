@@ -53,7 +53,7 @@
 
       </ul>
       <h3 class="logo">
-        <a ng-href="#/" ng-class="{'text-muted': !isActivePath('/'), 'text-info': isActivePath('/')}">
+        <a ng-href="#/{{!canShowNav() && 'login' || '' }}" ng-class="{'text-muted': !isActivePath('/'), 'text-info': isActivePath('/')}">
           <img src="/images/logo.png" alt="S" />crumble
         </a>
       </h3>
