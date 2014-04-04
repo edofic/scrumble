@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'RootCtrl', ($scope, $route, Auth) ->
+  .controller 'RootCtrl', ($scope, $route) ->
     $scope.navigationPaths =
       '/daily': 'Daily'
       '/sprint': 'Sprint'

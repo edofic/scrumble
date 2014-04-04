@@ -7,28 +7,28 @@
 
       <form class="panel panel-default" name="createProjectForm" ng-submit="createProject(project, createProjectForm.$invalid);">
         <div class="panel-heading">
-          <button type="submit" class="btn btn-primary pull-right add-project-btn">Add project</button>
+          <button type="submit" class="btn btn-primary pull-right add-project-btn" tabindex="4">Add project</button>
           <h3 class="panel-title row">
             <span class="col-sm-3 col-xs-6">
-              <input type="text" class="form-control" placeholder="Project name" ng-model="project.name" required></input>
+              <input type="text" class="form-control" placeholder="Project name" ng-model="project.name" required autofocus tabindex="1"></input>
             </span>
           </h3>
         </div>
 
         <div class="panel-body">
           <div ng-repeat="user in project.users">
-            <button type="button" class="btn btn-default pull-right" ng-click="project.users.splice($index, 1);">
+            <button type="button" class="btn btn-default pull-right" ng-click="project.users.splice($index, 1);" tabindex="5">
               <i class="glyphicon glyphicon-remove text-danger"></i>
             </button>
             <div class="row">
 
               <span class="input-group col-sm-3">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input type="text" class="form-control" placeholder="Username" ng-model="user.username" typeahead="username for username in allUsernames | filter:$viewValue | limitTo:8" typeahead-editable="false" required></input>
+                <input type="text" class="form-control" placeholder="Username" ng-model="user.username" typeahead="username for username in allUsernames | filter:$viewValue | limitTo:8" typeahead-editable="false" required tabindex="2"></input>
               </span>
 
               <span class="btn-group col-sm-6">
-                <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user[role]" btn-checkbox>
+                <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user[role]" btn-checkbox tabindex="2">
                   {{ roleName }}
                 </button>
               </span>
@@ -38,7 +38,7 @@
 
           </div>
 
-          <button type="button" class="btn btn-default pull-right" ng-click="project.users.push({});">
+          <button type="button" class="btn btn-default pull-right" ng-click="project.users.push({});" tabindex="3">
             <i class="glyphicon glyphicon-plus text-success"></i>
           </button>
         </div>

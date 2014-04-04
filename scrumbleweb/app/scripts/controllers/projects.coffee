@@ -2,6 +2,7 @@
 
 angular.module('scrumbleApp')
   .controller 'ProjectsCtrl', ($scope) ->
+    $scope.needsAdmin('You don\'t have permission to manage projects')
 
     $scope.allUsernames = ['lj', 'lz', 'ab', 'br', 'mh', 'aaaa', 'bbbb', 'bz', 'br', 'bh'];
 
@@ -44,8 +45,9 @@ angular.module('scrumbleApp')
         (data) ->
           $scope.projects.push(data)
           $scope.initNewProject()
+          $scope.notify("Added project #{data.name}", 'info')
         (reason) ->
-          console.log('Error occured: ', reason)
+          $scope.notify(reason.data.message, 'danger')
       )
     ###
 

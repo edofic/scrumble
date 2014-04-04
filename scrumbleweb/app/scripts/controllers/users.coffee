@@ -2,12 +2,12 @@
 
 angular.module('scrumbleApp')
   .controller 'UsersCtrl', ($scope, User, UserPassword) ->
+    $scope.needsAdmin('You don\'t have permission to manage users')
+
     $scope.users = User.query()
     $scope.userRoles =
       'RegularUser': 'Regular user'
       'Administrator': 'Administrator'
-
-    $scope.needsAdmin('You can\'t manage users')
 
     $scope.initNewUser = ->
       $scope.user = new User()
