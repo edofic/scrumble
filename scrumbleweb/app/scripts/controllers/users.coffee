@@ -7,6 +7,8 @@ angular.module('scrumbleApp')
       'RegularUser': 'Regular user'
       'Administrator': 'Administrator'
 
+    $scope.needsAdmin('You can\'t manage users')
+
     $scope.initNewUser = ->
       $scope.user = new User()
       $scope.user.role = 'RegularUser'
@@ -25,10 +27,9 @@ angular.module('scrumbleApp')
 
         $scope.users.push(data)
         $scope.initNewUser()
-        $scope.error = ''
+        $scope.notify("Added user #{data.username}" , 'info')
       , (reason) ->
-        $scope.error = 'User cannot be saved.'
-        console.log('Error occured: ', reason)
+        $scope.notify(reason.data.message, 'danger')
 
   .directive 'sameAs', ->
     require: 'ngModel',

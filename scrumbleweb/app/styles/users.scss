@@ -1,8 +1,8 @@
 .users {
   .add-user-btn {
   }
-  form .ng-dirty.ng-invalid {
-    // @extend .has-error; .. would have to be on parent
-    border-color: #b94a48;
+  form .ng-invalid {
+    // @extend .has-warning; .. would have to be on parent
+    border-color: #c09853;
   }
 }

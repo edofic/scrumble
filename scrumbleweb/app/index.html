@@ -57,6 +57,10 @@
           <img src="/images/logo.png" alt="S" />crumble
         </a>
       </h3>
+
+      <div class="notifications">
+        <alert ng-repeat="notification in notifications" type="notification.type" close="closeNotification($index)">{{notification.text}}</alert>
+      </div>
     </div>
 
     <div class="content" ng-view=""></div>
