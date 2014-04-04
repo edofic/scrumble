@@ -2,10 +2,12 @@
 
 angular.module('scrumbleApp')
   .controller 'RootCtrl', ($scope, $route) ->
-    $scope.navigationPaths =
-      '/daily': 'Daily'
-      '/sprint': 'Sprint'
-      '/product': 'Product'
+    # array keeps order
+    $scope.navigationPaths = [
+      {path: '/daily', name: 'Daily'}
+      {path: '/sprint', name: 'Sprint'}
+      {path: '/product', name: 'Product'}
+    ]
 
     $scope.route = $route;
     $scope.isActivePath = (path) ->
