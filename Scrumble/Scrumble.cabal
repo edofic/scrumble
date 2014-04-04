@@ -19,6 +19,7 @@ library
                      Model
                      Model.Role
                      Model.ProjectRole
+                     Model.StoryPriority
                      Settings
                      Settings.StaticFiles
                      Settings.Development

@@ -10,6 +10,7 @@ import Data.Typeable (Typeable)
 import Control.Applicative 
 import Model.Role
 import Model.ProjectRole
+import Model.StoryPriority
 
 import qualified Data.HashMap.Strict as Hash
 
