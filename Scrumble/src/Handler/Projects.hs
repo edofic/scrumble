@@ -4,11 +4,14 @@ import Import hiding ((==.))
 import Handler.ProjectsProject (getProjectsProjectR)
 import Database.Esqueleto hiding (Value)
 import qualified Authorization as Auth
+import Debug.Trace
 
 getProjectsR :: Handler Value
 getProjectsR = do
-  Entity userId _  <- Auth.currentUser
-  projects <- runDB $ getProjectsQ userId
+  user@(Entity userId _)  <- Auth.currentUser
+  projects <- runDB $ if Auth.isAdmin user
+    then getAdminProjectQ
+    else getProjectsQ userId
   return $ array $ (toJSON . FlatEntity) `fmap` projects
   where
     getProjectsQ userId = 
@@ -17,9 +20,11 @@ getProjectsR = do
         on (member ^. ProjectMemberProject ==. project ^. ProjectId)
         where_ (member ^. ProjectMemberUser ==. val userId)
         return project
+    getAdminProjectQ = selectList [] [] 
 
 postProjectsR :: Handler Value 
 postProjectsR = do
   Auth.assert Auth.isAdmin
-  insertProject >>= getProjectsProjectR where
-    insertProject = runDB $ requireJsonBody >>= insert
+  project <- requireJsonBody
+  id <- runDB $ insert project
+  getProjectsProjectR id
