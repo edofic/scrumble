@@ -5,3 +5,5 @@ angular.module('scrumbleApp')
     $scope.login = ->
       Auth.login($scope.username, $scope.password).then ->
         $location.path('/')
+      , (reason) ->
+        $scope.notify(reason.data.message, 'danger')
