@@ -3,11 +3,13 @@
 angular.module('scrumbleApp')
   .controller 'UsersCtrl', ($scope, User, UserPassword) ->
     $scope.users = User.query()
-    $scope.userRoles = ['RegularUser', 'Administrator']
+    $scope.userRoles =
+      'RegularUser': 'Regular user'
+      'Administrator': 'Administrator'
 
     $scope.initNewUser = ->
       $scope.user = new User()
-      $scope.user.role = $scope.userRoles[0]
+      $scope.user.role = 'RegularUser'
 
     $scope.initNewUser()
 
