@@ -25,8 +25,8 @@
     <![endif]-->
     <div class="header container">
       <ul class="nav nav-pills pull-right" ng-if="canShowNav()">
-        <li ng-repeat="(path, name) in navigationPaths" ng-class="{active: isActivePath(path)}">
-          <a ng-href="#{{path}}">{{name}}</a>
+        <li ng-repeat="path in navigationPaths" ng-class="{active: isActivePath(path.path)}">
+          <a ng-href="#{{path.path}}">{{ path.name }}</a>
         </li>
 
         <li class="dropdown" ng-if="isAdmin()">
@@ -53,10 +53,14 @@
 
       </ul>
       <h3 class="logo">
-        <a ng-href="#/" ng-class="{'text-muted': !isActivePath('/'), 'text-info': isActivePath('/')}">
+        <a ng-href="#/{{!canShowNav() && 'login' || '' }}" ng-class="{'text-muted': !isActivePath('/'), 'text-info': isActivePath('/')}">
           <img src="/images/logo.png" alt="S" />crumble
         </a>
       </h3>
+
+      <div class="notifications">
+        <alert ng-repeat="notification in notifications" type="notification.type" close="closeNotification($index)">{{notification.text}}</alert>
+      </div>
     </div>
 
     <div class="content" ng-view=""></div>
@@ -106,6 +110,8 @@
         <script src="scripts/controllers/login.js"></script>
         <script src="scripts/controllers/logout.js"></script>
         <script src="scripts/services/apiroot.js"></script>
+        <script src="scripts/controllers/sprint.js"></script>
+        <script src="scripts/controllers/product.js"></script>
         <!-- endbuild -->
 </body>
 </html>

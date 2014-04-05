@@ -2,6 +2,8 @@
 
 angular.module('scrumbleApp')
   .controller 'UsersCtrl', ($scope, User, UserPassword) ->
+    $scope.needsAdmin('You don\'t have permission to manage users')
+
     $scope.users = User.query()
     $scope.userRoles =
       'RegularUser': 'Regular user'
@@ -25,18 +27,14 @@ angular.module('scrumbleApp')
 
         $scope.users.push(data)
         $scope.initNewUser()
-        $scope.error = ''
+        $scope.notify("Added user #{data.username}" , 'info')
       , (reason) ->
-        $scope.error = 'User cannot be saved.'
-        console.log('Error occured: ', reason)
+        $scope.notify(reason.data.message, 'danger')
 
   .directive 'sameAs', ->
     require: 'ngModel',
     link: (scope, elem, attrs, ctrl) ->
-      ctrl.$parsers.unshift (viewValue) ->
-        if (viewValue == attrs.sameAs)
-          ctrl.$setValidity("sameAs", true)
-          return viewValue
-        else
-          ctrl.$setValidity("sameAs", false)
-          return
+      validate = ->
+        ctrl.$setValidity('sameAs', ctrl.$viewValue == attrs.sameAs)
+      scope.$watch attrs.ngModel, validate
+      attrs.$observe 'sameAs', validate

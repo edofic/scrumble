@@ -2,10 +2,12 @@
 
 angular.module('scrumbleApp')
   .controller 'RootCtrl', ($scope, $route) ->
-    $scope.navigationPaths =
-      '/daily': 'Daily'
-      '/sprint': 'Sprint'
-      '/product': 'Product'
+    # array keeps order
+    $scope.navigationPaths = [
+      {path: '/daily', name: 'Daily'}
+      {path: '/sprint', name: 'Sprint'}
+      {path: '/product', name: 'Product'}
+    ]
 
     $scope.route = $route;
     $scope.isActivePath = (path) ->
@@ -14,3 +16,15 @@ angular.module('scrumbleApp')
 
     $scope.canShowNav = -> $scope.currentUser
     $scope.isAdmin = -> $scope.currentUser.role == 'Administrator'
+
+    # $scope.notify('hello', 'success'/'danger')
+    $scope.notifications = []
+    $scope.closeNotification = (ix) -> $scope.notifications.splice(ix, 1)
+    $scope.notify = (text, type) -> $scope.notifications.push {'text': text, 'type': type}
+
+    # $scope.needsAdmin('You need to be admin')
+    $scope.needsAdmin = (orMessage) ->
+      removeWatcher = $scope.$watch 'currentUser.role', (role) ->
+        if (role && (role != 'Administrator'))
+          $scope.notify(orMessage, 'danger')
+          removeWatcher()
