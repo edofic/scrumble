@@ -46,3 +46,22 @@ angular.module('scrumbleApp')
       $scope.sprint = {}
 
     $scope.initNewSprint()
+
+  .directive 'dateLessThan', ->
+    require: 'ngModel',
+    link: (scope, elem, attrs, ctrl) ->
+      validate = ->
+        ctrl.$setValidity('dateLessThan', new Date(ctrl.$viewValue) < new Date(attrs.dateLessThan))
+      scope.$watch attrs.ngModel, validate
+      attrs.$observe 'dateLessThan', validate
+
+  .directive 'dateParseInput', ->
+    restrict: 'A'
+    require: 'ngModel'
+    link: (scope, elem, attrs, ctrl) ->
+      ctrl.$parsers.unshift (viewValue) ->
+        if(viewValue instanceof Date)
+          return viewValue
+        splitted = viewValue.split('.')
+        convertedDate = splitted[1] + "/" + splitted[0] + "/" + splitted[2]
+        return new Date(Date.parse(convertedDate))
