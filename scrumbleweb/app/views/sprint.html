@@ -1,1 +1,69 @@
-<p>This is the sprint view.</p>
+<div class="sprints">
+  <div class="whiteStripe">
+    <div class="container">
+      <h2>Sprints</h2>
+
+      <br>
+
+      <form class="panel panel-default" name="createSprintForm" ng-submit="createSprint(sprint, createSprintForm.$invalid);" ng-if="canCreateSprint()">
+        <div class="panel-heading">
+          <button type="submit" class="btn btn-primary pull-right add-sprint-btn" tabindex="4">Add sprint</button>
+
+          <h3 class="panel-title row">
+            <span class="col-sm-3 col-xs-6 input-group">
+
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </span>
+              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" placeholder="Sprint start" ng-model="sprint.start" max="sprint.end" datepicker-options="dateOptions" show-button-bar="false" required autofocus tabindex="1"></input>
+
+            </span>
+            <span class="col-sm-3 col-xs-6 input-group">
+
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </span>
+              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" placeholder="Sprint end" ng-model="sprint.end" datepicker-options="dateOptions" show-button-bar="false" required tabindex="1" min="sprint.start"></input>
+
+            </span>
+          </h3>
+        </div>
+
+        <div class="panel-body">
+
+          <div class="row">
+            <span class="col-sm-3 col-xs-7 input-group">
+              <span class="input-group-addon">
+                Velocity
+              </span>
+              <input type="number" class="form-control" placeholder="Velocity" ng-model="sprint.velocity" ng-pattern="/^\d+$/" required tabindex="2"></input>
+            </span>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <br>
+
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4" ng-repeat="sprint in sprints | orderBy:'start':true">
+          <div class="panel" ng-class="{'panel-default': !(sprint.start<today && today<sprint.end), 'panel-primary': (sprint.start<today && today<sprint.end)}">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ sprint.start | date:'dd.MM.yyyy' }} - {{ sprint.end | date:'dd.MM.yyyy' }}</h3>
+            </div>
+
+            <div class="panel-body">
+
+              Velocity: <span class="badge">{{ sprint.velocity }}</span> points per sprint
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
