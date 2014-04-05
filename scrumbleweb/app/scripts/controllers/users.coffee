@@ -34,10 +34,7 @@ angular.module('scrumbleApp')
   .directive 'sameAs', ->
     require: 'ngModel',
     link: (scope, elem, attrs, ctrl) ->
-      ctrl.$parsers.unshift (viewValue) ->
-        if (viewValue == attrs.sameAs)
-          ctrl.$setValidity("sameAs", true)
-          return viewValue
-        else
-          ctrl.$setValidity("sameAs", false)
-          return
+      validate = ->
+        ctrl.$setValidity('sameAs', ctrl.$viewValue == attrs.sameAs)
+      scope.$watch attrs.ngModel, validate
+      attrs.$observe 'sameAs', validate
