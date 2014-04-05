@@ -4,7 +4,6 @@ import Import hiding ((==.))
 import Handler.ProjectsProject (getProjectsProjectR)
 import Database.Esqueleto hiding (Value)
 import qualified Authorization as Auth
-import Debug.Trace
 
 getProjectsR :: Handler Value
 getProjectsR = do
