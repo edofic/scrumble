@@ -24,7 +24,15 @@ angular.module('scrumbleApp')
 
     # $scope.needsAdmin('You need to be admin')
     $scope.needsAdmin = (orMessage) ->
-      removeWatcher = $scope.$watch 'currentUser.role', (role) ->
-        if (role && (role != 'Administrator'))
-          $scope.notify(orMessage, 'danger')
+      checkRole = (role) ->
+        if (role)
           removeWatcher()
+          if (role != 'Administrator')
+            $scope.notify(orMessage, 'danger')
+      removeWatcher = $scope.$watch 'currentUser.role', checkRole
+      checkRole($scope.currentUser && $scope.currentUser.role)
+
+    $scope.userProjectRoles =
+      productOwner: 'Product'
+      scrumMaster: 'Scrum'
+      teamMember: 'Team'
