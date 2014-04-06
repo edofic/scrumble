@@ -1,20 +1,11 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'SprintCtrl', ($scope, $filter) ->
-    # is scrum master?
+  .controller 'SprintCtrl', ($scope, $filter, Sprint) ->
+    # TODO: use activeProjectId which will probably be in $root
+    $scope.projectId = 1;
+    # TODO: is scrum master in this project?
     $scope.canCreateSprint = -> true
-
-    $scope.sprints = [{
-      start: 1393662209873
-      end: 1396662209873
-      velocity: 20
-    }
-    {
-      start: 1396662209873
-      end: 1406662209873  # end > start
-      velocity: 20        # integer..
-    }]
 
     $scope.dateOptions =
       'starting-day': 1
@@ -22,14 +13,20 @@ angular.module('scrumbleApp')
 
     $scope.today = Date.now()
 
+    # TODO: fix if projectId is async...
+    $scope.sprints = Sprint.query {projectId: $scope.projectId}
+    ### Wanted from API:
+    [{
+      start: 1393662209873
+      end: 1396662209873   # end > start
+      velocity: 20         # integer..
+    }]
     ###
-    TODO:
-    $scope.sprints = Sprint.query()
 
     $scope.createSprint = (sprint, invalid) ->
       if (invalid)
         return
-      sprint.$save (data) ->
+      sprint.$save {projectId: $scope.projectId}, (data) ->
         $scope.sprints.push(data)
         $scope.initNewSprint()
         humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
@@ -37,13 +34,9 @@ angular.module('scrumbleApp')
         $scope.notify("Added sprint from #{humanStart} to #{humanEnd}", 'info')
       , (reason) ->
         $scope.notify(reason.data.message, 'danger')
-    ###
+
     $scope.initNewSprint = () ->
-      ###
-      TODO:
       $scope.sprint = new Sprint()
-      ###
-      $scope.sprint = {}
 
     $scope.initNewSprint()
 
