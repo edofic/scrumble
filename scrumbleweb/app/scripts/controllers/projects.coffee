@@ -1,10 +1,13 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'ProjectsCtrl', ($scope, Project) ->
+  .controller 'ProjectsCtrl', ($scope, Project, User) ->
     $scope.needsAdmin('You don\'t have permission to manage projects')
 
-    $scope.allUsernames = ['lj', 'lz', 'ab', 'br', 'mh', 'aaaa', 'bbbb', 'bz', 'br', 'bh'];
+    User.query((users) ->
+      $scope.allUsernames = $.map users, (user) ->
+        user.username
+    )
 
     $scope.userProjectRoles =
       productOwner: 'Product'
