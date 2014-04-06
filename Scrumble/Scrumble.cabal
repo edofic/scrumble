@@ -35,6 +35,8 @@ library
                      Handler.AuthLogout
                      Handler.AuthUser
                      Handler.Stories
+                     Handler.Sprint
+                     Handler.Sprints
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

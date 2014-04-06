@@ -14,6 +14,9 @@
 /api/projects/#ProjectId     ProjectsProjectR     GET   PUT   DELETE 
 /api/projects/#ProjectId/stories     StoriesR     GET   POST
 
+/api/projects/#ProjectId/sprints            SprintsR     GET   POST
+/api/projects/#ProjectId/sprints/#SprintId  SprintR      GET 
+
 /api/login          AuthenticationR  POST
 /api/logout         AuthLogoutR      POST
 /api/user           AuthUserR        GET

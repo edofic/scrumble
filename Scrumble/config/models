@@ -18,6 +18,7 @@ Project json
     deriving Eq Show
 
 Sprint json
+    project ProjectId
     deriving Eq Show
 
 Story json

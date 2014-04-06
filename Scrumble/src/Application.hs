@@ -40,6 +40,8 @@ import Handler.AuthLogout
 import Handler.UsersUserPassword
 import Handler.AuthUser
 import Handler.Stories
+import Handler.Sprint
+import Handler.Sprints
 import Model.Role
 
 addCORS :: W.Middleware
