@@ -2,10 +2,6 @@
 
 angular.module('scrumbleApp')
   .controller 'SprintCtrl', ($scope, $filter, Sprint) ->
-    # TODO: use activeProjectId which will probably be in $root
-    $scope.projectId = 1;
-    # TODO: is scrum master in this project?
-    $scope.canCreateSprint = -> true
 
     $scope.dateOptions =
       'starting-day': 1
@@ -13,8 +9,17 @@ angular.module('scrumbleApp')
 
     $scope.today = Date.now()
 
-    # TODO: fix if projectId is async...
-    $scope.sprints = Sprint.query {projectId: $scope.projectId}
+    updateFromActiveProject = ->
+      if(!$scope.currentUser.activeProject)
+        return
+      $scope.sprints = Sprint.query {projectId: $scope.currentUser.activeProject}
+      # TODO: is scrum master in this project?
+      user = $scope.currentUser
+      projectUsers = _.indexBy(user.projects[user.activeProject].users, 'username')
+      $scope.canCreateSprint = projectUsers[user.username] && projectUsers[user.username].scrumMaster
+
+    $scope.$watch 'currentUser.activeProject', updateFromActiveProject
+
     ### Wanted from API:
     [{
       start: 1393662209873
@@ -26,7 +31,7 @@ angular.module('scrumbleApp')
     $scope.createSprint = (sprint, invalid) ->
       if (invalid)
         return
-      sprint.$save {projectId: $scope.projectId}, (data) ->
+      sprint.$save {projectId: $scope.currentUser.activeProject}, (data) ->
         $scope.sprints.push(data)
         $scope.initNewSprint()
         humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
