@@ -29,6 +29,10 @@ angular.module('scrumbleApp')
           removeWatcher()
           if (role != 'Administrator')
             $scope.notify(orMessage, 'danger')
-
       removeWatcher = $scope.$watch 'currentUser.role', checkRole
       checkRole($scope.currentUser && $scope.currentUser.role)
+
+    $scope.userProjectRoles =
+      productOwner: 'Product'
+      scrumMaster: 'Scrum'
+      teamMember: 'Team'

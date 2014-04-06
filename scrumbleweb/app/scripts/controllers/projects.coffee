@@ -8,11 +8,6 @@ angular.module('scrumbleApp')
       $scope.allUsernames = $.map users, (user) ->
         user.username
 
-    $scope.userProjectRoles =
-      productOwner: 'Product'
-      scrumMaster: 'Scrum'
-      teamMember: 'Team'
-
     $scope.projects = Project.query()
     ### Wanted from API:
     [{
