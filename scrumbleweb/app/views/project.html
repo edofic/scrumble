@@ -4,11 +4,13 @@
             <h1>
                 Welcome to Scrumble!
             </h1>
-            <p>
-                Project <span class="text-danger">{{project.name}}</span>
-                <br>
-                Sprint {{project.sprint}}/{{project.sprints}}, ends on {{project.ends | date:shortDate}}
+            <p ng-if="!currentUser.activeProject">
+                You are not a member of any project
             </p>
+            <p ng-if="currentUser.activeProject">
+                Choose a project
+            </p>
+            <projectslist projects="currentUser.projects" user-project-roles="userProjectRoles" can-activate="true"></projectslist>
         </div>
     </div>
 </div>

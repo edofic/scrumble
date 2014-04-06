@@ -25,7 +25,12 @@
     <![endif]-->
     <div class="header container">
       <ul class="nav nav-pills pull-right" ng-if="canShowNav()">
-        <li ng-repeat="path in navigationPaths" ng-class="{active: isActivePath(path.path)}">
+
+        <li ng-if="!currentUser.activeProject">
+          <a ng-href="#/">You don't belong to any project</a>
+        </li>
+
+        <li ng-if="currentUser.activeProject" ng-repeat="path in navigationPaths" ng-class="{active: isActivePath(path.path)}">
           <a ng-href="#{{path.path}}">{{ path.name }}</a>
         </li>
 
@@ -55,6 +60,7 @@
       <h3 class="logo">
         <a ng-href="#/{{!canShowNav() && 'login' || '' }}" ng-class="{'text-muted': !isActivePath('/'), 'text-info': isActivePath('/')}">
           <img src="/images/logo.png" alt="S" />crumble
+          <span ng-if="currentUser.activeProject">: {{ currentUser.projects[currentUser.activeProject].name }}</span>
         </a>
       </h3>
 
