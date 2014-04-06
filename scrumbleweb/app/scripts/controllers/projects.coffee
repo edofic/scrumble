@@ -5,8 +5,7 @@ angular.module('scrumbleApp')
     $scope.needsAdmin('You don\'t have permission to manage projects')
 
     User.query (users) ->
-      $scope.allUsernames = $.map users, (user) ->
-        user.username
+      $scope.allUsernames = _.pluck(users, 'username')
 
     $scope.projects = Project.query()
     ### Wanted from API:
