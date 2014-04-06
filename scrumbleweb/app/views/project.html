@@ -1,16 +1,16 @@
 ﻿<div class="project">
-    <div class="jumbotron whiteStripe">
-        <div class="container">
-            <h1>
-                Welcome to Scrumble!
-            </h1>
-            <p ng-if="!currentUser.activeProject">
-                You are not a member of any project
-            </p>
-            <p ng-if="currentUser.activeProject">
-                Choose a project
-            </p>
-            <projectslist projects="currentUser.projects" user-project-roles="userProjectRoles" can-activate="true"></projectslist>
-        </div>
+  <div class="jumbotron whiteStripe">
+    <div class="container">
+      <h1>
+        Welcome to Scrumble!
+      </h1>
+      <p ng-if="!currentUser.activeProject">
+        You are not a member of any project
+      </p>
+      <p ng-if="currentUser.activeProject">
+        Choose a project
+      </p>
+      <projectslist projects="currentUser.projects" user-project-roles="userProjectRoles" can-activate="true"></projectslist>
     </div>
+  </div>
 </div>
