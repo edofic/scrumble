@@ -1,0 +1,24 @@
+﻿<div class="row projectsList">
+  <div class="col-sm-4" ng-repeat="project in projects">
+    <div class="panel" data-calc="{{ isActive = canActivate && ($root.currentUser.activeProject == project.id) }}"ng-class="{'panel-default': !isActive, 'panel-primary': isActive}">
+
+      <button type="button" class="btn btn-default pull-right chooseButton" ng-if="canActivate && !isActive" ng-click="$root.currentUser.activeProject = project.id">Choose</button>
+
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ project.name }}</h3>
+      </div>
+
+      <div class="panel-body">
+        <p ng-repeat="user in project.users">
+          <span class="labelsGroup pull-right">
+            <span class="label label-primary" ng-repeat="(role, roleName) in userProjectRoles" ng-if="user[role]">
+              {{ roleName }}
+            </span>
+          </span>
+          {{ user.username }}
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

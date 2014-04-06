@@ -50,27 +50,7 @@
 
   <div>
     <div class="container">
-      <div class="row">
-        <div class="col-sm-4" ng-repeat="project in projects">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{ project.name }}</h3>
-            </div>
-
-            <div class="panel-body">
-              <p ng-repeat="user in project.users">
-                <span class="labelsGroup pull-right">
-                  <span class="label label-primary" ng-repeat="(role, roleName) in userProjectRoles" ng-if="user[role]">
-                    {{ roleName }}
-                  </span>
-                </span>
-                {{ user.username }}
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </div>
+      <projectslist projects="projects" user-project-roles="userProjectRoles"></projectslist>
     </div>
   </div>
 </div>

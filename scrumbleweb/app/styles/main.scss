@@ -65,6 +65,10 @@ form .ng-invalid {
     border-color: #c09853;
 }
 
+.projectsList .chooseButton {
+    margin: 2px;
+}
+
 @import 'users';
 @import 'projects';
 @import 'daily';
