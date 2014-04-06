@@ -40,6 +40,33 @@ angular.module('scrumbleApp')
 
     $scope.initNewSprint()
 
+    # SprintDays affects sprintEnd
+    # WorkdayVelocity affects velocity
+    calculatingFields = ->
+      updateSprintDays = ->
+        if ($scope.sprint.end && $scope.sprint.start)
+          $scope.sprint.sprintDays = Math.round(($scope.sprint.end.getTime() - $scope.sprint.start.getTime())/1000/60/60/24)
+      updateSprintEnd = ->
+        if ($scope.sprint.start && $scope.sprint.sprintDays)
+          $scope.sprint.end = new Date($scope.sprint.start.getTime() + $scope.sprint.sprintDays*1000*60*60*24)
+      updateWorkdayVelocity = ->
+        if ($scope.sprint.velocity && $scope.sprint.sprintDays)
+          $scope.sprint.workdayVelocity = Math.round(($scope.sprint.velocity / ($scope.sprint.sprintDays*5/7))*100)/100
+      updateVelocity = ->
+        if ($scope.sprint.workdayVelocity && $scope.sprint.sprintDays)
+          $scope.sprint.velocity = Math.round($scope.sprint.workdayVelocity * ($scope.sprint.sprintDays*5/7))
+
+      $scope.$watch 'sprint.start', updateSprintDays
+      $scope.$watch 'sprint.end', updateSprintDays
+      $scope.$watch 'sprint.sprintDays', updateSprintEnd
+      $scope.$watch 'sprint.sprintStart', updateSprintEnd
+      $scope.$watch 'sprint.velocity', updateWorkdayVelocity
+      $scope.$watch 'sprint.sprintDays', updateWorkdayVelocity
+      $scope.$watch 'sprint.workdayVelocity', updateVelocity
+      $scope.$watch 'sprint.sprintDays', updateVelocity
+    calculatingFields()
+
+
   .directive 'dateLessThan', ->
     require: 'ngModel',
     link: (scope, elem, attrs, ctrl) ->

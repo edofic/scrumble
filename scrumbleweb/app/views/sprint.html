@@ -39,6 +39,22 @@
               <input type="number" class="form-control" placeholder="Velocity" ng-model="sprint.velocity" ng-pattern="/^\d+$/" min="1" required tabindex="2"></input>
             </span>
           </div>
+          <br>
+
+          <div class="row">
+            <span class="col-sm-3 col-xs-7 input-group has-success">
+              <span class="input-group-addon">
+                Sprint days
+              </span>
+              <input type="number" class="form-control" placeholder="Sprint days" ng-model="sprint.sprintDays" ng-pattern="/^\d+$/" min="1" tabindex="2"></input>
+            </span>
+            <span class="col-sm-3 col-xs-7 input-group has-success">
+              <span class="input-group-addon">
+                Velocity / workday
+              </span>
+              <input type="number" class="form-control" placeholder="Workday velocity" ng-model="sprint.workdayVelocity"tabindex="2"></input>
+            </span>
+          </div>
 
         </div>
       </form>
