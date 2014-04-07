@@ -11,9 +11,8 @@ getStoriesR projectId = do
   return $ array $ (toJSON . FlatEntity) `fmap` stories
 
 postStoriesR :: ProjectId -> Handler String
-postStoriesR projectId = go where
-  --TODO: assert project existance and user role on the project
-  go = do
+postStoriesR projectId = do
+    --TODO: assert project existance and user role on the project
     story :: Story <- requireJsonBody
     assertEqBadRequest $ storyProject story /= projectId
     storyId <- runDB $ insert story
