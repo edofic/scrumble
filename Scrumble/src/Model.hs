@@ -7,6 +7,7 @@ import Yesod
 import Data.Text (Text)
 import Database.Persist.Quasi
 import Data.Typeable (Typeable)
+import Data.Int (Int64)
 import Control.Applicative 
 import Model.Role
 import Model.ProjectRole

@@ -5,6 +5,7 @@ module Handler.Sprints
 
 import Import hiding ((==.))
 import Database.Esqueleto hiding (Value)
+import Model.ProjectRole
 import qualified Authorization as Auth
 
 getSprintsR :: ProjectId -> Handler Value
@@ -18,8 +19,8 @@ getSprintsR projectId = do
 
 postSprintsR :: ProjectId -> Handler Value
 postSprintsR projectId = do
-  Auth.assertM $ Auth.memberOfProject projectId
-  newSprint :: Sprint <- requireJsonBodyWith [("projectId", toJSON projectId)]
+  Auth.assertM $ Auth.roleOnProject ScrumMaster projectId
+  newSprint :: Sprint <- requireJsonBodyWith [("project", toJSON projectId)]
   sprintId <- runDB $ insert newSprint
   return $ toJSON $ FlatEntity $ Entity sprintId newSprint
 
