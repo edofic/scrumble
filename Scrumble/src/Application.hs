@@ -62,7 +62,8 @@ handleOptions app env =
         else app env
 
     where
-        corsHeaders = [("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")]
+        corsHeaders = [("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"), 
+                       ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")]
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
