@@ -6,6 +6,7 @@ import Yesod.Auth (maybeAuth)
 import Network.HTTP.Types.Status (unauthorized401)
 import Model.Role
 import Data.Maybe (isJust)
+import Model.ProjectRole
 
 unauthorized :: MonadHandler m => m a
 unauthorized = sendResponseStatus unauthorized401 ()
@@ -33,4 +34,9 @@ hasUserId wanted (Entity userId _) = userId == wanted
 memberOfProject :: ProjectId -> Entity User -> Handler Bool
 memberOfProject projectId (Entity userId _) = 
   fmap isJust $ runDB $ getBy $ UniqueMember userId projectId
-  
+
+roleOnProject :: ProjectRole -> ProjectId -> Entity User -> Handler Bool
+roleOnProject role projectId (Entity userId _) = 
+  fmap isOk $ runDB $ getBy $ UniqueMember userId projectId where
+    isOk (Just (Entity _ member)) = projectMemberRole member == role
+    isOk _ = False

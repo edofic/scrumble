@@ -15,6 +15,8 @@ import           Settings             as Import
 import           Settings.Development as Import
 import           Settings.StaticFiles as Import
 
+import           Data.Int             as Import (Int64)
+
 import           Util                 as Import
 
 #if __GLASGOW_HASKELL__ >= 704

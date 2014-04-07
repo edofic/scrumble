@@ -18,7 +18,10 @@ Project json
     deriving Eq Show
 
 Sprint json
-    project ProjectId
+    project  ProjectId
+    start    Int64
+    end      Int64
+    velocity Int64
     deriving Eq Show
 
 Story json
