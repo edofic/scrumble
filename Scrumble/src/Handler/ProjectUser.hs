@@ -21,6 +21,7 @@ putProjectUserR projectId userId = do
 
 deleteProjectUserR :: ProjectId -> UserId -> Handler ()
 deleteProjectUserR projectId userId = do
+  Auth.assert Auth.isAdmin
   runDB $ deleteWhere [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId]
 
 
