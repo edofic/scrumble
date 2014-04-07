@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .factory 'Auth', ($http, $rootScope, ApiRoot, Project) ->
+  .factory 'Auth', ($http, $rootScope, $q, ApiRoot, Project) ->
     auth =
       login: (username, password) ->
         $http.post(ApiRoot + '/api/login',
@@ -15,6 +15,11 @@ angular.module('scrumbleApp')
           $rootScope.currentUser = null
 
       loadCurrentUser: ->
+        defer = $q.defer()
+
+        if not $rootScope.currentUserPromise
+          $rootScope.currentUserPromise = defer.promise
+
         $http.get(ApiRoot + '/api/user').then (res) ->
           $rootScope.currentUser = res.data
           Project.query (projects) ->
@@ -22,7 +27,9 @@ angular.module('scrumbleApp')
             if (projects.length > 0)
               $rootScope.currentUser.activeProject = projects[0].id
 
+            defer.resolve()
+        , (reason) ->
+          defer.resolve()
+
   .run (Auth, $rootScope, $location) ->
-    Auth.loadCurrentUser().then((->), ->
-      $location.path('/login')
-    )
+    Auth.loadCurrentUser()
