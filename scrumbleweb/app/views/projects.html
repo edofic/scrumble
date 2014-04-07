@@ -28,7 +28,7 @@
               </span>
 
               <span class="btn-group col-sm-6">
-                <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user[role]" btn-checkbox tabindex="2">
+                <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user[role]" btn-checkbox ng-change="user[role] && setRole(role, user);" tabindex="2">
                   {{ roleName }}
                 </button>
               </span>
