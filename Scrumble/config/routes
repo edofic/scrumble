@@ -17,6 +17,7 @@
 /api/projects/#ProjectId/sprints            SprintsR     GET   POST
 /api/projects/#ProjectId/sprints/#SprintId  SprintR      GET 
 
+/api/projects/#ProjectId/users            ProjectUsersR   GET            POST
 /api/login          AuthenticationR  POST
 /api/logout         AuthLogoutR      POST
 /api/user           AuthUserR        GET

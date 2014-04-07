@@ -35,6 +35,7 @@ import Handler.Users
 import Handler.UsersUser
 import Handler.Projects
 import Handler.ProjectsProject
+import Handler.ProjectUsers
 import Handler.Authentication
 import Handler.AuthLogout
 import Handler.UsersUserPassword
