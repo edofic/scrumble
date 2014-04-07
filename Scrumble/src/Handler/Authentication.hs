@@ -6,6 +6,7 @@ import GHC.Generics (Generic)
 import Crypto.PasswordStore (verifyPassword)
 import Data.Text.Encoding (encodeUtf8)
 import Authorization
+import Network.HTTP.Types.Status (unauthorized401)
 
 data AuthRequest = AuthRequest { username :: Text
                                , password :: Text     
@@ -22,4 +23,5 @@ postAuthenticationR = do
     in  if passOk then 
           setCreds False $ Creds "jsonPost" username []
         else 
-          unauthorized
+          sendResponseStatus unauthorized401 ("Wrong password" :: Text)
+          
