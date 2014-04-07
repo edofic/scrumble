@@ -5,13 +5,14 @@ angular.module('scrumbleApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'angular-growl'
 ])
   .config ($routeProvider, $httpProvider) ->
     $routeProvider
       .when '/',
-        templateUrl: 'views/project.html'
-        controller: 'ProjectCtrl'
+        templateUrl: 'views/home.html'
+        controller: 'HomeCtrl'
       .when '/daily',
         templateUrl: 'views/daily.html'
         controller: 'DailyCtrl'
@@ -21,6 +22,9 @@ angular.module('scrumbleApp', [
       .when '/projects',
         templateUrl: 'views/projects.html'
         controller: 'ProjectsCtrl'
+      .when '/projects/:projectId',
+        templateUrl: 'views/project.html'
+        controller: 'ProjectCtrl'
       .when '/login',
         templateUrl: 'views/login.html'
         controller: 'LoginCtrl'
@@ -40,3 +44,6 @@ angular.module('scrumbleApp', [
     $httpProvider.defaults.withCredentials = true
     $httpProvider.defaults.useXDomain = true
     delete $httpProvider.defaults.headers.common['X-Requested-With']
+
+  .config (growlProvider) ->
+    growlProvider.globalTimeToLive 3000

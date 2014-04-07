@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'SprintCtrl', ($scope, $filter, Sprint) ->
+  .controller 'SprintCtrl', ($scope, $filter, Sprint, growl) ->
 
     $scope.dateOptions =
       'starting-day': 1
@@ -38,9 +38,9 @@ angular.module('scrumbleApp')
         $scope.initNewSprint()
         humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
         humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
-        $scope.notify("Added sprint from #{humanStart} to #{humanEnd}", 'info')
+        growl.addSuccessMessage("Added sprint from #{humanStart} to #{humanEnd}")
       , (reason) ->
-        $scope.notify(reason.data.message, 'danger')
+        growl.addErrorMessage(reason.data.message)
 
     $scope.initNewSprint = () ->
       $scope.sprint = new Sprint()

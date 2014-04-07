@@ -6,6 +6,16 @@ angular.module('scrumbleApp')
       query:
         method: 'GET'
         isArray: true
+      update:
+        method: 'PUT'
+    )
+  .factory 'ProjectUser', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/projects/:projectId/users/:userId', {},
+      query:
+        method: 'GET'
+        isArray: true
+      update:
+        method: 'PUT'
     )
   .factory 'Sprint', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/sprints', {},

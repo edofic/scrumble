@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'UsersCtrl', ($scope, User, UserPassword) ->
+  .controller 'UsersCtrl', ($scope, User, UserPassword, growl) ->
     $scope.needsAdmin('You don\'t have permission to manage users')
 
     $scope.users = User.query()
@@ -27,9 +27,9 @@ angular.module('scrumbleApp')
 
         $scope.users.push(data)
         $scope.initNewUser()
-        $scope.notify("Added user #{data.username}" , 'info')
+        growl.addSuccessMessage("Added user #{data.username}")
       , (reason) ->
-        $scope.notify(reason.data.message, 'danger')
+        growl.addErrorMessage(reason.data.message)
 
   .directive 'sameAs', ->
     require: 'ngModel',

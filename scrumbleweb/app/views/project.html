@@ -1,16 +1,60 @@
-﻿<div class="project">
-  <div class="jumbotron whiteStripe">
-    <div class="container">
-      <h1>
-        Welcome to Scrumble!
-      </h1>
-      <p ng-if="!currentUser.activeProject">
-        You are not a member of any project
-      </p>
-      <p ng-if="currentUser.activeProject">
-        Choose a project
-      </p>
-      <projectslist projects="currentUser.projects" user-project-roles="userProjectRoles" can-activate="true"></projectslist>
+﻿<div class="project white-stripe">
+  <div class="container">
+    <h2>{{ project.name }} <small><a href="" ng-click="rename()"><i class="glyphicon glyphicon-pencil"></i></a></small></h2>
+
+    <br>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div ng-repeat="user in users">
+          <div class="pull-right" ng-hide="user.editing">
+            <a href="" ng-click="editUser(user)"><i class="glyphicon glyphicon-pencil"></i></a>
+            <a href="" ng-click="removeUser(user)"><i class="glyphicon glyphicon-remove"></i></a>
+          </div>
+
+          <div class="btn-group pull-right" ng-show="user.editing">
+            <button type="button" class="btn btn-default" ng-click="saveUser(user)">Save</button>
+            <button type="button" class="btn btn-default" ng-click="cancelEditUser(user)">Cancel</button>
+          </div>
+
+          <div class="row">
+            <span class="input-group col-sm-3">
+              {{ formatUser(user.user) }}
+            </span>
+
+            <span class="btn-group col-sm-6" ng-hide="user.editing">
+              {{ userProjectRoles[user.role] }}
+            </span>
+
+            <span class="btn-group col-sm-6" ng-show="user.editing">
+              <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user.role" btn-radio="role" tabindex="2">
+                {{ roleName }}
+              </button>
+            </span>
+          </div>
+
+          <br ng-hide="$last">
+        </div>
+
+        <hr ng-show="users.length">
+
+        <div>
+          <button type="button" class="btn btn-default pull-right" ng-click="addUser()" tabindex="5">Add</button>
+
+          <div class="row">
+            <span class="input-group col-sm-3">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input type="text" class="form-control" placeholder="Username" ng-model="newUser.user" typeahead="u as formatUser(u) for u in allUsers | filter:$viewValue | limitTo:8" typeahead-input-formatter="formatUser($model)" typeahead-editable="false" required tabindex="2"></input>
+            </span>
+
+            <span class="btn-group col-sm-6">
+              <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="newUser.role" btn-radio="role" tabindex="2">
+                {{ roleName }}
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

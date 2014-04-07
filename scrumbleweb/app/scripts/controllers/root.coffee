@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'RootCtrl', ($scope, $route) ->
+  .controller 'RootCtrl', ($scope, $route, growl) ->
     # array keeps order
     $scope.navigationPaths = [
       {path: '/daily', name: 'Daily'}
@@ -9,38 +9,31 @@ angular.module('scrumbleApp')
       {path: '/product', name: 'Product'}
     ]
 
-    $scope.route = $route;
+    $scope.route = $route
+
     $scope.isActivePath = (path) ->
-      if($route.current && $route.current.$$route)
-        path == $route.current.$$route.originalPath
+      path == $route.current?.$$route?.originalPath
 
     $scope.canShowNav = -> $scope.currentUser
     $scope.isAdmin = -> $scope.currentUser.role == 'Administrator'
 
-    # $scope.notify('hello', 'success'/'danger')
-    $scope.notifications = []
-    $scope.closeNotification = (ix) -> $scope.notifications.splice(ix, 1)
-    $scope.notify = (text, type) -> $scope.notifications.push {'text': text, 'type': type}
-
     # $scope.needsAdmin('You need to be admin')
     $scope.needsAdmin = (orMessage) ->
       checkRole = (role) ->
-        if (role)
+        if role
           removeWatcher()
-          if (role != 'Administrator')
-            $scope.notify(orMessage, 'danger')
+          if role != 'Administrator'
+            growl.addErrorMessage(orMessage)
+
       removeWatcher = $scope.$watch 'currentUser.role', checkRole
       checkRole($scope.currentUser && $scope.currentUser.role)
 
+    $scope.formatUser = (user) ->
+      return if not user?
+
+      "#{user.firstName} #{user.lastName}"
+
     $scope.userProjectRoles =
-      productOwner: 'Product'
-      scrumMaster: 'Scrum'
-      teamMember: 'Team'
-    $scope.setRole = (role, store) ->
-      if (role == 'productOwner')
-        store.scrumMaster = false
-        store.teamMember = false
-      if (role == 'scrumMaster')
-        store.productOwner = false
-      if (role == 'teamMember')
-        store.productOwner = false
+      Developer: 'Team member'
+      ScrumMaster: 'Scrum master'
+      ProductOwner: 'Product owner'

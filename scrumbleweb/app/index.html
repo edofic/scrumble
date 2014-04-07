@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="scrumbleApp" ng-controller="RootCtrl">
+  <body ng-app="scrumbleApp" ng-controller="RootCtrl" ng-cloak>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -63,10 +63,6 @@
           <span ng-if="currentUser.activeProject">: {{ currentUser.projects[currentUser.activeProject].name }}</span>
         </a>
       </h3>
-
-      <div class="notifications">
-        <alert ng-repeat="notification in notifications" type="notification.type" close="closeNotification($index)">{{notification.text}}</alert>
-      </div>
     </div>
 
     <div class="content" ng-view=""></div>
@@ -74,6 +70,8 @@
     <div class="footer">
       <p>Made for the Faculty of Computer and Information Science, Ljubljana</p>
     </div>
+
+    <div growl></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -102,6 +100,8 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/angular-growl/build/angular-growl.js"></script>
+    <script src="bower_components/bootbox/bootbox.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -120,7 +120,8 @@
         <script src="scripts/controllers/sprint.js"></script>
         <script src="scripts/controllers/product.js"></script>
         <script src="scripts/services/project.js"></script>
-        <script src="scripts/directives/projectslist.js"></script>
+        <script src="scripts/controllers/home.js"></script>
+        <script src="scripts/services/bbox.js"></script>
         <!-- endbuild -->
 </body>
 </html>

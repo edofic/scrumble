@@ -1,9 +1,9 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'LoginCtrl', ($scope, $location, Auth) ->
+  .controller 'LoginCtrl', ($scope, $location, Auth, growl) ->
     $scope.login = ->
       Auth.login($scope.username, $scope.password).then ->
         $location.path('/')
       , (reason) ->
-        $scope.notify(reason.data.message, 'danger')
+        growl.addErrorMessage(reason.data.message)

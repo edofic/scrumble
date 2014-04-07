@@ -52,7 +52,7 @@ body {
 }
 
 
-.content .whiteStripe {
+.content .white-stripe {
     background-color: #fff;
 
     &.jumbotron {
@@ -74,6 +74,11 @@ form .ng-invalid {
     background-color: #f7f7f7;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 @import 'users';
 @import 'projects';
 @import 'daily';
+@import 'growl';
