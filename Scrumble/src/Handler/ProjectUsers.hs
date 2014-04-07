@@ -1,7 +1,6 @@
 module Handler.ProjectUsers where
 
-import Import hiding ((==.))
-import Database.Esqueleto hiding (Value)
+import Import
 import qualified Authorization as Auth
 
 getProjectUsersR :: ProjectId -> Handler Value
@@ -10,10 +9,7 @@ getProjectUsersR projectId = do
   members <- runDB getMembers
   return $ array $ (toJSON . entityVal) `fmap` members
   where
-  getMembers =
-    select $ from $ \member -> do
-      where_ (member ^. ProjectMemberProject ==. val projectId)
-      return member
+  getMembers = selectList [ProjectMemberProject ==. projectId] []
 
 
 postProjectUsersR :: ProjectId -> Handler ()
