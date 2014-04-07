@@ -6,6 +6,7 @@ module Handler.Sprints
 import Import hiding ((==.))
 import Database.Esqueleto hiding (Value)
 import Model.ProjectRole
+import Validation
 import qualified Authorization as Auth
 
 getSprintsR :: ProjectId -> Handler Value
@@ -21,6 +22,10 @@ postSprintsR :: ProjectId -> Handler Value
 postSprintsR projectId = do
   Auth.assertM $ Auth.roleOnProject ScrumMaster projectId
   newSprint :: Sprint <- requireJsonBodyWith [("project", toJSON projectId)]
+  runValidationHandler $ do
+    ("velocity", "Velocity should be non-negative") `validate` 
+      (sprintVelocity newSprint >= 0)
+    ("end", "End time should be after start time") `validate` 
+      (sprintEnd newSprint >= sprintStart newSprint)
   sprintId <- runDB $ insert newSprint
   return $ toJSON $ FlatEntity $ Entity sprintId newSprint
-

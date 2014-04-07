@@ -24,6 +24,7 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      Authorization
+                     Validation
                      Util
                      Handler.Home
                      Handler.Users
