@@ -36,3 +36,11 @@ angular.module('scrumbleApp')
       productOwner: 'Product'
       scrumMaster: 'Scrum'
       teamMember: 'Team'
+    $scope.setRole = (role, store) ->
+      if (role == 'productOwner')
+        store.scrumMaster = false
+        store.teamMember = false
+      if (role == 'scrumMaster')
+        store.productOwner = false
+      if (role == 'teamMember')
+        store.productOwner = false

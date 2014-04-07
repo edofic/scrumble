@@ -69,6 +69,11 @@ form .ng-invalid {
     margin: 2px;
 }
 
+.btn[btn-checkbox]:focus {
+    // otherwise it looks like its still active
+    background-color: #f7f7f7;
+}
+
 @import 'users';
 @import 'projects';
 @import 'daily';
