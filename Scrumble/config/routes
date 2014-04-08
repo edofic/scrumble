@@ -18,6 +18,8 @@
 /api/projects/#ProjectId/sprints/#SprintId  SprintR      GET 
 
 /api/projects/#ProjectId/users            ProjectUsersR   GET            POST
+/api/projects/#ProjectId/users/#UserId    ProjectUserR    GET      PUT   DELETE
+
 /api/login          AuthenticationR  POST
 /api/logout         AuthLogoutR      POST
 /api/user           AuthUserR        GET

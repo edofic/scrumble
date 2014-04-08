@@ -24,6 +24,7 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      Authorization
+                     Validation
                      Util
                      Handler.Home
                      Handler.Users
@@ -38,6 +39,7 @@ library
                      Handler.Sprint
                      Handler.Sprints
                      Handler.ProjectUsers
+                     Handler.ProjectUser
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
