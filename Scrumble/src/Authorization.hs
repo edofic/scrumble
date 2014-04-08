@@ -20,7 +20,7 @@ assertM :: (Entity User -> Handler Bool) -> Handler ()
 assertM f = do
   user <- currentUser
   ok <- f user
-  when (not ok) unauthorized
+  when (not ok && (not $ isAdmin user)) unauthorized
 
 assert :: (Entity User -> Bool) -> Handler ()
 assert = assertM . (return .)
