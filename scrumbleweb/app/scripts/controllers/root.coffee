@@ -4,9 +4,9 @@ angular.module('scrumbleApp')
   .controller 'RootCtrl', ($scope, $route, growl) ->
     # array keeps order
     $scope.navigationPaths = [
-      {path: '/daily', name: 'Daily'}
-      {path: '/sprint', name: 'Sprint'}
-      {path: '/product', name: 'Product'}
+      {path: '/daily', name: 'Daily Scrum'}
+      {path: '/sprint', name: 'Sprint Backlog'}
+      {path: '/product', name: 'Product Backlog'}
     ]
 
     $scope.route = $route
