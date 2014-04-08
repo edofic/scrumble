@@ -24,8 +24,15 @@ angular.module('scrumbleApp')
           $rootScope.currentUser = res.data
           Project.query (projects) ->
             $rootScope.currentUser.projects = _.indexBy projects, 'id'
-            if (projects.length > 0)
+
+            $rootScope.currentUser.activeProject = _.find projects, (x) -> x.id == (localStorage.activeProject >> 0)
+
+            if $rootScope.currentUser.activeProject?
+              $rootScope.currentUser.activeProject = $rootScope.currentUser.activeProject.id
+
+            if not $rootScope.currentUser.activeProject? and projects.length > 0
               $rootScope.currentUser.activeProject = projects[0].id
+              localStorage.activeProject = $rootScope.currentUser.activeProject
 
             defer.resolve()
         , (reason) ->

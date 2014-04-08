@@ -7,3 +7,4 @@ angular.module('scrumbleApp')
 
     $scope.chooseProject = (project) ->
       $rootScope.currentUser.activeProject = project.id
+      localStorage.activeProject = project.id
