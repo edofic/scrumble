@@ -20,11 +20,12 @@ validateM err pm = do
 runValidation :: (Eq w, Functor m, Monoid w) => WriterT w m a -> m (Maybe w)
 runValidation = fmap (mfilter (/= mempty) . Just . snd) . runWriterT
 
-runValidationHandler :: (Eq a, MonadHandler m, ToJSON a) => WriterT [(Text, a)] m t -> m ()
-runValidationHandler validation = do
-  errs <- merrs
-  maybe (return ()) sendErrors errs
+runValidationHandler :: (MonadHandler m) => WriterT [(Text, Text)] m t -> m t
+runValidationHandler validation = do 
+  (t, errs) <- runWriterT validation
+  if errs /= mempty 
+    then sendErrors errs
+    else return t
   where
-    merrs = runValidation validation
     sendErrors = sendResponseStatus badRequest400 . render
     render = object . map (\(k,m) -> (k, toJSON m)) 
