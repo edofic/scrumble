@@ -38,8 +38,10 @@ angular.module('scrumbleApp')
       ScrumMaster: 'Scrum master'
       ProductOwner: 'Product owner'
 
-    $scope.storyPriorities = $scope.$root.storyPriorities =
-      NotThisTime: 'Not this time'
-      CouldHave: 'Could have'
-      ShouldHave: 'Should have'
-      MustHave: 'Must have'
+    $scope.$root.storyPrioritiesOrdered = [
+      {value: 'MustHave', label: 'Must have'}
+      {value: 'ShouldHave', label: 'Should have'}
+      {value: 'CouldHave', label: 'Could have'}
+      {value: 'NotThisTime', label: 'Not this time'}
+    ]
+    $scope.$root.storyPriorities = _.indexBy($scope.$root.storyPrioritiesOrdered, 'value')
