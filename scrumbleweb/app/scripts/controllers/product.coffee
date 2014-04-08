@@ -44,7 +44,7 @@ angular.module('scrumbleApp')
 
         growl.addSuccessMessage("Story has been added.")
       , (reason) ->
-        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while adding story"))
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while adding story"))
 
     $scope.cancel = ->
       $modalInstance.dismiss()
