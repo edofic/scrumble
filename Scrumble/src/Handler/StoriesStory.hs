@@ -1,8 +1,4 @@
-module Handler.StoriesStory 
-(getStoriesStoryR
-,putStoriesStoryR
-,deleteStoriesStoryR
-,userStoryValidations) where
+module Handler.StoriesStory where
 
 import Import  hiding ((.||.))
 import qualified Authorization as Auth
