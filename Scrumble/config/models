@@ -32,7 +32,7 @@ Story json
     tests          [Text]
     priority       StoryPriority
     businessValue  Int64
-    UniqueStoryTitle title
+    UniqueStoryTitle project title
     deriving Eq Show
 
 Task json
