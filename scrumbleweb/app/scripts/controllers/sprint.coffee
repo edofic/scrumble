@@ -39,7 +39,7 @@ angular.module('scrumbleApp')
         humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
         growl.addSuccessMessage("Added sprint from #{humanStart} to #{humanEnd}")
       , (reason) ->
-        growl.addErrorMessage(reason.data.message)
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while creating sprint"))
 
     $scope.initNewSprint = () ->
       $scope.sprint = new Sprint()
@@ -78,10 +78,13 @@ angular.module('scrumbleApp')
       $scope.$watch 'sprint.end', updateSprintDays
       $scope.$watch 'sprint.sprintDays', updateSprintEnd
       $scope.$watch 'sprint.sprintStart', updateSprintEnd
-      $scope.$watch 'sprint.velocity', updateWorkdayVelocity
-      $scope.$watch 'sprint.sprintDays', updateWorkdayVelocity
-      $scope.$watch 'sprint.workdayVelocity', updateVelocity
-      $scope.$watch 'sprint.sprintDays', updateVelocity
+      $scope.workdayVelocityEnable = false
+      if ($scope.workdayVelocityEnable)
+        $scope.$watch 'sprint.velocity', updateWorkdayVelocity
+        $scope.$watch 'sprint.sprintDays', updateWorkdayVelocity
+        $scope.$watch 'sprint.workdayVelocity', updateVelocity
+        $scope.$watch 'sprint.sprintDays', updateVelocity
+
     calculatingFields()
 
 

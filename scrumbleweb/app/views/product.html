@@ -13,7 +13,7 @@
     <div class="panel panel-default story" ng-repeat="story in stories">
       <div class="panel-heading">
         <h3 class="panel-title">{{ story.title }}</h3>
-        <p>Priority: <strong>{{ storyPriorities[story.priority] }}</strong> | Business value: <strong>{{ story.businessValue }}</strong></p>
+        <p>Priority: <strong>{{ storyPriorities[story.priority].label }}</strong> | Business value: <strong>{{ story.businessValue }}</strong></p>
       </div>
       <div class="panel-body">
         <p class="description">{{ story.description }}</p>

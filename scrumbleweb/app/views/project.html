@@ -23,12 +23,12 @@
             </span>
 
             <span class="btn-group col-sm-6" ng-hide="user.editing">
-              {{ userProjectRoles[user.role] }}
+              {{ userProjectRoles[user.role].label }}
             </span>
 
             <span class="btn-group col-sm-6" ng-show="user.editing">
-              <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="user.role" btn-radio="role" tabindex="2">
-                {{ roleName }}
+              <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="user.role" btn-radio="role.value" tabindex="2">
+                {{ role.label }}
               </button>
             </span>
           </div>
@@ -38,8 +38,8 @@
 
         <hr ng-show="users.length">
 
-        <div>
-          <button type="button" class="btn btn-default pull-right" ng-click="addUser()" tabindex="5">Add</button>
+        <form ng-submit="addUser()">
+          <button type="submit" class="btn btn-default pull-right" tabindex="5">Add</button>
 
           <div class="row">
             <span class="input-group col-sm-3">
@@ -48,12 +48,12 @@
             </span>
 
             <span class="btn-group col-sm-6">
-              <button type="button" class="btn btn-default" ng-repeat="(role, roleName) in userProjectRoles" ng-model="newUser.role" btn-radio="role" tabindex="2">
-                {{ roleName }}
+              <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="newUser.role" btn-radio="role.value" tabindex="2">
+                {{ role.label }}
               </button>
             </span>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

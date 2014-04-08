@@ -33,13 +33,23 @@ angular.module('scrumbleApp')
 
       "#{user.firstName} #{user.lastName}"
 
-    $scope.userProjectRoles =
-      Developer: 'Team member'
-      ScrumMaster: 'Scrum master'
-      ProductOwner: 'Product owner'
+    $scope.backupError = (errorMessage, backupErrorMessage) ->
+      if errorMessage? && errorMessage != 'Internal Server Error'
+        errorMessage
+      else
+        backupErrorMessage
 
-    $scope.storyPriorities = $scope.$root.storyPriorities =
-      NotThisTime: 'Not this time'
-      CouldHave: 'Could have'
-      ShouldHave: 'Should have'
-      MustHave: 'Must have'
+    $scope.userProjectRolesOrdered = [
+      {value: 'Developer', label: 'Team member'}
+      {value: 'ScrumMaster', label: 'Scrum master'}
+      {value: 'ProductOwner', label: 'Product owner'}
+    ]
+    $scope.userProjectRoles = _.indexBy($scope.userProjectRolesOrdered, 'value')
+
+    $scope.$root.storyPrioritiesOrdered = [
+      {value: 'MustHave', label: 'Must have'}
+      {value: 'ShouldHave', label: 'Should have'}
+      {value: 'CouldHave', label: 'Could have'}
+      {value: 'NotThisTime', label: 'Not this time'}
+    ]
+    $scope.$root.storyPriorities = _.indexBy($scope.$root.storyPrioritiesOrdered, 'value')

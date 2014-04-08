@@ -14,6 +14,10 @@ angular.module('scrumbleApp')
           allUsersMap = _.zipObject(_.map(allUsers, (u) -> [u.id, u]))
           _.map users, (user) ->
             user.user = allUsersMap[user.user]
+        , (reason) ->
+          growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while getting users"))
+      , (reason) ->
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while getting users"))
 
     $scope.rename = ->
       bbox.prompt 'New project name:', (newName) ->
@@ -26,7 +30,7 @@ angular.module('scrumbleApp')
 
           growl.addSuccessMessage("Project #{data.name} has been updated")
         , (reason) ->
-          growl.addErrorMessage(reason.data.message)
+          growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while renaming project"))
 
     $scope.editUser = (user) ->
       user.$copy = angular.copy(user)
@@ -45,12 +49,16 @@ angular.module('scrumbleApp')
       u.$update projectId: $scope.project.id, userId: user.user.id, (res) ->
         $scope.initNewUser()
         $scope.load()
+      , (reason) ->
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while saving user"))
 
     $scope.removeUser = (user) ->
       bbox.confirm "Are you sure you want to remove user #{$scope.formatUser(user.user)} from project?", (ok) ->
         if ok?
           user.$delete projectId: $scope.project.id, userId: user.user.id, (res) ->
             $scope.load()
+          , (reason) ->
+            growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while removing user"))
 
     $scope.addUser = ->
       u = new ProjectUser
@@ -61,6 +69,8 @@ angular.module('scrumbleApp')
       u.$save projectId: $scope.project.id, (res) ->
         $scope.initNewUser()
         $scope.load()
+      , (reason) ->
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while adding user"))
 
     $scope.initNewUser = ->
       $scope.newUser =
