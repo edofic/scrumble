@@ -29,6 +29,6 @@ postProjectsR = do
   project <- requireJsonBody
   projectIdMyb <- runDB $ insertUnique project
   runValidationHandler $ do
-    ("name", "Project with supplied name allready exists") `validate`
+    ("name", "Project with supplied name already exists") `validate`
       (isJust projectIdMyb)
   getProjectsProjectR $ fromJust projectIdMyb
