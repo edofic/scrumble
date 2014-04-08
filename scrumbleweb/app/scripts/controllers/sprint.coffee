@@ -33,7 +33,10 @@ angular.module('scrumbleApp')
     $scope.createSprint = (sprint, invalid) ->
       if (invalid)
         return
-      sprint.$save {projectId: $scope.currentUser.activeProject}, (data) ->
+      sprintCopy = angular.copy(sprint)
+      sprintCopy.start = sprintCopy.start.getTime()
+      sprintCopy.end = sprintCopy.end.getTime()
+      sprintCopy.$save {projectId: $scope.currentUser.activeProject}, (data) ->
         $scope.sprints.push(data)
         $scope.initNewSprint()
         humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
