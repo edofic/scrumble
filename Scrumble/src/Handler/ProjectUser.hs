@@ -1,7 +1,10 @@
 module Handler.ProjectUser where
 
 import Import
+import Data.List (nub)
+import Validation
 import qualified Authorization as Auth
+import Handler.ProjectUsers (userRolesValidation)
 
 getProjectUserR :: ProjectId -> UserId -> Handler Value
 getProjectUserR projectId userId = do
@@ -15,7 +18,9 @@ putProjectUserR projectId userId = do
   Auth.assert Auth.isAdmin
   maybeMember <- runDB $ selectFirst [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId] []
   member <- maybe notFound return maybeMember
-  nmember :: ProjectMember <- requireJsonBody
+  nmemberRaw :: ProjectMember <- requireJsonBodyWith [("project", toJSON projectId), ("user", toJSON userId)]
+  let nmember = nmemberRaw { projectMemberRoles = nub $ projectMemberRoles nmemberRaw}
+  runValidationHandler $ userRolesValidation $ projectMemberRoles nmember
   runDB $ replace (entityKey member) nmember
 
 

@@ -1,18 +1,25 @@
+{-# LANGUAGE RankNTypes #-}
+
 module Validation 
 ( validate
 , validateM
 , runValidation
 , runValidationHandler
+, Validation
+, ValidationField
 )where
 
 import Import
 import Control.Monad.Writer
-import Network.HTTP.Types.Status (badRequest400)
+import Network.HTTP.Types.Status (badRequest400) 
 
-validate :: MonadWriter [(Text, Text)] m => (Text, Text) -> Bool -> m ()
+type ValidationField = (Text, Text)
+type Validation m a = MonadWriter [ValidationField] m => a -> m ()
+
+validate :: ValidationField -> Validation m Bool
 validate err p = when (not p) $ tell [err]
 
-validateM :: MonadWriter [(Text, Text)] m => (Text, Text) -> m Bool -> m ()
+validateM :: ValidationField -> Validation m (m Bool)
 validateM err pm = do
   p <- pm
   when (not p) $ tell [err]

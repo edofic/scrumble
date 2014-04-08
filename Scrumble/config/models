@@ -42,6 +42,6 @@ Task json
 ProjectMember json
     user    UserId
     project ProjectId
-    role    ProjectRole
+    roles   [ProjectRole]
     UniqueMember user project
     deriving Eq Show

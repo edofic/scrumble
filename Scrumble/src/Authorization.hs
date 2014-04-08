@@ -6,6 +6,7 @@ import Yesod.Auth (maybeAuth)
 import Network.HTTP.Types.Status (unauthorized401)
 import Model.Role
 import Data.Maybe (isJust)
+import Data.List (elem)
 import Model.ProjectRole
 
 unauthorized :: MonadHandler m => m a
@@ -38,9 +39,8 @@ memberOfProject projectId (Entity userId _) =
 roleOnProject :: ProjectRole -> ProjectId -> Entity User -> Handler Bool
 roleOnProject role projectId (Entity userId _) = 
   fmap isOk $ runDB $ getBy $ UniqueMember userId projectId where
-    isOk (Just (Entity _ member)) = projectMemberRole member == role
+    isOk (Just (Entity _ member)) = role `elem` projectMemberRoles member
     isOk _ = False
-
 
 handlerBinComb :: (Bool -> Bool -> Bool) -> (Entity User -> Handler Bool) -> (Entity User -> Handler Bool) -> Entity User -> Handler Bool
 handlerBinComb op h1 h2 = \user -> do

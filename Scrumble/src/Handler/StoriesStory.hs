@@ -16,7 +16,8 @@ getStoriesStoryR projectId storyId = do
 assertionOwnerMaster :: ProjectId -> (Entity User -> Handler Bool)
 assertionOwnerMaster projectId = (Auth.roleOnProject ProductOwner projectId) .||. (Auth.roleOnProject ScrumMaster projectId)
 
-userStoryValidations story = do
+userStoryValidations :: Validation m Story
+userStoryValidations story = 
   ("businessValue", "Business value should be non-negative") `validate`
     (storyBusinessValue story >= 0)
 
