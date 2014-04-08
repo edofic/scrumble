@@ -36,6 +36,7 @@ library
                      Handler.AuthLogout
                      Handler.AuthUser
                      Handler.Stories
+                     Handler.StoriesStory
                      Handler.Sprint
                      Handler.Sprints
                      Handler.ProjectUsers
