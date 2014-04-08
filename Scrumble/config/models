@@ -26,11 +26,12 @@ Sprint json
     deriving Eq Show
 
 Story json
-    project     ProjectId
-    title       Text
-    description Text
-    tests       [Text]
-    priority    StoryPriority
+    project        ProjectId
+    title          Text
+    description    Text
+    tests          [Text]
+    priority       StoryPriority
+    businessValue  Int64
     UniqueStoryTitle title
     deriving Eq Show
 
