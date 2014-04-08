@@ -48,7 +48,7 @@
               </span>
               <input type="number" class="form-control" placeholder="Sprint days" ng-model="sprint.sprintDays" ng-pattern="/^\d+$/" min="1" tabindex="2"></input>
             </span>
-            <span class="col-sm-3 col-xs-7 input-group has-success">
+            <span class="col-sm-3 col-xs-7 input-group has-success" ng-if="workdayVelocityEnable">
               <span class="input-group-addon">
                 Velocity / workday
               </span>

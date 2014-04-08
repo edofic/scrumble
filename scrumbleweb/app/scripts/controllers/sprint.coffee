@@ -78,10 +78,13 @@ angular.module('scrumbleApp')
       $scope.$watch 'sprint.end', updateSprintDays
       $scope.$watch 'sprint.sprintDays', updateSprintEnd
       $scope.$watch 'sprint.sprintStart', updateSprintEnd
-      $scope.$watch 'sprint.velocity', updateWorkdayVelocity
-      $scope.$watch 'sprint.sprintDays', updateWorkdayVelocity
-      $scope.$watch 'sprint.workdayVelocity', updateVelocity
-      $scope.$watch 'sprint.sprintDays', updateVelocity
+      $scope.workdayVelocityEnable = false
+      if ($scope.workdayVelocityEnable)
+        $scope.$watch 'sprint.velocity', updateWorkdayVelocity
+        $scope.$watch 'sprint.sprintDays', updateWorkdayVelocity
+        $scope.$watch 'sprint.workdayVelocity', updateVelocity
+        $scope.$watch 'sprint.sprintDays', updateVelocity
+
     calculatingFields()
 
 
