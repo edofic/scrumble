@@ -5,7 +5,7 @@ import qualified Authorization as Auth
 
 getProjectUserR :: ProjectId -> UserId -> Handler Value
 getProjectUserR projectId userId = do
-  Auth.assert Auth.isAdmin
+  Auth.assertM $ Auth.memberOfProject projectId
   role <- runDB $ selectFirst [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId] []
   maybe notFound (return . toJSON . entityVal) role
 

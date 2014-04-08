@@ -5,7 +5,7 @@ import qualified Authorization as Auth
 
 getProjectUsersR :: ProjectId -> Handler Value
 getProjectUsersR projectId = do
-  Auth.assert Auth.isAdmin 
+  Auth.assertM $ Auth.memberOfProject projectId
   members <- runDB getMembers
   return $ array $ (toJSON . entityVal) `fmap` members
   where
