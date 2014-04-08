@@ -33,10 +33,12 @@ angular.module('scrumbleApp')
 
       "#{user.firstName} #{user.lastName}"
 
-    $scope.userProjectRoles =
-      Developer: 'Team member'
-      ScrumMaster: 'Scrum master'
-      ProductOwner: 'Product owner'
+    $scope.userProjectRolesOrdered = [
+      {value: 'Developer', label: 'Team member'}
+      {value: 'ScrumMaster', label: 'Scrum master'}
+      {value: 'ProductOwner', label: 'Product owner'}
+    ]
+    $scope.userProjectRoles = _.indexBy($scope.userProjectRolesOrdered, 'value')
 
     $scope.$root.storyPrioritiesOrdered = [
       {value: 'MustHave', label: 'Must have'}
