@@ -29,7 +29,7 @@ angular.module('scrumbleApp')
         $scope.initNewUser()
         growl.addSuccessMessage("Added user #{data.username}")
       , (reason) ->
-        growl.addErrorMessage(reason.data.message || "An error occured while saving user")
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while saving user"))
 
   .directive 'sameAs', ->
     require: 'ngModel',

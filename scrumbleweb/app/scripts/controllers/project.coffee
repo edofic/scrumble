@@ -15,9 +15,9 @@ angular.module('scrumbleApp')
           _.map users, (user) ->
             user.user = allUsersMap[user.user]
         , (reason) ->
-          growl.addErrorMessage(reason.data.message || "An error occured while getting users")
+          growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while getting users"))
       , (reason) ->
-        growl.addErrorMessage(reason.data.message || "An error occured while getting users")
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while getting users"))
 
     $scope.rename = ->
       bbox.prompt 'New project name:', (newName) ->
@@ -30,7 +30,7 @@ angular.module('scrumbleApp')
 
           growl.addSuccessMessage("Project #{data.name} has been updated")
         , (reason) ->
-          growl.addErrorMessage(reason.data.message || "An error occured while renaming project")
+          growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while renaming project"))
 
     $scope.editUser = (user) ->
       user.$copy = angular.copy(user)
@@ -50,7 +50,7 @@ angular.module('scrumbleApp')
         $scope.initNewUser()
         $scope.load()
       , (reason) ->
-        growl.addErrorMessage(reason.data.message || "An error occured while saving user")
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while saving user"))
 
     $scope.removeUser = (user) ->
       bbox.confirm "Are you sure you want to remove user #{$scope.formatUser(user.user)} from project?", (ok) ->
@@ -58,7 +58,7 @@ angular.module('scrumbleApp')
           user.$delete projectId: $scope.project.id, userId: user.user.id, (res) ->
             $scope.load()
           , (reason) ->
-            growl.addErrorMessage(reason.data.message || "An error occured while removing user")
+            growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while removing user"))
 
     $scope.addUser = ->
       u = new ProjectUser
@@ -70,7 +70,7 @@ angular.module('scrumbleApp')
         $scope.initNewUser()
         $scope.load()
       , (reason) ->
-        growl.addErrorMessage(reason.data.message || "An error occured while adding user")
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while adding user"))
 
     $scope.initNewUser = ->
       $scope.newUser =

@@ -33,6 +33,12 @@ angular.module('scrumbleApp')
 
       "#{user.firstName} #{user.lastName}"
 
+    $scope.backupError = (errorMessage, backupErrorMessage) ->
+      if errorMessage? && errorMessage != 'Internal Server Error'
+        errorMessage
+      else
+        backupErrorMessage
+
     $scope.userProjectRolesOrdered = [
       {value: 'Developer', label: 'Team member'}
       {value: 'ScrumMaster', label: 'Scrum master'}

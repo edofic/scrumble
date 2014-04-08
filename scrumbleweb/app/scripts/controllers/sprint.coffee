@@ -39,7 +39,7 @@ angular.module('scrumbleApp')
         humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
         growl.addSuccessMessage("Added sprint from #{humanStart} to #{humanEnd}")
       , (reason) ->
-        growl.addErrorMessage(reason.data.message || "An error occured while creating sprint")
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while creating sprint"))
 
     $scope.initNewSprint = () ->
       $scope.sprint = new Sprint()
