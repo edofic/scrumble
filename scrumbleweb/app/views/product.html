@@ -18,7 +18,7 @@
       <div class="panel-body">
         <p class="description">{{ story.description }}</p>
         <ul class="tests">
-          <li ng-repeat="test in story.tests"># {{ test }}</li>
+          <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
         </ul>
       </div>
     </div>
