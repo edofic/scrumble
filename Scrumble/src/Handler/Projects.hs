@@ -4,6 +4,8 @@ import Import hiding ((==.))
 import Handler.ProjectsProject (getProjectsProjectR)
 import Database.Esqueleto hiding (Value)
 import qualified Authorization as Auth
+import Data.Maybe (isJust, fromJust)
+import Validation
 
 getProjectsR :: Handler Value
 getProjectsR = do
@@ -25,5 +27,8 @@ postProjectsR :: Handler Value
 postProjectsR = do
   Auth.assert Auth.isAdmin
   project <- requireJsonBody
-  id <- runDB $ insert project
-  getProjectsProjectR id
+  projectIdMyb <- runDB $ insertUnique project
+  runValidationHandler $ do
+    ("name", "Project with supplied name allready exists") `validate`
+      (isJust projectIdMyb)
+  getProjectsProjectR $ fromJust projectIdMyb
