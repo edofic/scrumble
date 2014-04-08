@@ -1,0 +1,44 @@
+<form class="product-story-add-modal" ng-submit="addStory()">
+  <div class="modal-header">
+    <h3>Add new story</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Story name:</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" ng-model="story.title">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Description:</label>
+        <div class="col-sm-9">
+          <textarea class="form-control" rows="3" ng-model="story.description"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Acceptance tests:</label>
+        <div class="col-sm-9">
+          <p ng-repeat="test in story.tests"><input type="text" class="form-control" ng-model="test.test"></p>
+          <a href="" ng-click="addTest()">add another</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Priority:</label>
+        <div class="col-sm-9">
+          <select class="form-control" ng-model="story.priority" ng-options="key as value for (key, value) in $root.storyPriorities"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Business value:</label>
+        <div class="col-sm-9">
+          <input type="number" min="0" class="form-control" ng-model="story.businessValue">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Add story</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

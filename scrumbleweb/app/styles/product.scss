@@ -1,0 +1,39 @@
+@import 'sass-bootstrap/lib/bootstrap';
+
+.product {
+  .new-story-btn {
+    margin-top: 20px;
+  }
+  
+  .story {
+    .panel-heading {
+      p {
+        margin: 2px 0 0;
+        font-size: 12px;
+      }
+    }
+
+    .description {
+      margin-bottom: 7px;
+    }
+
+    .tests {
+      margin-bottom: 0;
+      padding: 0;
+
+      li {
+        list-style: none;
+        color: $brand-primary;
+      }
+    }
+  }
+
+}
+
+.product-story-add-modal {
+  .modal-header {
+    h3 {
+      margin: 0;
+    }
+  }
+}

@@ -1,1 +1,28 @@
-<p>This is the product view.</p>
+<div class="product white-stripe">
+  <div class="container">
+    <div class="pull-right" ng-show="canEdit">
+      <button class="btn btn-primary pull-right new-story-btn" ng-click="addStory()">Add new story</button>
+    </div>
+
+    <h2>Product backlog</h2>
+
+    <br>
+
+    <p ng-hide="stories.length">No stories yet.</p>
+
+    <div class="panel panel-default story" ng-repeat="story in stories">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ story.title }}</h3>
+        <p>Priority: <strong>{{ storyPriorities[story.priority] }}</strong> | Business value: <strong>{{ story.businessValue }}</strong></p>
+      </div>
+      <div class="panel-body">
+        <p class="description">{{ story.description }}</p>
+        <ul class="tests">
+          <li ng-repeat="test in story.tests"># {{ test }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <br>
+  </div>
+</div>

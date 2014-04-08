@@ -37,3 +37,9 @@ angular.module('scrumbleApp')
       Developer: 'Team member'
       ScrumMaster: 'Scrum master'
       ProductOwner: 'Product owner'
+
+    $scope.storyPriorities = $scope.$root.storyPriorities =
+      NotThisTime: 'Not this time'
+      CouldHave: 'Could have'
+      ShouldHave: 'Should have'
+      MustHave: 'Must have'
