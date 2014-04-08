@@ -20,7 +20,7 @@ assertM :: (Entity User -> Handler Bool) -> Handler ()
 assertM f = do
   user <- currentUser
   ok <- f user
-  when (not ok) unauthorized
+  when (not ok && (not $ isAdmin user)) unauthorized
 
 assert :: (Entity User -> Bool) -> Handler ()
 assert = assertM . (return .)
@@ -40,3 +40,14 @@ roleOnProject role projectId (Entity userId _) =
   fmap isOk $ runDB $ getBy $ UniqueMember userId projectId where
     isOk (Just (Entity _ member)) = projectMemberRole member == role
     isOk _ = False
+
+
+handlerBinComb :: (Bool -> Bool -> Bool) -> (Entity User -> Handler Bool) -> (Entity User -> Handler Bool) -> Entity User -> Handler Bool
+handlerBinComb op h1 h2 = \user -> do
+  b1 <- h1 user
+  b2 <- h2 user
+  return $ op b1 b2
+
+(.||.) = handlerBinComb (||)
+(.&&.) = handlerBinComb (&&)
+

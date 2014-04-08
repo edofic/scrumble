@@ -12,7 +12,9 @@
 /api/users/#UserId/password  UsersUserPasswordR   POST
 /api/projects                ProjectsR            GET   POST
 /api/projects/#ProjectId     ProjectsProjectR     GET   PUT   DELETE 
-/api/projects/#ProjectId/stories     StoriesR     GET   POST
+
+/api/projects/#ProjectId/stories                StoriesR            GET     POST
+/api/projects/#ProjectId/stories/#StoryId       StoriesStoryR       GET     PUT      DELETE
 
 /api/projects/#ProjectId/sprints            SprintsR     GET   POST
 /api/projects/#ProjectId/sprints/#SprintId  SprintR      GET 

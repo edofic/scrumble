@@ -20,6 +20,6 @@ angular.module('scrumbleApp')
 
           growl.addSuccessMessage("Added project #{data.name}")
         , (reason) ->
-          growl.addErrorMessage(reason.data.message)
+          growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while creating project"))
 
     $scope.load()

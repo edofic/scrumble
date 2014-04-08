@@ -42,6 +42,7 @@ import Handler.AuthLogout
 import Handler.UsersUserPassword
 import Handler.AuthUser
 import Handler.Stories
+import Handler.StoriesStory
 import Handler.Sprint
 import Handler.Sprints
 import Model.Role

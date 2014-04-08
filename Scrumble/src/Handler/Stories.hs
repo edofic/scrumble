@@ -2,6 +2,8 @@ module Handler.Stories (getStoriesR, postStoriesR) where
 
 import Import
 import qualified Authorization as Auth
+import Validation
+import Handler.StoriesStory (userStoryValidations, assertionOwnerMaster)
 
 getStoriesR :: ProjectId -> Handler Value
 getStoriesR projectId = do
@@ -11,7 +13,8 @@ getStoriesR projectId = do
 
 postStoriesR :: ProjectId -> Handler String
 postStoriesR projectId = do
-  Auth.assertM $ Auth.memberOfProject projectId
+  Auth.assertM $ assertionOwnerMaster projectId
   story :: Story <- requireJsonBodyWith [("project", toJSON projectId)]
+  runValidationHandler $ userStoryValidations story
   storyId <- runDB $ insert story
   return $ show storyId

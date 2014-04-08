@@ -6,4 +6,4 @@ angular.module('scrumbleApp')
       Auth.login($scope.username, $scope.password).then ->
         $location.path('/')
       , (reason) ->
-        growl.addErrorMessage(reason.data.message)
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while logging in"))

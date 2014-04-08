@@ -1,9 +1,12 @@
 module Handler.ProjectsProject where
 
+import qualified Import as Imp
 import Import hiding ((==.))
-import Database.Esqueleto hiding (Value, delete)
+import Database.Esqueleto hiding (Value, delete, count)
 import Data.Maybe (listToMaybe)
 import qualified Authorization as Auth
+import Validation 
+import Control.Monad (when)
 
 getProjectsProjectR :: ProjectId -> Handler Value
 getProjectsProjectR projectId = do
@@ -39,8 +42,8 @@ putProjectsProjectR :: ProjectId -> Handler ()
 putProjectsProjectR projectId =  do
   Auth.assert Auth.isAdmin
   updated :: Project <- requireJsonBody
-  runDB $ replace projectId updated
-                             
-                             
-                             
+  runDB $ runValidationHandler $ do 
+    existing <- count [ProjectName Imp.==. (projectName updated)]
+    () <- ("name", "Project with supplied name already exists") `validate` (existing == 0)
+    when (existing == 0) $ replace projectId updated
                              
