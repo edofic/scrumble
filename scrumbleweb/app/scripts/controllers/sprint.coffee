@@ -8,6 +8,10 @@ angular.module('scrumbleApp')
       'show-weeks': false
 
     $scope.today = Date.now()
+    $scope.addDays = (date, num) ->
+      ret = new Date(date)
+      ret.setDate(ret.getDate()+num)
+      ret.getTime()
 
     updateFromActiveProject = ->
       user = $scope.currentUser
@@ -21,14 +25,6 @@ angular.module('scrumbleApp')
       $scope.canCreateSprint = isAdmin || isScrum
 
     $scope.$watch 'currentUser.activeProject', updateFromActiveProject
-
-    ### Wanted from API:
-    [{
-      start: 1393662209873
-      end: 1396662209873   # end > start
-      velocity: 20         # integer..
-    }]
-    ###
 
     $scope.createSprint = (sprint, invalid) ->
       if (invalid)
