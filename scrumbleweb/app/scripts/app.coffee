@@ -9,13 +9,14 @@ angular.module('scrumbleApp', [
   'angular-growl'
 ])
   .config ($routeProvider, $httpProvider) ->
-    currentUser = ($rootScope, $location, $q) ->
+    currentUser = ['$rootScope', '$location', '$q', ($rootScope, $location, $q) ->
       $rootScope.currentUserPromise.then ->
         if not $rootScope.currentUser
           $location.url('/login')
           $q.defer().promise
         else
           $rootScope.currentUser
+    ]
 
     loginRequired =
       currentUser: currentUser
