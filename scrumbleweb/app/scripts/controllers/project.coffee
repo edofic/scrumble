@@ -6,6 +6,10 @@ angular.module('scrumbleApp')
 
     $scope.canEdit = -> $scope.isAdmin()
 
+    $scope.projectHasRole =
+      'ProductOwner': false
+      'ScrumMaster': false
+
     $scope.load = ->
       $scope.allUsers = User.query()
       $scope.project = Project.get projectId: $routeParams.projectId
@@ -14,6 +18,10 @@ angular.module('scrumbleApp')
           allUsersMap = _.zipObject(_.map(allUsers, (u) -> [u.id, u]))
           _.map users, (user) ->
             user.user = allUsersMap[user.user]
+
+          $scope.projectHasRole['ScrumMaster'] = _.find(users, {roles: ['ScrumMaster']})?
+          $scope.projectHasRole['ProductOwner'] = _.find(users, {roles: ['ProductOwner']})?
+
         , (reason) ->
           growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while getting users"))
       , (reason) ->
@@ -33,8 +41,11 @@ angular.module('scrumbleApp')
         , (reason) ->
           growl.addErrorMessage($scope.backupError(reason.data.message || reason.data.name, "An error occured while renaming project"))
 
+
     $scope.editUser = (user) ->
       user.$copy = angular.copy(user)
+      trueArr = _.map _.range(user.roles.length), -> true
+      user.roles = _.zipObject(user.roles, trueArr)
       user.editing = yes
 
     $scope.cancelEditUser = (user) ->
@@ -44,7 +55,7 @@ angular.module('scrumbleApp')
     $scope.saveUser = (user) ->
       u = new ProjectUser
       u.user = user.user.id
-      u.role = user.role
+      u.roles = _.keys(_.pick(user.roles, (value) -> value ))
       u.project = $scope.project.id # WHY???
 
       u.$update projectId: $scope.project.id, userId: user.user.id, (res) ->
@@ -67,7 +78,7 @@ angular.module('scrumbleApp')
         return
       u = new ProjectUser
       u.user = $scope.newUser.user.id
-      u.role = $scope.newUser.role
+      u.roles = _.keys(_.pick($scope.newUser.roles, (value) -> value ))
       u.project = $scope.project.id # WHY???
 
       u.$save projectId: $scope.project.id, (res) ->
@@ -80,7 +91,23 @@ angular.module('scrumbleApp')
 
     $scope.initNewUser = ->
       $scope.newUser =
-        role: 'Developer'
+        roles: {'Developer': true}
+
+
+    $scope.rolesToLabels = (roles) ->
+      _.map roles, (role) ->
+        $scope.userProjectRoles[role].label
+
+    $scope.rolesToRules = (user, changedRole) ->
+      if user.roles['ScrumMaster'] && user.roles['ProductOwner']
+        if changedRole == 'ScrumMaster'
+          user.roles['ProductOwner'] = false
+        else
+          user.roles['ScrumMaster'] = false
+
+    $scope.projectRoleAllowed = (user, changeableRole) ->
+      user.roles[changeableRole] || !$scope.projectHasRole[changeableRole]
+
 
     $scope.load()
     $scope.initNewUser()

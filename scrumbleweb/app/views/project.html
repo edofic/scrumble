@@ -23,11 +23,11 @@
             </span>
 
             <span class="btn-group col-sm-6" ng-hide="user.editing">
-              {{ userProjectRoles[user.role].label }}
+              {{ rolesToLabels(user.roles) }}
             </span>
 
             <span class="btn-group col-sm-6" ng-show="user.editing">
-              <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="user.role" btn-radio="role.value" tabindex="2">
+              <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="user.roles[role.value]" tabindex="2" btn-checkbox ng-change="rolesToRules(user, role.value)" ng-disabled="!projectRoleAllowed(user, role.value)">
                 {{ role.label }}
               </button>
             </span>
@@ -48,7 +48,7 @@
             </span>
 
             <span class="btn-group col-sm-6">
-              <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="newUser.role" btn-radio="role.value" tabindex="2">
+              <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="newUser.roles[role.value]" tabindex="2" btn-checkbox ng-change="rolesToRules(newUser, role.value)" ng-disabled="!projectRoleAllowed(newUser, role.value)">
                 {{ role.label }}
               </button>
             </span>
