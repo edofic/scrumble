@@ -6,6 +6,10 @@ angular.module('scrumbleApp')
 
     $scope.canEdit = -> $scope.isAdmin()
 
+    $scope.projectHasRole =
+      'ProductOwner': false
+      'ScrumMaster': false
+
     $scope.load = ->
       $scope.allUsers = User.query()
       $scope.project = Project.get projectId: $routeParams.projectId
@@ -14,6 +18,10 @@ angular.module('scrumbleApp')
           allUsersMap = _.zipObject(_.map(allUsers, (u) -> [u.id, u]))
           _.map users, (user) ->
             user.user = allUsersMap[user.user]
+
+          $scope.projectHasRole['ScrumMaster'] = _.find(users, {roles: ['ScrumMaster']})?
+          $scope.projectHasRole['ProductOwner'] = _.find(users, {roles: ['ProductOwner']})?
+
         , (reason) ->
           growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while getting users"))
       , (reason) ->
@@ -88,6 +96,9 @@ angular.module('scrumbleApp')
           user.roles['ProductOwner'] = false
         else
           user.roles['ScrumMaster'] = false
+
+    $scope.projectRoleAllowed = (user, changeableRole) ->
+      user.roles[changeableRole] || !$scope.projectHasRole[changeableRole]
 
 
     $scope.load()
