@@ -43,6 +43,8 @@ angular.module('scrumbleApp')
 
     $scope.editUser = (user) ->
       user.$copy = angular.copy(user)
+      trueArr = _.map _.range(user.roles.length), -> true
+      user.roles = _.zipObject(user.roles, trueArr)
       user.editing = yes
 
     $scope.cancelEditUser = (user) ->
