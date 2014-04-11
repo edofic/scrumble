@@ -35,5 +35,5 @@ postSprintsR projectId = do
   where
     overlapping (Sprint {sprintStart=start, sprintEnd=end}) = 
       (wraps start ||. wraps end ||. covers start end) ++ [SprintProject ==. projectId]
-    wraps x = [SprintStart <. x, SprintEnd >. x]
-    covers start end = [SprintStart >. start, SprintEnd <. end ]
+    wraps x = [SprintStart <=. x, SprintEnd >=. x]
+    covers start end = [SprintStart >=. start, SprintEnd <=. end ]

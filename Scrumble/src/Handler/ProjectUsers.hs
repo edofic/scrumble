@@ -5,6 +5,7 @@ import Validation
 import Model.ProjectRole
 import Data.List (nub)
 import qualified Authorization as Auth
+import Data.Maybe (isJust)
 
 getProjectUsersR :: ProjectId -> Handler Value
 getProjectUsersR projectId = do
@@ -21,7 +22,10 @@ postProjectUsersR projectId = do
   memberRaw :: ProjectMember <- requireJsonBodyWith [("project", toJSON projectId)]
   let member = memberRaw { projectMemberRoles = nub $ projectMemberRoles member}
   runValidationHandler $ userRolesValidation $ projectMemberRoles member
-  runDB $ insert member
+  memberIdMyb <- runDB $ insertUnique member
+  runValidationHandler $ do
+    ("error", "Member for this project already exists") `validate`
+      (isJust memberIdMyb)
   return ()
  
 userRolesValidation :: Validation m [ProjectRole]

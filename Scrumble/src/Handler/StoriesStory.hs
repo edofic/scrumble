@@ -5,6 +5,7 @@ import qualified Authorization as Auth
 import Authorization ((.||.))
 import Model.ProjectRole
 import Validation
+import Control.Monad (when)
 
 getStoriesStoryR :: ProjectId -> StoryId -> Handler Value
 getStoriesStoryR projectId storyId = do
@@ -26,7 +27,11 @@ putStoriesStoryR projectId storyId = do
   Auth.assertM $ assertionOwnerMaster projectId
   story <- requireJsonBodyWith [("project", toJSON projectId)]
   runValidationHandler $ userStoryValidations story
-  runDB $ replace storyId story
+  runDB $ runValidationHandler $ do
+    existing <- count [StoryTitle ==. (storyTitle story), StoryId !=. storyId]
+    ("title", "Story with supplied title already exists") `validate` (existing == 0)
+    when (existing == 0) $ replace storyId story
+  return ()
 
 deleteStoriesStoryR :: ProjectId -> StoryId -> Handler ()
 deleteStoriesStoryR projectId storyId = do
