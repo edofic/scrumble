@@ -43,7 +43,7 @@ putProjectsProjectR projectId =  do
   Auth.assert Auth.isAdmin
   updated :: Project <- requireJsonBody
   runDB $ runValidationHandler $ do 
-    existing <- count [ProjectName Imp.==. (projectName updated)]
+    existing <- count [ProjectName Imp.==. (projectName updated), ProjectId Imp.!=. projectId]
     () <- ("name", "Project with supplied name already exists") `validate` (existing == 0)
     when (existing == 0) $ replace projectId updated
                              
