@@ -31,7 +31,7 @@ angular.module('scrumbleApp')
       bbox.prompt 'New project name:', (newName) ->
         return if not newName
 
-        tempProject = anuglar.copy($scope.project)
+        tempProject = angular.copy($scope.project)
         tempProject.name = newName
 
         tempProject.$update projectId: tempProject.id, (data) ->
