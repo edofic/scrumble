@@ -15,6 +15,7 @@ angular.module('scrumbleApp')
 
     $scope.initNewUser()
 
+    $scope.autoError = {}
     $scope.createUser = (user, invalid) ->
       if (invalid)
         return
@@ -28,8 +29,10 @@ angular.module('scrumbleApp')
         $scope.users.push(data)
         $scope.initNewUser()
         growl.addSuccessMessage("Added user #{data.username}")
+        $scope.autoError.removeErrors()
       , (reason) ->
         growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while saving user"))
+        $scope.autoError.showErrors(reason.data)
 
   .directive 'sameAs', ->
     require: 'ngModel',

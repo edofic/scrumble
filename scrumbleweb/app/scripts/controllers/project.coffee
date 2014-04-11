@@ -23,14 +23,15 @@ angular.module('scrumbleApp')
       bbox.prompt 'New project name:', (newName) ->
         return if not newName
 
-        $scope.project.name = newName
+        tempProject = anuglar.copy($scope.project)
+        tempProject.name = newName
 
-        $scope.project.$update projectId: $scope.project.id, (data) ->
+        tempProject.$update projectId: tempProject.id, (data) ->
           $scope.load()
 
           growl.addSuccessMessage("Project #{data.name} has been updated")
         , (reason) ->
-          growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while renaming project"))
+          growl.addErrorMessage($scope.backupError(reason.data.message || reason.data.name, "An error occured while renaming project"))
 
     $scope.editUser = (user) ->
       user.$copy = angular.copy(user)
@@ -60,7 +61,10 @@ angular.module('scrumbleApp')
           , (reason) ->
             growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while removing user"))
 
-    $scope.addUser = ->
+    $scope.autoErrorAddUser = {}
+    $scope.addUser = (invalid) ->
+      if (invalid)
+        return
       u = new ProjectUser
       u.user = $scope.newUser.user.id
       u.role = $scope.newUser.role
@@ -69,8 +73,10 @@ angular.module('scrumbleApp')
       u.$save projectId: $scope.project.id, (res) ->
         $scope.initNewUser()
         $scope.load()
+        $scope.autoErrorAddUser.removeErrors()
       , (reason) ->
         growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while adding user"))
+        $scope.autoErrorAddUser.showErrors(reason.data)
 
     $scope.initNewUser = ->
       $scope.newUser =

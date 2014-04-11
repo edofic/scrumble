@@ -9,6 +9,10 @@ angular.module('scrumbleApp')
       ###
       .row, .fake-row
         [ng-model], [fake-ng-model]
+
+      Finds ng-model which matches the field (or fake-ng-model)
+      Looks for a parent with class row (or fake-row)
+      Appends error message after this parent
       ###
 
       errorElements = []
