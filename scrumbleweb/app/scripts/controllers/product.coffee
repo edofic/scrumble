@@ -7,7 +7,7 @@ angular.module('scrumbleApp')
     $scope.canEdit = no
 
     ProjectUser.get projectId: projectId, userId: $rootScope.currentUser.id, (projectUser) ->
-      $scope.canEdit = projectUser.role == 'ProductOwner' || projectUser.role == 'ScrumMaster'
+      $scope.canEdit = ('ProductOwner' in projectUser.roles) || ('ScrumMaster' in projectUser.roles)
 
     $scope.load = ->
       $scope.stories = Story.query projectId: projectId
@@ -31,6 +31,7 @@ angular.module('scrumbleApp')
     $scope.story.businessValue = 0
     $scope.story.project = projectId
 
+    $scope.autoError = {}
     $scope.addTest = ->
       $scope.story.tests.push({test: ''})
 
@@ -43,8 +44,10 @@ angular.module('scrumbleApp')
         $modalInstance.close()
 
         growl.addSuccessMessage("Story has been added.")
+        $scope.autoError.removeErrors()
       , (reason) ->
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while adding story"))
+        $scope.autoError.showErrors(reason.data)
 
     $scope.cancel = ->
       $modalInstance.dismiss()

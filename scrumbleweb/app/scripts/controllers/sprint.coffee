@@ -26,6 +26,7 @@ angular.module('scrumbleApp')
 
     $scope.$watch 'currentUser.activeProject', updateFromActiveProject
 
+    $scope.autoError = {}
     $scope.createSprint = (sprint, invalid) ->
       if (invalid)
         return
@@ -38,8 +39,10 @@ angular.module('scrumbleApp')
         humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
         humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
         growl.addSuccessMessage("Added sprint from #{humanStart} to #{humanEnd}")
+        $scope.autoError.removeErrors()
       , (reason) ->
         growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while creating sprint"))
+        $scope.autoError.showErrors(reason.data)
 
     $scope.initNewSprint = () ->
       $scope.sprint = new Sprint()
