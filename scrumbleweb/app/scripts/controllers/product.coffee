@@ -7,7 +7,7 @@ angular.module('scrumbleApp')
     $scope.canEdit = no
 
     ProjectUser.get projectId: projectId, userId: $rootScope.currentUser.id, (projectUser) ->
-      $scope.canEdit = projectUser.role == 'ProductOwner' || projectUser.role == 'ScrumMaster'
+      $scope.canEdit = ('ProductOwner' in projectUser.roles) || ('ScrumMaster' in projectUser.roles)
 
     $scope.load = ->
       $scope.stories = Story.query projectId: projectId

@@ -32,6 +32,7 @@ angular.module('scrumbleApp')
         , (reason) ->
           growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while renaming project"))
 
+
     $scope.editUser = (user) ->
       user.$copy = angular.copy(user)
       user.editing = yes
@@ -43,7 +44,7 @@ angular.module('scrumbleApp')
     $scope.saveUser = (user) ->
       u = new ProjectUser
       u.user = user.user.id
-      u.role = user.role
+      u.roles = _.keys(_.pick(user.roles, (value) -> value ))
       u.project = $scope.project.id # WHY???
 
       u.$update projectId: $scope.project.id, userId: user.user.id, (res) ->
@@ -63,7 +64,7 @@ angular.module('scrumbleApp')
     $scope.addUser = ->
       u = new ProjectUser
       u.user = $scope.newUser.user.id
-      u.role = $scope.newUser.role
+      u.roles = _.keys(_.pick($scope.newUser.roles, (value) -> value ))
       u.project = $scope.project.id # WHY???
 
       u.$save projectId: $scope.project.id, (res) ->
@@ -74,7 +75,20 @@ angular.module('scrumbleApp')
 
     $scope.initNewUser = ->
       $scope.newUser =
-        role: 'Developer'
+        roles: {'Developer': true}
+
+
+    $scope.rolesToLabels = (roles) ->
+      _.map roles, (role) ->
+        $scope.userProjectRoles[role].label
+
+    $scope.rolesToRules = (user, changedRole) ->
+      if user.roles['ScrumMaster'] && user.roles['ProductOwner']
+        if changedRole == 'ScrumMaster'
+          user.roles['ProductOwner'] = false
+        else
+          user.roles['ScrumMaster'] = false
+
 
     $scope.load()
     $scope.initNewUser()
