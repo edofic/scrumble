@@ -35,8 +35,11 @@ angular.module('scrumbleApp')
     $scope.addTest = ->
       $scope.story.tests.push({test: ''})
 
-    $scope.addStory = ->
+    $scope.addStory = (invalid) ->
+      if (invalid)
+        return
       s = new Story()
+      s.description = ''
       angular.extend(s, $scope.story)
       s.tests = _.filter(_.map $scope.story.tests, (t) -> t.test)
 

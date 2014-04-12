@@ -1,4 +1,4 @@
-<form class="product-story-add-modal" ng-submit="addStory()" autoerror="autoError">
+<form class="product-story-add-modal" name="storyAddForm" ng-submit="addStory(storyAddForm.$invalid)" autoerror="autoError">
   <div class="modal-header">
     <h3>Add new story</h3>
   </div>
@@ -7,7 +7,7 @@
       <div class="form-group fake-row">
         <label class="col-sm-3 control-label">Story name:</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" ng-model="story.title">
+          <input type="text" class="form-control" ng-model="story.title" required>
         </div>
       </div>
       <div class="form-group fake-row">
