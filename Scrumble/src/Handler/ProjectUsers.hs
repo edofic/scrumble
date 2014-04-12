@@ -20,7 +20,7 @@ postProjectUsersR :: ProjectId -> Handler ()
 postProjectUsersR projectId = do 
   Auth.assert Auth.isAdmin
   memberRaw :: ProjectMember <- requireJsonBodyWith [("project", toJSON projectId)]
-  let member = memberRaw { projectMemberRoles = nub $ projectMemberRoles member}
+  let member = memberRaw { projectMemberRoles = nub $ projectMemberRoles memberRaw}
   runValidationHandler $ userRolesValidation $ projectMemberRoles member
   memberIdMyb <- runDB $ insertUnique member
   runValidationHandler $ do
