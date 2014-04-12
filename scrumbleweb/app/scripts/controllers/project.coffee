@@ -86,17 +86,13 @@ angular.module('scrumbleApp')
         $scope.load()
         $scope.autoErrorAddUser.removeErrors()
       , (reason) ->
-        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while adding user"))
+        growl.addErrorMessage($scope.backupError(reason.data.message || reason.data.error, "An error occured while adding user"))
         $scope.autoErrorAddUser.showErrors(reason.data)
 
     $scope.initNewUser = ->
       $scope.newUser =
         roles: {'Developer': true}
 
-
-    $scope.rolesToLabels = (roles) ->
-      _.map roles, (role) ->
-        $scope.userProjectRoles[role].label
 
     $scope.rolesToRules = (user, changedRole) ->
       if user.roles['ScrumMaster'] && user.roles['ProductOwner']

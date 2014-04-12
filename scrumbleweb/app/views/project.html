@@ -22,11 +22,13 @@
               {{ formatUser(user.user) }}
             </span>
 
-            <span class="btn-group col-sm-6" ng-hide="user.editing">
-              {{ rolesToLabels(user.roles) }}
+            <span class="btn-group col-sm-6" ng-if="!user.editing">
+              <span ng-repeat="roleValue in user.roles" class="label label-primary">
+                {{ userProjectRoles[roleValue].label }}
+              </span>
             </span>
 
-            <span class="btn-group col-sm-6" ng-show="user.editing">
+            <span class="btn-group col-sm-6" ng-if="user.editing">
               <button type="button" class="btn btn-default" ng-repeat="role in userProjectRolesOrdered" ng-model="user.roles[role.value]" tabindex="2" btn-checkbox ng-change="rolesToRules(user, role.value)" ng-disabled="!projectRoleAllowed(user, role.value)">
                 {{ role.label }}
               </button>
