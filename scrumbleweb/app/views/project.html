@@ -22,7 +22,7 @@
               {{ formatUser(user.user) }}
             </span>
 
-            <span class="btn-group col-sm-6" ng-if="!user.editing">
+            <span class="labels-group col-sm-6" ng-if="!user.editing">
               <span ng-repeat="roleValue in user.roles" class="label label-primary">
                 {{ userProjectRoles[roleValue].label }}
               </span>
