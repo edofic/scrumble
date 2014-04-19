@@ -14,7 +14,16 @@
       <div class="row">
         <div class="col-lg-6">
           <ul class="nav nav-pills nav-stacked">
-            <li ng-repeat="project in currentUser.projects" ng-class="{ active: isActive(project) }"><a href="" ng-click="chooseProject(project)">{{ project.name }}</a></li>
+            <li ng-repeat="project in currentUser.projects" ng-class="{ active: isActive(project) }">
+              <span class="pull-right edit-project" ng-if="isAdmin() || isScrum(project.users[currentUser.id].roles)">
+                <a ng-href="#/projects/{{ project.id }}">
+                  <i class="glyphicon glyphicon-pencil"></i>
+                </a>
+              </span>
+              <a href="" ng-click="chooseProject(project)">
+                {{ project.name }}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
