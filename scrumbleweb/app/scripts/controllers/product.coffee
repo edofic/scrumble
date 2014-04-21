@@ -20,6 +20,16 @@ angular.module('scrumbleApp')
       modalInstance.result.then ->
         $scope.load()
 
+    $scope.changeEstimate = (story) ->
+      modalInstance = $modal.open(
+        templateUrl: 'views/product-story-estimate-modal.html'
+        controller: 'ProductStoryEstimateModalCtrl'
+        resolve:
+          story: -> story
+      )
+      modalInstance.result.then ->
+        # $scope.load()
+
     $scope.load()
 
   .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->
@@ -51,6 +61,24 @@ angular.module('scrumbleApp')
       , (reason) ->
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while adding story"))
         $scope.autoError.showErrors(reason.data)
+
+    $scope.cancel = ->
+      $modalInstance.dismiss()
+
+  .controller 'ProductStoryEstimateModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl, story) ->
+    $scope.story = story
+
+    $scope.estimate =
+      estimate: 0
+
+    $scope.save = (invalid) ->
+      return if invalid
+
+      $scope.story.estimate = $scope.estimate.estimate
+
+      $modalInstance.close()
+
+      growl.addSuccessMessage("Estimate has been saved.")
 
     $scope.cancel = ->
       $modalInstance.dismiss()
