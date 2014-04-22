@@ -1,0 +1,15 @@
+@import 'product';
+
+.current-sprint {
+  @extend .product;
+  .story {
+    .panel-body{
+      .tasks-info{
+        td a{
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+}
