@@ -1,4 +1,6 @@
 <div class="sprints">
+  <ng-include src="'/views/current-sprint.html'" ng-controller="CurrentSprintCtrl"></ng-include>
+
   <div class="white-stripe">
     <div class="container">
       <h2>Sprints</h2>
@@ -66,7 +68,7 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-sm-4" ng-repeat="sprint in sprints | orderBy:'start':true">
+        <div class="col-sm-4" ng-repeat="sprint in sprints | orderBy:'start'">
           <div class="panel" ng-class="{'panel-default': !(sprint.start<today && today<sprint.end), 'panel-primary': (sprint.start<today && today<sprint.end)}">
             <div class="panel-heading">
               <h3 class="panel-title">{{ sprint.start | date:'dd.MM.yyyy' }} - {{ sprint.end | date:'dd.MM.yyyy' }}</h3>
