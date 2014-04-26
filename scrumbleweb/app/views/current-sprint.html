@@ -46,13 +46,20 @@
                     <td>{{task.task}}</td>
                     <td>
                       <span ng-if="task.status !== 'Unassigned'">{{ allUsers[task.userId].username }}</span>
-                      <a ng-if="task.status == 'Unassigned'" href="">Take task</a>
+                      <a ng-if="task.status == 'Unassigned' && isDeveloper()" href="">Take task</a>
                     </td>
                     <td class="text-{{ statusColor[task.status] }}">{{task.status}}</td>
                     <td>{{task.remaining}} hours</td>
                   </tr>
+                  <tr>
+                    <td><button type="button" class="btn btn-default" ng-click="addTask(story.id)">Add a task</button></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
                 </tbody>
               </table>
+
             </div>
           </div>
         </div>
