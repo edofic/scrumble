@@ -2,6 +2,7 @@
 
 angular.module('scrumbleApp')
   .controller 'CurrentSprintCtrl', ($scope, $filter, $rootScope, $modal, Sprint, Story, User, growl) ->
+    projectId = $scope.currentUser.activeProject
 
     $scope.statusColor =
       'Unassigned': 'danger'
@@ -10,7 +11,7 @@ angular.module('scrumbleApp')
       'Completed': 'success'
 
     getAllDevs = ->
-      projectUsers = $scope.currentUser.projects[$scope.currentUser.activeProject].users
+      projectUsers = $scope.currentUser.projects[projectId].users
       devs = _.filter projectUsers, (user) -> 'Developer' in user.roles
       _.map devs, (user) -> $scope.allUsers[user.user]
 
@@ -21,12 +22,12 @@ angular.module('scrumbleApp')
     $scope.load = ->
       #   TODO: use only stories inside this sprint
       # SprintStories.get sprintId: $scope.currentSprint.id, (stories) ->
-      Story.query projectId: $rootScope.currentUser.activeProject, (stories) -> # TODO: remove
+      Story.query projectId: projectId, (stories) -> # TODO: remove
         $scope.currentSprint.stories = stories
 
         _.each stories, (story) ->
           # TODO: use api..
-          # StoryTasks.get storyId: story.id, (tasks) ->
+          # StoryTasks.get {projectId: projectId, storyId: story.id}, (tasks) ->
           #  story.tasks = tasks
           story.tasks = [
             task: 'backend implementation'
@@ -66,13 +67,14 @@ angular.module('scrumbleApp')
         templateUrl: 'views/task-add-modal.html'
         controller: 'TaskAddModalCtrl'
         resolve:
+          projectId: -> projectId
           storyId: -> storyId
           allDevs: -> $scope.allDevs
       )
       modalInstance.result.then ->
         $scope.load()
 
-  .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, growl, storyId, allDevs) ->
+  .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, growl, projectId, storyId, allDevs) ->
 
     $scope.allDevs = allDevs
     # TODO: use api
@@ -86,7 +88,7 @@ angular.module('scrumbleApp')
       $scope.task.userId = $scope.task.user?.id
 
       # TODO: use api
-      $scope.task.$save storyId: storyId, ->
+      $scope.task.$save {projectId: projectId, storyId: storyId}, ->
         $modalInstance.close()
 
         growl.addSuccessMessage("Task has been added.")
