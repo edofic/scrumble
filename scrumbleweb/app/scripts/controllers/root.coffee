@@ -28,7 +28,7 @@ angular.module('scrumbleApp')
       removeWatcher = $scope.$watch 'currentUser.role', checkRole
       checkRole($scope.currentUser && $scope.currentUser.role)
 
-    $scope.formatUser = (user) ->
+    $scope.$root.formatUser = $scope.formatUser = (user) ->
       return if not user?
 
       "#{user.firstName} #{user.lastName}"
