@@ -69,7 +69,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><button type="button" class="btn btn-default" ng-click="addTask(story.id)">Add a task</button></td>
+                    <td><button ng-if="isDeveloper() || isScrum()" type="button" class="btn btn-default" ng-click="addTask(story.id)">Add a task</button></td>
                     <td></td>
                     <td></td>
                     <td></td>
