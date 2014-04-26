@@ -85,7 +85,11 @@ angular.module('scrumbleApp')
       if (invalid)
         return
 
-      $scope.task.userId = $scope.task.user?.id
+      $scope.task.status = 'Unassigned'
+
+      if $scope.task.user?
+        $scope.task.userId = $scope.task.user.id
+        $scope.task.status = 'Assigned'
 
       # TODO: use api
       $scope.task.$save {projectId: projectId, storyId: storyId}, ->
