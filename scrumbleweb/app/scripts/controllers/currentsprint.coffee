@@ -31,7 +31,7 @@ angular.module('scrumbleApp')
           story.tasks = [
             task: 'backend implementation'
             userId: 1
-            status: 'Assigned'
+            status: 'Accepted'
             remaining: 3
           ,
             task: 'frontend implementation'
