@@ -18,8 +18,8 @@ angular.module('scrumbleApp')
       if(!user || !user.activeProject)
         return
       $scope.sprints = Sprint.query {projectId: user.activeProject}
-      projectUsers = _.indexBy(user.projects[user.activeProject].users, 'username')
-      isScrum = projectUsers[user.username] && projectUsers[user.username].scrumMaster
+      projectUsers = user.projects[user.activeProject].users
+      isScrum = projectUsers[user.id] && ('ScrumMaster' in projectUsers[user.id].roles)
 
       isAdmin = user.role == 'Administrator'
       $scope.canCreateSprint = isAdmin || isScrum
