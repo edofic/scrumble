@@ -13,16 +13,23 @@ angular.module('scrumbleApp')
       ret.setDate(ret.getDate()+num)
       ret.getTime()
 
+    $scope.isScrum = ->
+      user = $scope.currentUser
+      projectUsers = user.projects[user.activeProject].users
+      projectUsers[user.id] && ('ScrumMaster' in projectUsers[user.id].roles)
+    $scope.isDeveloper = ->
+      user = $scope.currentUser
+      projectUsers = user.projects[user.activeProject].users
+      projectUsers[user.id] && ('Developer' in projectUsers[user.id].roles)
+
     updateFromActiveProject = ->
       user = $scope.currentUser
       if(!user || !user.activeProject)
         return
       $scope.sprints = Sprint.query {projectId: user.activeProject}
-      projectUsers = user.projects[user.activeProject].users
-      isScrum = projectUsers[user.id] && ('ScrumMaster' in projectUsers[user.id].roles)
 
       isAdmin = user.role == 'Administrator'
-      $scope.canCreateSprint = isAdmin || isScrum
+      $scope.canCreateSprint = isAdmin || $scope.isScrum()
 
     $scope.$watch 'currentUser.activeProject', updateFromActiveProject
 
