@@ -8,6 +8,10 @@
         td a{
           white-space: nowrap;
         }
+
+        td.actions .btn {
+          min-width: 10ex;
+        }
       }
     }
   }
