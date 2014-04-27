@@ -39,6 +39,8 @@ library
                      Handler.StoriesStory
                      Handler.Sprint
                      Handler.Sprints
+                     Handler.SprintStory
+                     Handler.SprintStories
                      Handler.ProjectUsers
                      Handler.ProjectUser
 
