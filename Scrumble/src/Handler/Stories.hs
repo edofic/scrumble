@@ -15,7 +15,7 @@ getStoriesR projectId = do
 postStoriesR :: ProjectId -> Handler ()
 postStoriesR projectId = do
   Auth.masterOnly projectId
-  story :: Story <- requireJsonBodyWith [("project", toJSON projectId)]
+  story :: Story <- requireJsonBodyWith [("project", toJSON projectId), ("done", toJSON False)]
   runValidationHandler $ do
     userStoryValidations story
     ("done", "New story should not be done") `validate`
