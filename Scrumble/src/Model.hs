@@ -12,6 +12,7 @@ import Control.Applicative
 import Model.Role
 import Model.ProjectRole
 import Model.StoryPriority
+import Model.TaskStatus
 
 import qualified Data.HashMap.Strict as Hash
 

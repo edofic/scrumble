@@ -41,7 +41,10 @@ Story json
 Task json
     story StoryId
     sprint SprintId
-    title Text
+    task Text
+    status TaskStatus
+    userId UserId Maybe
+    remaining Int64
     deriving Eq Show
 
 ProjectMember json

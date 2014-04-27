@@ -4,6 +4,7 @@ import Import
 import qualified Authorization as Auth
 import Validation
 import Data.Maybe (isJust)
+import Model.TaskStatus
 
 getSprintStoryTasksR :: ProjectId -> SprintId -> StoryId -> Handler Value
 getSprintStoryTasksR _ sprintId storyId = do
@@ -13,7 +14,8 @@ getSprintStoryTasksR _ sprintId storyId = do
 
 postSprintStoryTasksR :: ProjectId -> SprintId -> StoryId -> Handler ()
 postSprintStoryTasksR projectId sprintId storyId = do
-  task :: Task <- requireJsonBodyWith [("story", toJSON storyId), ("sprint", toJSON sprintId)] 
+  taskRaw :: Task <- requireJsonBodyWith [("story", toJSON storyId), ("sprint", toJSON sprintId)]
+  let task = taskRaw { taskStatus = Unassigned, taskUserId = Nothing }
   _ <- runDB $ do
     storyMby <- selectFirst [StoryId ==. storyId
                             ,StoryProject ==. projectId
@@ -25,6 +27,8 @@ postSprintStoryTasksR projectId sprintId storyId = do
         (isJust storyMby)
       ("sprint", "Sprint does not exist or not part of this project.") `validate`
         (isJust sprintMby)
+      ("remaining", "Remaining work must be more than 0.") `validate`
+        (taskRemaining task > 0)
     --TODO: check if sprint is active now (current time is inbetween sprint start and end)
     insert task
   return ()
