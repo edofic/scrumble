@@ -8,14 +8,14 @@ import Handler.ProjectUsers (userRolesValidation)
 
 getProjectUserR :: ProjectId -> UserId -> Handler Value
 getProjectUserR projectId userId = do
-  Auth.assertM $ Auth.memberOfProject projectId
+  Auth.assert $ Auth.memberOfProject projectId
   role <- runDB $ selectFirst [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId] []
   maybe notFound (return . toJSON . entityVal) role
 
 
 putProjectUserR :: ProjectId -> UserId -> Handler ()
 putProjectUserR projectId userId = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   maybeMember <- runDB $ selectFirst [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId] []
   member <- maybe notFound return maybeMember
   nmemberRaw :: ProjectMember <- requireJsonBodyWith [("project", toJSON projectId), ("user", toJSON userId)]
@@ -26,7 +26,7 @@ putProjectUserR projectId userId = do
 
 deleteProjectUserR :: ProjectId -> UserId -> Handler ()
 deleteProjectUserR projectId userId = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   runDB $ deleteWhere [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId]
 
 

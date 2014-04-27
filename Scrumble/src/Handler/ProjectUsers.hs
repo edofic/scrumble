@@ -9,7 +9,7 @@ import Data.Maybe (isJust)
 
 getProjectUsersR :: ProjectId -> Handler Value
 getProjectUsersR projectId = do
-  Auth.assertM $ Auth.memberOfProject projectId
+  Auth.assert $ Auth.memberOfProject projectId
   members <- runDB getMembers
   return $ array $ (toJSON . entityVal) `fmap` members
   where
@@ -18,7 +18,7 @@ getProjectUsersR projectId = do
 
 postProjectUsersR :: ProjectId -> Handler ()
 postProjectUsersR projectId = do 
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   memberRaw :: ProjectMember <- requireJsonBodyWith [("project", toJSON projectId)]
   let member = memberRaw { projectMemberRoles = nub $ projectMemberRoles memberRaw}
   runValidationHandler $ userRolesValidation $ projectMemberRoles member

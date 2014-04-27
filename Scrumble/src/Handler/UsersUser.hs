@@ -6,11 +6,11 @@ import qualified Authorization as Auth
 
 getUsersUserR :: UserId -> Handler Value
 getUsersUserR userId = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   userEntity <- runDB $ selectFirst [UserId ==. userId] []
   maybe notFound (return . toJSON . FlatEntity) userEntity
 
 deleteUsersUserR :: UserId -> Handler ()
 deleteUsersUserR userId = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   runDB $ delete userId >> return ()

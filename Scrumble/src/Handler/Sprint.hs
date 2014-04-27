@@ -6,7 +6,7 @@ import qualified Authorization as Auth
 
 getSprintR :: ProjectId -> SprintId -> Handler Value
 getSprintR projectId sprintId = do
-  Auth.assertM $ Auth.memberOfProject projectId
+  Auth.assert $ Auth.memberOfProject projectId
   sprintM <- runDB $ get sprintId
   let sprintM' = mfilter ((== projectId) . sprintProject) sprintM    
   maybe notFound 

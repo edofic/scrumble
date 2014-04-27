@@ -25,7 +25,7 @@ getProjectsR = do
 
 postProjectsR :: Handler Value 
 postProjectsR = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   project <- requireJsonBody
   projectIdMyb <- runDB $ insertUnique project
   runValidationHandler $ do

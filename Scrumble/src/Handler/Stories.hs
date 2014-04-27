@@ -8,13 +8,13 @@ import Data.Maybe (isJust)
 
 getStoriesR :: ProjectId -> Handler Value
 getStoriesR projectId = do
-  Auth.assertM $ Auth.memberOfProject projectId
+  Auth.assert $ Auth.memberOfProject projectId
   stories :: [Entity Story] <- runDB $ selectList [StoryProject ==. projectId] []
   return $ array $ (toJSON . FlatEntity) `fmap` stories
 
 postStoriesR :: ProjectId -> Handler ()
 postStoriesR projectId = do
-  Auth.assertM $ assertionOwnerMaster projectId
+  Auth.assert $ assertionOwnerMaster projectId
   story :: Story <- requireJsonBodyWith [("project", toJSON projectId)]
   runValidationHandler $ do
     userStoryValidations story

@@ -15,7 +15,7 @@ instance FromJSON PasswordRequest
 
 postUsersUserPasswordR :: UserId -> Handler ()
 postUsersUserPasswordR userId = do
-  Auth.assert $ Auth.isAdmin .||. Auth.hasUserId userId
+  Auth.assert $ Auth.hasUserId userId
   PasswordRequest newPassword <- requireJsonBody
   hashed <- liftIO $ decodeUtf8 `fmap` makePassword (encodeUtf8 newPassword) 14
   ok <- runDB $ runMaybeT $ do
