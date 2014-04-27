@@ -2,7 +2,6 @@ module Handler.StoriesStory where
 
 import Import  
 import qualified Authorization as Auth
-import Model.ProjectRole
 import Validation
 import Control.Monad (when)
 import Data.Maybe (isJust)
@@ -15,9 +14,6 @@ getStoriesStoryR projectId storyId = do
   story <- maybe notFound return storyMby
   return $ (toJSON . FlatEntity) story
 
-assertionOwnerMaster :: ProjectId -> Auth.Check Bool
-assertionOwnerMaster projectId = (Auth.roleOnProject ProductOwner projectId) .||. (Auth.roleOnProject ScrumMaster projectId)
-
 userStoryValidations :: Validation m Story
 userStoryValidations story = 
   ("businessValue", "Business value should be non-negative") `validate`
@@ -25,7 +21,7 @@ userStoryValidations story =
 
 putStoriesStoryR :: ProjectId -> StoryId -> Handler ()
 putStoriesStoryR projectId storyId = do
-  Auth.assert $ assertionOwnerMaster projectId
+  Auth.masterOnly projectId
   story <- requireJsonBodyWith [("project", toJSON projectId)]
   runValidationHandler $ userStoryValidations story
   runDB $ runValidationHandler $ do
@@ -42,6 +38,6 @@ putStoriesStoryR projectId storyId = do
 
 deleteStoriesStoryR :: ProjectId -> StoryId -> Handler ()
 deleteStoriesStoryR projectId storyId = do
-  Auth.assert $ assertionOwnerMaster projectId
+  Auth.masterOnly projectId
   runDB $ deleteWhere [StoryId ==. storyId, StoryProject ==. projectId] 
 

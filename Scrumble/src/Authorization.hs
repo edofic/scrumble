@@ -46,10 +46,16 @@ memberOfProject projectId = Check $ \(Entity userId _) ->
   fmap isJust $ runDB $ getBy $ UniqueMember userId projectId
 
 roleOnProject :: ProjectRole -> ProjectId -> Check Bool
-roleOnProject role projectId = Check $ \(Entity userId _) ->
+roleOnProject role = rolesOnProject [role]
+
+rolesOnProject :: [ProjectRole] -> ProjectId -> Check Bool
+rolesOnProject roles projectId = Check $ \(Entity userId _) ->
   fmap isOk $ runDB $ getBy $ UniqueMember userId projectId where
-    isOk (Just (Entity _ member)) = role `elem` projectMemberRoles member
+    isOk (Just (Entity _ member)) = any (`elem` projectMemberRoles member) roles
     isOk _ = False
 
 adminOnly :: Handler ()
 adminOnly = assert $ pureCheck isAdmin
+
+masterOnly :: ProjectId -> Handler ()
+masterOnly = assert . rolesOnProject [ScrumMaster, ProductOwner] 
