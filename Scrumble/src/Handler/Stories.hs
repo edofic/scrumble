@@ -16,7 +16,10 @@ postStoriesR :: ProjectId -> Handler ()
 postStoriesR projectId = do
   Auth.assertM $ assertionOwnerMaster projectId
   story :: Story <- requireJsonBodyWith [("project", toJSON projectId)]
-  runValidationHandler $ userStoryValidations story
+  runValidationHandler $ do
+    userStoryValidations story
+    ("done", "New story should not be done") `validate`
+      (storyDone story == False)
   storyIdMby <- runDB $ insertUnique story
   runValidationHandler $ do
     ("title", "Story with supplied title already exists") `validate`

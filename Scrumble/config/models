@@ -27,11 +27,14 @@ Sprint json
 
 Story json
     project        ProjectId
+    sprint         SprintId Maybe
     title          Text
     description    Text
     tests          [Text]
     priority       StoryPriority
     businessValue  Int64
+    done           Bool
+    points         Double Maybe
     UniqueStoryTitle project title
     deriving Eq Show
 
