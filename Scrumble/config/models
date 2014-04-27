@@ -40,6 +40,8 @@ Story json
 
 Task json
     story StoryId
+    sprint SprintId
+    title Text
     deriving Eq Show
 
 ProjectMember json

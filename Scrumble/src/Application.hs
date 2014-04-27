@@ -47,6 +47,7 @@ import Handler.Sprint
 import Handler.Sprints
 import Handler.SprintStory
 import Handler.SprintStories
+import Handler.Tasks
 import Model.Role
 
 addCORS :: W.Middleware

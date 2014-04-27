@@ -43,6 +43,7 @@ library
                      Handler.SprintStories
                      Handler.ProjectUsers
                      Handler.ProjectUser
+                     Handler.Tasks
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
