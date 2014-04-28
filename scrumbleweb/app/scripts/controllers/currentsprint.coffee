@@ -26,9 +26,9 @@ angular.module('scrumbleApp')
         $scope.currentSprint.stories = stories
 
         _.each stories, (story) ->
-          # TODO: use api..
-          # StoryTasks.get {projectId: projectId, storyId: story.id}, (tasks) ->
-          #  story.tasks = tasks
+          Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
+            story.tasks = tasks
+          ###
           story.tasks = [
             task: 'backend implementation'
             userId: 1
@@ -49,6 +49,8 @@ angular.module('scrumbleApp')
             status: 'Unassigned'
             remaining: 2
           ]
+          ###
+
 
     $scope.$watchCollection 'sprints', ->
       sortedSprints = $filter('orderBy')($scope.sprints, 'start')
@@ -69,17 +71,17 @@ angular.module('scrumbleApp')
         controller: 'TaskAddModalCtrl'
         resolve:
           projectId: -> projectId
+          sprintId: -> $scope.currentSprint.id
           storyId: -> storyId
           allDevs: -> $scope.allDevs
       )
       modalInstance.result.then ->
         $scope.load()
 
-  .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, growl, projectId, storyId, allDevs) ->
+  .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
 
     $scope.allDevs = allDevs
-    # TODO: use api
-    $scope.task = {} # new Task()
+    $scope.task = new Task()
 
     $scope.autoError = {}
     $scope.saveTask = (invalid) ->
@@ -93,7 +95,7 @@ angular.module('scrumbleApp')
         $scope.task.status = 'Assigned'
 
       # TODO: use api
-      $scope.task.$save {projectId: projectId, storyId: storyId}, ->
+      $scope.task.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
         $modalInstance.close()
 
         growl.addSuccessMessage("Task has been added.")
