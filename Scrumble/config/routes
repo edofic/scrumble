@@ -23,6 +23,7 @@
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId SprintStoryR PUT DELETE
 
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/tasks SprintStoryTasksR GET    POST
+/api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/tasks/#TaskId SprintStoryTaskR GET PUT
 
 /api/projects/#ProjectId/users            ProjectUsersR   GET            POST
 /api/projects/#ProjectId/users/#UserId    ProjectUserR    GET      PUT   DELETE
