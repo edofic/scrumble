@@ -14,8 +14,9 @@ getSprintStoryTasksR _ sprintId storyId = do
 
 postSprintStoryTasksR :: ProjectId -> SprintId -> StoryId -> Handler ()
 postSprintStoryTasksR projectId sprintId storyId = do
-  taskRaw :: Task <- requireJsonBodyWith [("story", toJSON storyId), ("sprint", toJSON sprintId)]
-  let task = taskRaw { taskStatus = Unassigned, taskUserId = Nothing }
+  --TODO: validate authentication
+  --TODO: validate user existance and role on project:
+  task :: Task <- requireJsonBodyWith [("story", toJSON storyId), ("sprint", toJSON sprintId)]
   _ <- runDB $ do
     storyMby <- selectFirst [StoryId ==. storyId
                             ,StoryProject ==. projectId
