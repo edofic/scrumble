@@ -27,6 +27,11 @@ angular.module('scrumbleApp')
           Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
             story.tasks = tasks
 
+          , (reason) ->
+            growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading tasks"))
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading stories"))
+
 
     $scope.$watchCollection 'sprints', ->
       sortedSprints = $filter('orderBy')($scope.sprints, 'start')
@@ -64,6 +69,11 @@ angular.module('scrumbleApp')
         sprintId: $scope.currentSprint.id
         storyId: story.id
         taskId: task.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+        $scope.load()
+
 
     $scope.taskRelease = (task, story) ->
       delete task.user
@@ -74,6 +84,10 @@ angular.module('scrumbleApp')
         sprintId: $scope.currentSprint.id
         storyId: story.id
         taskId: task.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+        $scope.load()
 
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
