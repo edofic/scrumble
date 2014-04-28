@@ -58,9 +58,10 @@ angular.module('scrumbleApp')
       currSprintIx = _.findIndex sortedSprints, (sprint) ->
         (sprint.start < $scope.today) and ($scope.today < sprint.end)
 
-      $scope.currentSprint = sortedSprints[currSprintIx]
+      $scope.currentSprint = null
 
-      if $scope.currentSprint?
+      if currSprintIx >= 0
+        $scope.currentSprint = sortedSprints[currSprintIx]
         $scope.currentSprint.number = currSprintIx + 1
         $scope.load()
 
