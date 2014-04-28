@@ -1,8 +1,10 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'CurrentSprintCtrl', ($scope, $filter, $rootScope, $modal, Sprint, Story, User, growl) ->
+  .controller 'CurrentSprintCtrl', ($scope, $filter, $rootScope, $modal, Sprint, Story, SprintStory, Task, User, growl) ->
     projectId = $scope.currentUser.activeProject
+    $scope.SprintStory = SprintStory
+    $scope.Task = Task
 
     $scope.statusColor =
       'Unassigned': 'danger'
