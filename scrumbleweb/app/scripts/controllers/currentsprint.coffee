@@ -22,9 +22,7 @@ angular.module('scrumbleApp')
       $scope.allDevs = getAllDevs()
 
     $scope.load = ->
-      #   TODO: use only stories inside this sprint
-      # SprintStories.get sprintId: $scope.currentSprint.id, (stories) ->
-      Story.query projectId: projectId, (stories) -> # TODO: remove
+      SprintStory.query {projectId: projectId, sprintId: $scope.currentSprint.id}, (stories) ->
         $scope.currentSprint.stories = stories
 
         _.each stories, (story) ->
