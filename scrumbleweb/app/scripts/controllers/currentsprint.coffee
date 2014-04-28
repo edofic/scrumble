@@ -26,28 +26,6 @@ angular.module('scrumbleApp')
         _.each stories, (story) ->
           Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
             story.tasks = tasks
-          ###
-          story.tasks = [
-            task: 'backend implementation'
-            userId: 1
-            status: 'Accepted'
-            remaining: 3
-          ,
-            task: 'frontend implementation'
-            userId: 2
-            status: 'Completed'
-            remaining: 0
-          ,
-            task: 'db schema'
-            userId: 1
-            status: 'Assigned'
-            remaining: 1
-          ,
-            task: 'frontend validation'
-            status: 'Unassigned'
-            remaining: 2
-          ]
-          ###
 
 
     $scope.$watchCollection 'sprints', ->
