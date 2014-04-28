@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'ProductCtrl', ($scope, $rootScope, $modal, Story, Project, ProjectUser, growl) ->
+  .controller 'ProductCtrl', ($scope, $rootScope, $modal, Story, Project, ProjectUser, SprintStory, growl) ->
     projectId = $rootScope.currentUser.activeProject
 
     $scope.canEdit = no
@@ -31,6 +31,22 @@ angular.module('scrumbleApp')
         # $scope.load()
 
     $scope.load()
+
+    $scope.addStoryToSprint = (storyId) ->
+      sprintStory = new SprintStory()
+      sprintStory.$update
+        projectId: projectId
+        sprintId: 1 # TODO
+        storyId: storyId
+      , $scope.load
+    $scope.removeStoryFromSprint = (storyId, sprintId) ->
+      sprintStory = new SprintStory()
+      sprintStory.$delete
+        projectId: projectId
+        sprintId: sprintId
+        storyId: storyId
+      , $scope.load
+
 
   .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->
     projectId = $rootScope.currentUser.activeProject
