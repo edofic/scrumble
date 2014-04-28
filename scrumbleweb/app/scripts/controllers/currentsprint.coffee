@@ -26,28 +26,11 @@ angular.module('scrumbleApp')
         _.each stories, (story) ->
           Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
             story.tasks = tasks
-          ###
-          story.tasks = [
-            task: 'backend implementation'
-            userId: 1
-            status: 'Accepted'
-            remaining: 3
-          ,
-            task: 'frontend implementation'
-            userId: 2
-            status: 'Completed'
-            remaining: 0
-          ,
-            task: 'db schema'
-            userId: 1
-            status: 'Assigned'
-            remaining: 1
-          ,
-            task: 'frontend validation'
-            status: 'Unassigned'
-            remaining: 2
-          ]
-          ###
+
+          , (reason) ->
+            growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading tasks"))
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading stories"))
 
 
     $scope.$watchCollection 'sprints', ->
@@ -75,6 +58,37 @@ angular.module('scrumbleApp')
       )
       modalInstance.result.then ->
         $scope.load()
+
+
+    $scope.taskTake = (task, story) ->
+      task.user = $scope.currentUser.id
+      task.userId = $scope.currentUser.id
+      task.status = 'Accepted'
+      task.$update
+        projectId: projectId
+        sprintId: $scope.currentSprint.id
+        storyId: story.id
+        taskId: task.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+        $scope.load()
+
+
+    $scope.taskRelease = (task, story) ->
+      delete task.user
+      delete task.userId
+      task.status = 'Unassigned'
+      task.$update
+        projectId: projectId
+        sprintId: $scope.currentSprint.id
+        storyId: story.id
+        taskId: task.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+        $scope.load()
+
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
 

@@ -42,5 +42,7 @@ angular.module('scrumbleApp')
       query:
         method: 'GET'
         isArray: true
+      update:
+        method: 'PUT'
     )
 
