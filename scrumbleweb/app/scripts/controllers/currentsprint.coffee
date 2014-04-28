@@ -92,6 +92,7 @@ angular.module('scrumbleApp')
 
       if $scope.task.user?
         $scope.task.userId = $scope.task.user.id
+        $scope.task.user = $scope.task.user.id
         $scope.task.status = 'Assigned'
 
       # TODO: use api
