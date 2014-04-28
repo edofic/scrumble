@@ -11,7 +11,7 @@ import Control.Monad (when)
 getProjectsProjectR :: ProjectId -> Handler Value
 getProjectsProjectR projectId = do
   user@(Entity userId _) <- Auth.currentUser
-  project <- runDB $ if Auth.isAdmin user 
+  project <- runDB $ if Auth.isAdmin user
     then getAdminProjectQ 
     else getProjectQ userId
   maybe notFound (return . toJSON . FlatEntity) project 
@@ -34,13 +34,13 @@ getProjectsProjectR projectId = do
 
 deleteProjectsProjectR :: ProjectId -> Handler ()
 deleteProjectsProjectR projectId = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   runDB $ delete projectId >> return ()
 
 
 putProjectsProjectR :: ProjectId -> Handler ()
 putProjectsProjectR projectId =  do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   updated :: Project <- requireJsonBody
   runDB $ runValidationHandler $ do 
     existing <- count [ProjectName Imp.==. (projectName updated), ProjectId Imp.!=. projectId]

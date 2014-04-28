@@ -9,13 +9,13 @@ import qualified Authorization as Auth
 
 getUsersR :: Handler Value
 getUsersR = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   users :: [Entity User] <- runDB $ selectList [] [] 
   return $ array $ (toJSON . FlatEntity) `fmap` users
 
 postUsersR :: Handler Value
 postUsersR = do
-  Auth.assert Auth.isAdmin
+  Auth.adminOnly
   user <- requireJsonBody
   userIdMby <- runDB $ insertUnique user 
   runValidationHandler $ 

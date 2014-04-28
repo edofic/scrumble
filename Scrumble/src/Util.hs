@@ -9,15 +9,16 @@ import Prelude
 import Data.Aeson
 import Data.Text
 import Yesod
+import Control.Applicative
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import Network.HTTP.Types.Status (badRequest400)
 import qualified Data.HashMap.Strict as HM
 
-(.||.) :: (a -> Bool) -> (a -> Bool) -> a -> Bool
-(.||.) p1 p2 a = p1 a || p2 a
+(.||.) :: (Applicative f) => f Bool -> f Bool -> f Bool
+(.||.) = liftA2 (||)
 
-(.&&.) :: (a -> Bool) -> (a -> Bool) -> a -> Bool
-(.&&.) p1 p2 a = p1 a && p2 a
+(.&&.) :: (Applicative f) => f Bool -> f Bool -> f Bool
+(.&&.) = liftA2 (&&)
 
 requireJsonBodyWith :: (FromJSON a, MonadHandler m) => [(Text, Value)] -> m a
 requireJsonBodyWith additions = liftHandlerT $ do

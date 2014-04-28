@@ -10,13 +10,13 @@ import qualified Authorization as Auth
 
 getSprintsR :: ProjectId -> Handler Value
 getSprintsR projectId = do 
-  Auth.assertM $ Auth.memberOfProject projectId
+  Auth.assert $ Auth.memberOfProject projectId
   sprints <- runDB $ selectList [SprintProject ==. projectId] []
   return $ array $ FlatEntity `map` sprints
 
 postSprintsR :: ProjectId -> Handler Value
 postSprintsR projectId = do
-  Auth.assertM $ Auth.roleOnProject ScrumMaster projectId
+  Auth.assert $ Auth.roleOnProject ScrumMaster projectId
   newSprint :: Sprint <- requireJsonBodyWith [("project", toJSON projectId)]
   currentTime <- liftIO $ currentTimestamp
   runValidationHandler $ do
@@ -36,4 +36,4 @@ postSprintsR projectId = do
     overlapping (Sprint {sprintStart=start, sprintEnd=end}) = 
       (wraps start ||. wraps end ||. covers start end) ++ [SprintProject ==. projectId]
     wraps x = [SprintStart <=. x, SprintEnd >=. x]
-    covers start end = [SprintStart >=. start, SprintEnd <=. end ]
+    covers start end = [SprintStart >=. start, SprintEnd <=. end]

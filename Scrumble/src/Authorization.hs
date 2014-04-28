@@ -2,11 +2,11 @@ module Authorization where
 
 import Import
 import Control.Monad (when)
+import Control.Applicative
 import Yesod.Auth (maybeAuth)
 import Network.HTTP.Types.Status (unauthorized401)
 import Model.Role
 import Data.Maybe (isJust)
-import Data.List (elem)
 import Model.ProjectRole
 
 unauthorized :: MonadHandler m => m a
@@ -17,37 +17,45 @@ currentUser = do
   mauth <- maybeAuth
   maybe unauthorized return mauth
 
-assertM :: (Entity User -> Handler Bool) -> Handler ()
-assertM f = do
+newtype Check a = Check { runCheck :: Entity User -> Handler a }
+                  deriving (Functor)
+
+pureCheck :: (Entity User -> a) -> Check a
+pureCheck f = Check $ return . f
+
+instance Applicative Check where
+  pure = Check . const . return
+  Check f <*> Check x = 
+    Check $ \user -> f user <*> x user
+
+assert :: Check Bool -> Handler ()
+assert (Check f) = do
   user <- currentUser
   ok <- f user
   when (not ok && (not $ isAdmin user)) unauthorized
 
-assert :: (Entity User -> Bool) -> Handler ()
-assert = assertM . (return .)
-
 isAdmin :: Entity User -> Bool
 isAdmin (Entity _ user) = userRole user == Administrator
 
-hasUserId :: UserId -> Entity User -> Bool
-hasUserId wanted (Entity userId _) = userId == wanted
+hasUserId :: UserId -> Check Bool
+hasUserId wanted = Check $ \(Entity userId _) -> return $
+  userId == wanted
 
-memberOfProject :: ProjectId -> Entity User -> Handler Bool
-memberOfProject projectId (Entity userId _) = 
+memberOfProject :: ProjectId -> Check Bool
+memberOfProject projectId = Check $ \(Entity userId _) ->
   fmap isJust $ runDB $ getBy $ UniqueMember userId projectId
 
-roleOnProject :: ProjectRole -> ProjectId -> Entity User -> Handler Bool
-roleOnProject role projectId (Entity userId _) = 
+roleOnProject :: ProjectRole -> ProjectId -> Check Bool
+roleOnProject role = rolesOnProject [role]
+
+rolesOnProject :: [ProjectRole] -> ProjectId -> Check Bool
+rolesOnProject roles projectId = Check $ \(Entity userId _) ->
   fmap isOk $ runDB $ getBy $ UniqueMember userId projectId where
-    isOk (Just (Entity _ member)) = role `elem` projectMemberRoles member
+    isOk (Just (Entity _ member)) = any (`elem` projectMemberRoles member) roles
     isOk _ = False
 
-handlerBinComb :: (Bool -> Bool -> Bool) -> (Entity User -> Handler Bool) -> (Entity User -> Handler Bool) -> Entity User -> Handler Bool
-handlerBinComb op h1 h2 = \user -> do
-  b1 <- h1 user
-  b2 <- h2 user
-  return $ op b1 b2
+adminOnly :: Handler ()
+adminOnly = assert $ pureCheck isAdmin
 
-(.||.) = handlerBinComb (||)
-(.&&.) = handlerBinComb (&&)
-
+masterOnly :: ProjectId -> Handler ()
+masterOnly = assert . rolesOnProject [ScrumMaster, ProductOwner] 

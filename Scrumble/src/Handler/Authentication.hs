@@ -5,7 +5,6 @@ import Yesod.Auth
 import GHC.Generics (Generic)
 import Crypto.PasswordStore (verifyPassword)
 import Data.Text.Encoding (encodeUtf8)
-import Authorization
 import Network.HTTP.Types.Status (unauthorized401, notFound404)
 
 data AuthRequest = AuthRequest { username :: Text
