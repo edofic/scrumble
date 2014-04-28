@@ -51,15 +51,15 @@
                     <td class="text-{{ statusColor[task.status] }}">{{task.status}}</td>
                     <td>{{task.remaining}} hours</td>
                     <td class="actions">
-                      <button ng-if="task.status == 'Unassigned' && isDeveloper()" type="button" class="btn btn-default btn-xs">
+                      <button ng-if="task.status == 'Unassigned' && isDeveloper()" type="button" class="btn btn-default btn-xs" ng-click="taskTake(task, story)">
                         Take
                       </button>
 
-                      <button ng-if="task.status == 'Assigned' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs">
+                      <button ng-if="task.status == 'Assigned' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs" ng-click="taskTake(task, story)">
                         Accept
                       </button>
 
-                      <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs">
+                      <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs" ng-click="taskRelease(task, story)">
                         Release
                       </button>
 

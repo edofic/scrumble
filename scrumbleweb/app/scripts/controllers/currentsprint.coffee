@@ -76,6 +76,28 @@ angular.module('scrumbleApp')
       modalInstance.result.then ->
         $scope.load()
 
+
+    $scope.taskTake = (task, story) ->
+      task.user = $scope.currentUser.id
+      task.userId = $scope.currentUser.id
+      task.status = 'Accepted'
+      task.$update
+        projectId: projectId
+        sprintId: $scope.currentSprint.id
+        storyId: story.id
+        taskId: task.id
+
+    $scope.taskRelease = (task, story) ->
+      delete task.user
+      delete task.userId
+      task.status = 'Unassigned'
+      task.$update
+        projectId: projectId
+        sprintId: $scope.currentSprint.id
+        storyId: story.id
+        taskId: task.id
+
+
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
 
     $scope.allDevs = allDevs
