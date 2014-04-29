@@ -9,9 +9,8 @@ import Model.TaskStatus
 
 
 getSprintStoryTaskR :: ProjectId -> SprintId -> StoryId -> TaskId -> Handler Value
-getSprintStoryTaskR _ sprintId storyId taskId = do
-  --TODO: validate authentication
-  --TODO: validate that user is on the project (also implies project existance)
+getSprintStoryTaskR projectId sprintId storyId taskId = do
+  Auth.assert $ Auth.memberOfProject projectId
   taskMby <- runDB $ selectFirst [TaskSprint ==. sprintId
                                  ,TaskStory ==. storyId
                                  ,TaskId ==. taskId] []
@@ -22,6 +21,7 @@ getSprintStoryTaskR _ sprintId storyId taskId = do
 
 putSprintStoryTaskR :: ProjectId -> SprintId -> StoryId -> TaskId -> Handler ()
 putSprintStoryTaskR projectId sprintId storyId taskId = do
+  Auth.devOrMaster projectId
   task :: Task <- requireJsonBodyWith [("story", toJSON storyId), ("sprint", toJSON sprintId)]
   runDB $ do
     existingMby <- selectFirst [TaskSprint ==. sprintId

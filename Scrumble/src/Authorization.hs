@@ -59,3 +59,6 @@ adminOnly = assert $ pureCheck isAdmin
 
 masterOnly :: ProjectId -> Handler ()
 masterOnly = assert . rolesOnProject [ScrumMaster, ProductOwner] 
+
+devOrMaster :: ProjectId -> Handler ()
+devOrMaster = assert . rolesOnProject [ScrumMaster, Developer]
