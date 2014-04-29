@@ -21,6 +21,7 @@ getSprintStoryTaskR projectId sprintId storyId taskId = do
 
 putSprintStoryTaskR :: ProjectId -> SprintId -> StoryId -> TaskId -> Handler ()
 putSprintStoryTaskR projectId sprintId storyId taskId = do
+  user <- Auth.currentUser
   Auth.devOrMaster projectId
   task :: Task <- requireJsonBodyWith [("story", toJSON storyId), ("sprint", toJSON sprintId)]
   runDB $ do
@@ -34,17 +35,18 @@ putSprintStoryTaskR projectId sprintId storyId taskId = do
         roleMby <- selectFirst [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId] []
         ("userId", "User must have a role on the project.") `validate` (isJust roleMby)
       ("remaining", "Remaining work must be >= 0.") `validate` ((taskRemaining task) >= 0)
-      modifyValications (entityVal existing) task
+      modifyValications (entityVal existing) task (Just $ entityKey user)
     replace taskId task
     return ()
 
-modifyValications existing new = case (taskStatus existing) of 
+modifyValications existing new user = case (taskStatus existing) of 
     Unassigned -> do
       when ((taskStatus new) == Assigned) $ ("userId", "Assigning tasks should also set user id.") `validate`
         (isJust $ taskUserId new)
       when ((taskStatus new) == Completed) $ ("status", "Can not set an unassigned task as complete.") `validate` False
       when ((taskStatus new) == Unassigned) $ ("status", "Can not unassign an unassigned task.") `validate` False
-      when ((taskStatus new) == Accepted) $ ("status", "Can not set an unassigned task as accepted.") `validate` False
+      when ((taskStatus new) == Accepted) $ ("userId", "User must be defined when accepting task.") `validate` 
+        ((taskUserId new) == user)
     Assigned   -> do
       when ((taskStatus new) == Unassigned) $ ("status", "Unassigning task should also remove user id.") `validate`
         (isNothing $ taskUserId new)
