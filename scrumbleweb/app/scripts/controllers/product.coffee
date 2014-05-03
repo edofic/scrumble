@@ -1,16 +1,28 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'ProductCtrl', ($scope, $rootScope, $modal, Story, Project, ProjectUser, SprintStory, growl) ->
+  .controller 'ProductCtrl', ($scope, $rootScope, $modal, Story, Project, ProjectUser, Sprint, SprintStory, growl) ->
     projectId = $rootScope.currentUser.activeProject
 
-    $scope.canEdit = no
-
     ProjectUser.get projectId: projectId, userId: $rootScope.currentUser.id, (projectUser) ->
-      $scope.canEdit = ('ProductOwner' in projectUser.roles) || ('ScrumMaster' in projectUser.roles)
+      $scope.isProductOwner = 'ProductOwner' in projectUser.roles
+      $scope.isScrumMaster = 'ScrumMaster' in projectUser.roles
 
     $scope.load = ->
-      $scope.stories = Story.query projectId: projectId
+      $scope.sprints = Sprint.query projectId: projectId, (sprints) ->
+        $scope.currentSprint = _.find sprints, (x) -> x.current
+        $scope.nextSprint = _.find sprints, (x) -> x.next
+
+        $scope.stories = Story.query projectId: projectId, ->
+          $scope.finishedStories = $scope.filterDone($scope.stories)
+          $scope.unfinishedStories = $scope.filterNotDone($scope.stories)
+          $scope.unfinishedCurrentStories = _.filter $scope.unfinishedStories, (x) -> x.sprint
+          $scope.unfinishedRemainingStories = _.filter $scope.unfinishedStories, (x) -> !x.sprint
+
+    $scope.load()
+
+    $scope.canAddStory = ->
+      $scope.isProductOwner || $scope.isScrumMaster
 
     $scope.addStory = ->
       modalInstance = $modal.open(
@@ -20,7 +32,10 @@ angular.module('scrumbleApp')
       modalInstance.result.then ->
         $scope.load()
 
-    $scope.changeEstimate = (story) ->
+    $scope.canEditStoryEstimate = (story) ->
+      not story.done and $scope.isScrumMaster
+
+    $scope.changeStoryEstimate = (story) ->
       modalInstance = $modal.open(
         templateUrl: 'views/product-story-estimate-modal.html'
         controller: 'ProductStoryEstimateModalCtrl'
@@ -30,24 +45,50 @@ angular.module('scrumbleApp')
       modalInstance.result.then ->
         # $scope.load()
 
-    $scope.load()
+    $scope.canAddUnfinishedStoryToSprint = (story) ->
+      not story.sprint and $scope.isScrumMaster
 
-    $scope.addStoryToSprint = (storyId) ->
+    $scope.canRemoveUnfinishedStoryFromSprint = (story) ->
+      story.sprint and $scope.isScrumMaster
+
+    $scope.canAddFinishedStoryToSprint = (story) ->
+      no
+
+    $scope.canRemoveFinishedStoryFromSprint = (story) ->
+      no
+
+    $scope.addStoryToSprint = (story) ->
       sprintStory = new SprintStory()
       sprintStory.$update
         projectId: projectId
-        sprintId: 1 # TODO
-        storyId: storyId
+        sprintId: $scope.nextSprint.id
+        storyId: story.id
       , $scope.load
-    $scope.removeStoryFromSprint = (storyId, sprintId) ->
+
+    $scope.removeStoryFromSprint = (story) ->
       sprintStory = new SprintStory()
       sprintStory.$delete
         projectId: projectId
-        sprintId: sprintId
-        storyId: storyId
+        sprintId: story.sprint.id
+        storyId: story.id
       , $scope.load
 
-
+  .directive('productStory', ->
+    restrict: 'E'
+    scope:
+      story: '='
+      nextSprint: '='
+      canAddToSprint: '='
+      addToSprint: '='
+      canRemoveFromSprint: '='
+      removeFromSprint: '='
+      canEditEstimate: '='
+      changeEstimate: '='
+    replace: yes
+    templateUrl: 'views/product-story.html'
+    controller: ($scope) ->
+      
+  )
 
   .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->
     projectId = $rootScope.currentUser.activeProject

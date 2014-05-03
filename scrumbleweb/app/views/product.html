@@ -1,7 +1,7 @@
 <div class="product">
   <div class="white-stripe">
     <div class="container">
-      <div class="pull-right" ng-show="canEdit">
+      <div class="pull-right" ng-show="canAddStory()">
         <button class="btn btn-primary pull-right new-story-btn" ng-click="addStory()">Add new story</button>
       </div>
 
@@ -9,73 +9,64 @@
 
       <br>
 
-      <p ng-hide="stories.length">No stories yet.</p>
-      <p ng-show="stories.length > 0 && filterNotDone(stories).length <= 0">All stories are finished.</p>
+      <ul class="nav nav-tabs">
+        <li ng-class="{active: !showFinished}"><a href="" ng-click="showFinished = false">Unfinished stories</a></li>
+        <li ng-class="{active: showFinished}"><a href="" ng-click="showFinished = true">Finished stories</a></li>
+      </ul>
 
-      <div class="panel panel-default story" ng-repeat="story in filterNotDone(stories)">
-        <div class="panel-heading">
-          <button class="btn btn-danger pull-right" type="button" ng-if="!story.sprint" ng-click="addStoryToSprint(story.id)">Add to sprint 1</button>
-          <button class="btn btn-danger pull-right" type="button" ng-if="story.sprint" ng-click="removeStoryFromSprint(story.id, story.sprint)">Remove from sprint {{story.sprint}}</button>
+      <br>
 
-          <h3 class="panel-title">{{ story.title }}</h3>
-          <p>
-            Priority: <strong>{{ storyPriorities[story.priority].label }}</strong> |
-            Business value: <strong>{{ story.businessValue }}</strong> |
-            Estimate: {{ story.estimate || "/" }} <span ng-if="isAdmin() || isScrum(currentUser.projects[currentUser.activeProject].users[currentUser.id].roles)"><a href="" ng-click="changeEstimate(story)"><i class="glyphicon glyphicon-pencil"></i></a></span>
-          </p>
-        </div>
-        <div class="panel-body">
-          <p class="description">{{ story.description }}</p>
-          <ul class="tests">
-            <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
-          </ul>
-          <ul class="notes">
-            <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
-          </ul>
+      <div ng-show="!showFinished">
+        <p ng-hide="stories.length">No stories yet.</p>
+        <p ng-show="stories.length > 0 && unfinishedStories.length == 0">All stories are finished.</p>
+
+        <div ng-show="unfinishedStories.length">
+          <h3>Current sprint</h3>
+
+          <product-story
+              ng-repeat="story in unfinishedCurrentStories"
+              story="story"
+              next-sprint="nextSprint"
+              can-add-to-sprint="canAddUnfinishedStoryToSprint"
+              add-to-sprint="addStoryToSprint"
+              can-remove-from-sprint="canRemoveUnfinishedStoryFromSprint"
+              remove-from-sprint="removeStoryFromSprint"
+              can-edit-estimate="canEditStoryEstimate"
+              change-estimate="changeStoryEstimate">
+          </product-story>
+
+          <h3>Remaining stories</h3>
+
+          <product-story
+              ng-repeat="story in unfinishedRemainingStories"
+              story="story"
+              next-sprint="nextSprint"
+              can-add-to-sprint="canAddUnfinishedStoryToSprint"
+              add-to-sprint="addStoryToSprint"
+              can-remove-from-sprint="canRemoveUnfinishedStoryFromSprint"
+              remove-from-sprint="removeStoryFromSprint"
+              can-edit-estimate="canEditStoryEstimate"
+              change-estimate="changeStoryEstimate">
+          </product-story>
         </div>
       </div>
 
-      <br>
-    </div>
-  </div>
-  <br>
-  <br>
+      <div ng-show="showFinished">
+        <p ng-hide="finishedStories.length">No finished stories.</p>
 
-
-  <div class="white-stripe">
-    <div class="container">
-      <h2>Finished stories</h2>
-      <br>
-    </div>
-  </div>
-  <br>
-
-  <div>
-    <div class="container">
-      <p ng-hide="filterDone(stories).length">No finished stories.</p>
-
-      <div class="panel panel-default story" ng-repeat="story in filterDone(stories)">
-        <div class="panel-heading">
-
-          <h3 class="panel-title">{{ story.title }}</h3>
-          <p>
-            Priority: <strong>{{ storyPriorities[story.priority].label }}</strong> |
-            Business value: <strong>{{ story.businessValue }}</strong> |
-            Estimate: {{ story.estimate || "/" }}
-          </p>
-        </div>
-        <div class="panel-body">
-          <p class="description">{{ story.description }}</p>
-          <ul class="tests">
-            <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
-          </ul>
-          <ul class="notes">
-            <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
-          </ul>
-        </div>
+        <product-story
+            ng-repeat="story in finishedStories"
+            story="story"
+            next-sprint="nextSprint"
+            can-add-to-sprint="canAddFinishedStoryToSprint"
+            add-to-sprint="addStoryToSprint"
+            can-remove-from-sprint="canRemoveFinishedStoryFromSprint"
+            remove-from-sprint="removeStoryFromSprint"
+            can-edit-estimate="canEditStoryEstimate"
+            change-estimate="changeStoryEstimate">
+        </product-story>
       </div>
 
-      <br>
     </div>
   </div>
 </div>

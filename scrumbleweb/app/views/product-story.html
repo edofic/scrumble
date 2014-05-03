@@ -1,0 +1,23 @@
+<div class="panel panel-default story">
+  <div class="panel-heading">
+    <button class="btn btn-danger pull-right" type="button" ng-if="canAddToSprint(story)" ng-click="addToSprint(story)">Add to sprint {{ nextSprint.number }}</button>
+    <button class="btn btn-danger pull-right" type="button" ng-if="canRemoveFromSprint(story)" ng-click="removeFromSprint(story)">Remove from sprint {{ story.sprint.number }}</button>
+
+    <h3 class="panel-title">{{ story.title }}</h3>
+    <p>
+      Priority: <strong>{{ $root.storyPriorities[story.priority].label }}</strong> |
+      Business value: <strong>{{ story.businessValue }}</strong> |
+      Estimate: {{ story.estimate || "/" }} <span ng-if="canEditEstimate(story)"><a href="" ng-click="changeEstimate(story)"><i class="glyphicon glyphicon-pencil"></i></a></span>
+      <span ng-if="story.sprint">| Sprint {{ story.sprint.number }}</span>
+    </p>
+  </div>
+  <div class="panel-body">
+    <p class="description">{{ story.description }}</p>
+    <ul class="tests">
+      <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
+    </ul>
+    <ul class="notes">
+      <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
+    </ul>
+  </div>
+</div>
