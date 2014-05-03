@@ -30,8 +30,8 @@ Story json
     sprint         SprintId Maybe
     title          Text
     description    Text
-    tests          [Text]
-    notes          [Text]
+    tests          Text
+    notes          Text
     priority       StoryPriority
     businessValue  Int64
     done           Bool
