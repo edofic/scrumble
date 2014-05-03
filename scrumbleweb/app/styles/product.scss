@@ -26,6 +26,15 @@
         color: $brand-primary;
       }
     }
+    .notes {
+      margin-bottom: 0;
+      padding: 0;
+
+      li {
+        list-style: none;
+        color: $brand-warning;
+      }
+    }
   }
 
 }

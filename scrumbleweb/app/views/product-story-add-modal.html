@@ -24,6 +24,13 @@
         </div>
       </div>
       <div class="form-group fake-row">
+        <label class="col-sm-3 control-label">Notes:</label>
+        <div class="col-sm-9">
+          <p ng-repeat="note in story.notes"><input type="text" class="form-control" ng-model="note.note"></p>
+          <a href="" ng-click="addNote()">add another</a>
+        </div>
+      </div>
+      <div class="form-group fake-row">
         <label class="col-sm-3 control-label">Priority:</label>
         <div class="col-sm-9">
           <select class="form-control" ng-model="story.priority" ng-options="priority.value as priority.label for priority in $root.storyPrioritiesOrdered"></select>

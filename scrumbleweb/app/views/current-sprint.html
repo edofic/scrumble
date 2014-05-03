@@ -1,5 +1,5 @@
-<div class="current-sprint">
-  <div class="white-stripe" ng-if="currentSprint">
+<div class="current-sprint" ng-if="currentSprint">
+  <div class="white-stripe">
     <div class="container">
       <h2>User stories for Sprint {{currentSprint.number}} ({{ currentSprint.start | date:'dd.MM.yyyy' }} - {{ currentSprint.end | date:'dd.MM.yyyy' }})</h2>
 
@@ -27,6 +27,9 @@
               <p class="description">{{ story.description }}</p>
               <ul class="tests">
                 <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
+              </ul>
+              <ul class="notes">
+                <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
               </ul>
               <br>
             </div>
