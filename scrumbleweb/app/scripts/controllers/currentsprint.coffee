@@ -93,6 +93,29 @@ angular.module('scrumbleApp')
       _.reduce story.tasks, (sum, task) ->
         sum + task.remaining
       , 0
+    $scope.acceptStory = (story) ->
+      storyStory = new Story()
+      story.done = true
+      angular.extend storyStory, story
+      storyStory.$update
+        projectId: projectId
+        storyId: storyStory.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while accepting a story"))
+        $scope.load()
+    $scope.rejectStory = (story) ->
+      sprintId = story.sprint
+      story.sprint = null
+      sprintStory = new SprintStory()
+      sprintStory.$delete
+        projectId: projectId
+        sprintId: sprintId
+        storyId: story.id
+      , $scope.load
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
+        $scope.load()
 
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
