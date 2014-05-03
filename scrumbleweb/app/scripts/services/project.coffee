@@ -49,14 +49,29 @@ angular.module('scrumbleApp')
 
             data.resource
     )
-  .factory 'Story', ($resource, ApiRoot) ->
-    $resource(ApiRoot + '/api/projects/:projectId/stories/:storyId', {},
+
+  .factory 'Story', ($resource, $q, richQuery, ApiRoot, Sprint) ->
+    Story = $resource(ApiRoot + '/api/projects/:projectId/stories/:storyId', {},
       query:
         method: 'GET'
         isArray: true
       update:
         method: 'PUT'
     )
+
+    richQuery Story, (stories, cb) ->
+      projectId = stories[0].project
+
+      Sprint.query projectId: projectId, (sprints) ->
+        sprintsMap = _.indexBy sprints, 'id'
+
+        _.each stories, (x) ->
+          x.sprint = sprintsMap[x.sprint]
+
+        cb()
+
+    Story
+
   .factory 'SprintStory', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/sprints/:sprintId/stories/:storyId', {},
       query:
