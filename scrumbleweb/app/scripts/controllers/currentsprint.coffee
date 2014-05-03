@@ -89,6 +89,11 @@ angular.module('scrumbleApp')
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
         $scope.load()
 
+    $scope.storyRemainingSum = (story) ->
+      _.reduce story.tasks, (sum, task) ->
+        sum + task.remaining
+      , 0
+
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
 
