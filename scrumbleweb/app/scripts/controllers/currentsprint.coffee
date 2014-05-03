@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'CurrentSprintCtrl', ($scope, $filter, $rootScope, $modal, Sprint, Story, SprintStory, Task, User, growl) ->
+  .controller 'CurrentSprintCtrl', ($scope, $filter, $rootScope, $modal, $q, Sprint, Story, SprintStory, Task, User, growl, bbox) ->
     projectId = $scope.currentUser.activeProject
 
     $scope.statusColor =
@@ -105,17 +105,28 @@ angular.module('scrumbleApp')
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while accepting a story"))
         $scope.load()
     $scope.rejectStory = (story) ->
-      sprintId = story.sprint
-      story.sprint = null
-      sprintStory = new SprintStory()
-      sprintStory.$delete
-        projectId: projectId
-        sprintId: sprintId
-        storyId: story.id
-      , $scope.load
-      , (reason) ->
-        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
-        $scope.load()
+      bbox.prompt 'Add a note?', (note) ->
+        promises = []
+        if note
+          story.notes.push(note)
+
+          storyStory = new Story()
+          angular.extend storyStory, story
+          promises.push storyStory.$update
+            projectId: projectId
+            storyId: storyStory.id
+
+        sprintStory = new SprintStory()
+        promises.push sprintStory.$delete
+          projectId: projectId
+          sprintId: story.sprint
+          storyId: story.id
+
+        $q.all(promises).then ->
+          $scope.load()
+        , (reason) ->
+          growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
+          $scope.load()
 
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
