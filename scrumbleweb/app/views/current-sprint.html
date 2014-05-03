@@ -13,10 +13,10 @@
   <div>
     <div class="container">
       <div ng-repeat="story in filterNotDone(currentSprint.stories)">
-        <div class="panel story" ng-class="{'panel-default': storyRemainingSum(story) != 0, 'panel-success': storyRemainingSum(story) == 0}">
+        <div class="panel story" ng-class="{'panel-default': !storyIsCompleted(story), 'panel-success': storyIsCompleted(story)}">
           <div class="panel-heading">
             <div class="btn-group pull-right" ng-if="isProduct()">
-              <button class="btn btn-success" type="button" ng-if="storyRemainingSum(story) == 0" ng-click="acceptStory(story)">Accept</button>
+              <button class="btn btn-success" type="button" ng-if="storyIsCompleted(story)" ng-click="acceptStory(story)">Accept</button>
               <button class="btn btn-danger" type="button" ng-click="rejectStory(story)">Reject</button>
             </div>
 
@@ -73,6 +73,9 @@
 
                       <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs">
                         Log time
+                      </button>
+                      <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id && task.remaining == 0" type="button" class="btn btn-success btn-xs" ng-click="taskComplete(task, story)">
+                        Complete
                       </button>
                     </td>
                   </tr>

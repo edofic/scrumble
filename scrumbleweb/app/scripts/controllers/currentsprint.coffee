@@ -89,10 +89,21 @@ angular.module('scrumbleApp')
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
         $scope.load()
 
-    $scope.storyRemainingSum = (story) ->
-      _.reduce story.tasks, (sum, task) ->
-        sum + task.remaining
-      , 0
+    $scope.taskComplete = (task, story) ->
+      task.status = 'Completed'
+      task.$update
+        projectId: projectId
+        sprintId: $scope.currentSprint.id
+        storyId: story.id
+        taskId: task.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+        $scope.load()
+
+    $scope.storyIsCompleted = (story) ->
+      _.all story.tasks, (task) ->
+        task.status == 'Completed'
     $scope.acceptStory = (story) ->
       storyStory = new Story()
       story.done = true
@@ -149,7 +160,6 @@ angular.module('scrumbleApp')
 
       taskCopy.remaining = taskCopy.remaining * 100
 
-      # TODO: use api
       taskCopy.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
         $modalInstance.close()
 
