@@ -47,6 +47,11 @@ angular.module('scrumbleApp')
         storyId: storyId
       , $scope.load
 
+    $scope.filterDone = (arr) ->
+      _.where arr, done: true
+    $scope.filterNotDone = (arr) ->
+      _.where arr, done: false
+
 
   .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->
     projectId = $rootScope.currentUser.activeProject
