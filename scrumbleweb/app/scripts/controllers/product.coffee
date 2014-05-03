@@ -53,6 +53,7 @@ angular.module('scrumbleApp')
 
     $scope.story = new Story
     $scope.story.tests = [{test: ''}]
+    $scope.story.notes = [{notes: ''}]
     $scope.story.priority = 'MustHave'
     $scope.story.businessValue = 0
     $scope.story.project = projectId
@@ -60,6 +61,8 @@ angular.module('scrumbleApp')
     $scope.autoError = {}
     $scope.addTest = ->
       $scope.story.tests.push({test: ''})
+    $scope.addNote = ->
+      $scope.story.notes.push({note: ''})
 
     $scope.addStory = (invalid) ->
       if (invalid)
@@ -68,6 +71,7 @@ angular.module('scrumbleApp')
       s.description = ''
       angular.extend(s, $scope.story)
       s.tests = _.filter(_.map $scope.story.tests, (t) -> t.test)
+      s.notess = _.filter(_.map $scope.story.notes, (t) -> t.note)
 
       s.$save projectId: projectId, ->
         $modalInstance.close()

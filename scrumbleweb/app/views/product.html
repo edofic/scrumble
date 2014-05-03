@@ -10,7 +10,7 @@
 
     <p ng-hide="stories.length">No stories yet.</p>
 
-    <div class="panel panel-default story" ng-repeat="story in stories">
+    <div class="panel panel-default story" ng-repeat="story in stories" ng-if="!story.done">
       <div class="panel-heading">
         <button class="btn btn-danger pull-right" type="button" ng-if="!story.sprint" ng-click="addStoryToSprint(story.id)">Add to sprint 1</button>
         <button class="btn btn-danger pull-right" type="button" ng-if="story.sprint" ng-click="removeStoryFromSprint(story.id, story.sprint)">Remove from sprint {{story.sprint}}</button>
@@ -26,6 +26,9 @@
         <p class="description">{{ story.description }}</p>
         <ul class="tests">
           <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
+        </ul>
+        <ul class="notes">
+          <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
         </ul>
       </div>
     </div>
