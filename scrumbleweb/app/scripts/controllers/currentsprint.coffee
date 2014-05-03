@@ -89,6 +89,18 @@ angular.module('scrumbleApp')
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
         $scope.load()
 
+    $scope.taskComplete = (task, story) ->
+      task.status = 'Completed'
+      task.$update
+        projectId: projectId
+        sprintId: $scope.currentSprint.id
+        storyId: story.id
+        taskId: task.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+        $scope.load()
+
     $scope.storyIsCompleted = (story) ->
       _.all story.tasks, (task) ->
         task.status == 'Completed'

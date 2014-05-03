@@ -74,6 +74,9 @@
                       <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs">
                         Log time
                       </button>
+                      <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id && task.remaining == 0" type="button" class="btn btn-success btn-xs" ng-click="taskComplete(task, story)">
+                        Complete
+                      </button>
                     </td>
                   </tr>
                   <tr>
