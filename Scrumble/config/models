@@ -31,6 +31,7 @@ Story json
     title          Text
     description    Text
     tests          [Text]
+    notes          [Text]
     priority       StoryPriority
     businessValue  Int64
     done           Bool
