@@ -21,6 +21,10 @@ angular.module('scrumbleApp')
       user = $scope.currentUser
       projectUsers = user.projects[user.activeProject].users
       projectUsers[user.id] && ('Developer' in projectUsers[user.id].roles)
+    $scope.isProduct = ->
+      user = $scope.currentUser
+      projectUsers = user.projects[user.activeProject].users
+      projectUsers[user.id] && ('ProductOwner' in projectUsers[user.id].roles)
 
     updateFromActiveProject = ->
       user = $scope.currentUser

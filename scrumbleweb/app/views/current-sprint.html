@@ -12,9 +12,14 @@
 
   <div>
     <div class="container">
-      <div ng-repeat="story in currentSprint.stories">
-        <div class="panel panel-default story">
+      <div ng-repeat="story in filterNotDone(currentSprint.stories)">
+        <div class="panel story" ng-class="{'panel-default': storyRemainingSum(story) != 0, 'panel-success': storyRemainingSum(story) == 0}">
           <div class="panel-heading">
+            <div class="btn-group pull-right" ng-if="isProduct()">
+              <button class="btn btn-success" type="button" ng-if="storyRemainingSum(story) == 0" ng-click="acceptStory(story)">Accept</button>
+              <button class="btn btn-danger" type="button" ng-click="rejectStory(story)">Reject</button>
+            </div>
+
             <h3 class="panel-title">{{ story.title }}</h3>
             <p>
               Priority: <strong>{{ storyPriorities[story.priority].label }}</strong> |
@@ -52,7 +57,7 @@
                       <span ng-if="task.status !== 'Unassigned'">{{ allUsers[task.userId].username }}</span>
                     </td>
                     <td class="text-{{ statusColor[task.status] }}">{{task.status}}</td>
-                    <td>{{task.remaining}} hours</td>
+                    <td>{{task.remaining / 100}} hours</td>
                     <td class="actions">
                       <button ng-if="task.status == 'Unassigned' && isDeveloper()" type="button" class="btn btn-default btn-xs" ng-click="taskTake(task, story)">
                         Take

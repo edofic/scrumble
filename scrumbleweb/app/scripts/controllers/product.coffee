@@ -48,6 +48,7 @@ angular.module('scrumbleApp')
       , $scope.load
 
 
+
   .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->
     projectId = $rootScope.currentUser.activeProject
 

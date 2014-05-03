@@ -39,6 +39,11 @@ angular.module('scrumbleApp')
       else
         backupErrorMessage
 
+    $scope.filterDone = (arr) ->
+      _.where arr, done: true
+    $scope.filterNotDone = (arr) ->
+      _.where arr, done: false
+
     $scope.$root.userProjectRolesOrdered = [
       {value: 'Developer', label: 'Team member'}
       {value: 'ScrumMaster', label: 'Scrum master'}

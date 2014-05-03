@@ -89,6 +89,34 @@ angular.module('scrumbleApp')
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
         $scope.load()
 
+    $scope.storyRemainingSum = (story) ->
+      _.reduce story.tasks, (sum, task) ->
+        sum + task.remaining
+      , 0
+    $scope.acceptStory = (story) ->
+      storyStory = new Story()
+      story.done = true
+      angular.extend storyStory, story
+      storyStory.$update
+        projectId: projectId
+        storyId: storyStory.id
+      , null
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while accepting a story"))
+        $scope.load()
+    $scope.rejectStory = (story) ->
+      sprintId = story.sprint
+      story.sprint = null
+      sprintStory = new SprintStory()
+      sprintStory.$delete
+        projectId: projectId
+        sprintId: sprintId
+        storyId: story.id
+      , $scope.load
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
+        $scope.load()
+
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
 
@@ -100,15 +128,18 @@ angular.module('scrumbleApp')
       if (invalid)
         return
 
-      $scope.task.status = 'Unassigned'
+      taskCopy = angular.copy $scope.task
+      taskCopy.status = 'Unassigned'
 
-      if $scope.task.user?
-        $scope.task.userId = $scope.task.user.id
-        $scope.task.user = $scope.task.user.id
-        $scope.task.status = 'Assigned'
+      if taskCopy.user?
+        taskCopy.userId = taskCopy.user.id
+        taskCopy.user = taskCopy.user.id
+        taskCopy.status = 'Assigned'
+
+      taskCopy.remaining = taskCopy.remaining * 100
 
       # TODO: use api
-      $scope.task.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
+      taskCopy.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
         $modalInstance.close()
 
         growl.addSuccessMessage("Task has been added.")

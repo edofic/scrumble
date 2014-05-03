@@ -28,6 +28,8 @@ angular.module('scrumbleApp')
       query:
         method: 'GET'
         isArray: true
+      update:
+        method: 'PUT'
     )
   .factory 'SprintStory', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/sprints/:sprintId/stories/:storyId', {},
