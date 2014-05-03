@@ -45,6 +45,7 @@ library
                      Handler.ProjectUsers
                      Handler.ProjectUser
                      Handler.Tasks
+                     Handler.TasksTask
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
