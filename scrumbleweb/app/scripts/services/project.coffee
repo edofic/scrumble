@@ -21,7 +21,33 @@ angular.module('scrumbleApp')
     $resource(ApiRoot + '/api/projects/:projectId/sprints/:sprintId', {},
       query:
         method: 'GET'
-        isArray: true
+        isArray: true,
+        interceptor:
+          response: (data) ->
+            data.resource.sort (a, b) ->
+              a.start - b.start
+
+            number = 1
+
+            _.each data.resource, (x) ->
+              x.number = number
+              x.current = no
+              x.next = no
+
+              number += 1
+
+            now = new Date()
+
+            currentIdx = _.findIndex data.resource, (x) ->
+              x.start < now and now < x.end
+
+            if currentIdx != -1
+              data.resource[currentIdx].current = yes
+
+              if data.resource[currentIdx + 1]
+                data.resource[currentIdx + 1].next = yes
+
+            data.resource
     )
   .factory 'Story', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/stories/:storyId', {},
