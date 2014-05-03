@@ -100,15 +100,18 @@ angular.module('scrumbleApp')
       if (invalid)
         return
 
-      $scope.task.status = 'Unassigned'
+      taskCopy = angular.copy $scope.task
+      taskCopy.status = 'Unassigned'
 
-      if $scope.task.user?
-        $scope.task.userId = $scope.task.user.id
-        $scope.task.user = $scope.task.user.id
-        $scope.task.status = 'Assigned'
+      if taskCopy.user?
+        taskCopy.userId = taskCopy.user.id
+        taskCopy.user = taskCopy.user.id
+        taskCopy.status = 'Assigned'
+
+      taskCopy.remaining = taskCopy.remaining * 100
 
       # TODO: use api
-      $scope.task.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
+      taskCopy.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
         $modalInstance.close()
 
         growl.addSuccessMessage("Task has been added.")

@@ -52,7 +52,7 @@
                       <span ng-if="task.status !== 'Unassigned'">{{ allUsers[task.userId].username }}</span>
                     </td>
                     <td class="text-{{ statusColor[task.status] }}">{{task.status}}</td>
-                    <td>{{task.remaining}} hours</td>
+                    <td>{{task.remaining / 100}} hours</td>
                     <td class="actions">
                       <button ng-if="task.status == 'Unassigned' && isDeveloper()" type="button" class="btn btn-default btn-xs" ng-click="taskTake(task, story)">
                         Take
