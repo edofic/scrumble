@@ -71,7 +71,7 @@ angular.module('scrumbleApp')
       s.description = ''
       angular.extend(s, $scope.story)
       s.tests = _.filter(_.map $scope.story.tests, (t) -> t.test)
-      s.notess = _.filter(_.map $scope.story.notes, (t) -> t.note)
+      s.notes = _.filter(_.map $scope.story.notes, (t) -> t.note)
 
       s.$save projectId: projectId, ->
         $modalInstance.close()
