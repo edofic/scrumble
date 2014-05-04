@@ -1,6 +1,6 @@
 <div class="panel panel-default story">
   <div class="panel-heading">
-    <button class="btn btn-danger pull-right" type="button" ng-if="canAddToSprint(story)" ng-click="addToSprint(story)">Add to sprint {{ currentSprint.number }}</button>
+    <button class="btn btn-primary pull-right" type="button" ng-if="canAddToSprint(story)" ng-click="addToSprint(story)">Add to sprint {{ currentSprint.number }}</button>
     <button class="btn btn-danger pull-right" type="button" ng-if="canRemoveFromSprint(story)" ng-click="removeFromSprint(story)">Remove from sprint {{ story.sprint.number }}</button>
 
     <h3 class="panel-title">{{ story.title }}</h3>
