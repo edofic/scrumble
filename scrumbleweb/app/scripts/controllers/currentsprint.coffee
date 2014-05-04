@@ -102,8 +102,8 @@ angular.module('scrumbleApp')
         $scope.load()
 
     $scope.storyIsCompleted = (story) ->
-      _.all story.tasks, (task) ->
-        task.status == 'Completed'
+      story.tasks? and story.tasks.length > 0 and _.all story.tasks, (task) -> task.status == 'Completed'
+
     $scope.acceptStory = (story) ->
       storyStory = new Story()
       story.done = true
