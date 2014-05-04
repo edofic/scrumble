@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'ProjectCtrl', ($scope, $routeParams, User, Project, ProjectUser, growl, bbox) ->
+  .controller 'ProjectCtrl', ($scope, $routeParams, User, Project, ProjectUser, Auth, growl, bbox) ->
     $scope.needsAdmin('You don\'t have permission to manage projects')
 
     $scope.canEdit = -> $scope.isAdmin()
@@ -61,6 +61,7 @@ angular.module('scrumbleApp')
       u.$update projectId: $scope.project.id, userId: user.user.id, (res) ->
         $scope.initNewUser()
         $scope.load()
+        Auth.loadCurrentUser() if u.user == $scope.currentUser.id
       , (reason) ->
         growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while saving user"))
 
