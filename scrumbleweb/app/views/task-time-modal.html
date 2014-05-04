@@ -1,0 +1,25 @@
+<form class="task-time-modal" name="form" ng-submit="save(form.$invalid)">
+  <div class="modal-header">
+    <h3>Log time for {{ task.task }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal">
+      <div class="form-group fake-row">
+        <label class="col-sm-3 control-label">Work done:</label>
+        <div class="col-sm-9">
+          <input type="number" min="0" max="{{ time.doneMax }}" class="form-control" ng-model="time.done">
+        </div>
+      </div>
+      <div class="form-group fake-row">
+        <label class="col-sm-3 control-label">Remaining:</label>
+        <div class="col-sm-9">
+          <p class="form-control-static">{{ time.remaining() / 100 }} hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

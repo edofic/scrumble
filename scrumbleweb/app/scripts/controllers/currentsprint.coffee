@@ -139,6 +139,23 @@ angular.module('scrumbleApp')
           growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
           $scope.load()
 
+    $scope.logTime = (task, story) ->
+      modalInstance = $modal.open(
+        templateUrl: 'views/task-time-modal.html'
+        controller: 'TaskTimeModalCtrl'
+        resolve:
+          task: -> task
+      )
+      modalInstance.result.then ->
+        task.$update
+          projectId: projectId
+          sprintId: $scope.currentSprint.id
+          storyId: story.id
+          taskId: task.id
+        , null
+        , (reason) ->
+          growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
+          $scope.load()
 
   .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
 
@@ -168,6 +185,25 @@ angular.module('scrumbleApp')
       , (reason) ->
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while adding task"))
         $scope.autoError.showErrors(reason.data)
+
+    $scope.cancel = ->
+      $modalInstance.dismiss()
+
+  .controller 'TaskTimeModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl, task) ->
+    $scope.task = task
+
+    $scope.time =
+      done: 0
+      doneMax: $scope.task.remaining / 100
+      remaining: ->
+        $scope.task.remaining - ($scope.time.done * 100)
+
+    $scope.save = (invalid) ->
+      return if invalid
+
+      $scope.task.remaining = $scope.time.remaining()
+
+      $modalInstance.close()
 
     $scope.cancel = ->
       $modalInstance.dismiss()
