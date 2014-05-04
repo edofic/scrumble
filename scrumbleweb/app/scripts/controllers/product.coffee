@@ -45,7 +45,7 @@ angular.module('scrumbleApp')
         # $scope.load()
 
     $scope.canAddUnfinishedStoryToSprint = (story) ->
-      not story.sprint and $scope.isScrumMaster
+      not story.sprint and $scope.isScrumMaster # and story.estimation > 0
 
     $scope.canRemoveUnfinishedStoryFromSprint = (story) ->
       no
