@@ -21,12 +21,12 @@
         <p ng-show="stories.length > 0 && unfinishedStories.length == 0">All stories are finished.</p>
 
         <div ng-show="unfinishedStories.length">
-          <h3>Current sprint</h3>
+          <h3>Current sprint ({{ currentSprint.start | date }} - {{ currentSprint.end | date }})</h3>
 
           <product-story
               ng-repeat="story in unfinishedCurrentStories"
               story="story"
-              next-sprint="nextSprint"
+              current-sprint="currentSprint"
               can-add-to-sprint="canAddUnfinishedStoryToSprint"
               add-to-sprint="addStoryToSprint"
               can-remove-from-sprint="canRemoveUnfinishedStoryFromSprint"
@@ -40,7 +40,7 @@
           <product-story
               ng-repeat="story in unfinishedRemainingStories"
               story="story"
-              next-sprint="nextSprint"
+              current-sprint="currentSprint"
               can-add-to-sprint="canAddUnfinishedStoryToSprint"
               add-to-sprint="addStoryToSprint"
               can-remove-from-sprint="canRemoveUnfinishedStoryFromSprint"
@@ -57,7 +57,7 @@
         <product-story
             ng-repeat="story in finishedStories"
             story="story"
-            next-sprint="nextSprint"
+            current-sprint="currentSprint"
             can-add-to-sprint="canAddFinishedStoryToSprint"
             add-to-sprint="addStoryToSprint"
             can-remove-from-sprint="canRemoveFinishedStoryFromSprint"

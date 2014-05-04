@@ -11,7 +11,6 @@ angular.module('scrumbleApp')
     $scope.load = ->
       $scope.sprints = Sprint.query projectId: projectId, (sprints) ->
         $scope.currentSprint = _.find sprints, (x) -> x.current
-        $scope.nextSprint = _.find sprints, (x) -> x.next
 
         $scope.stories = Story.query projectId: projectId, ->
           $scope.finishedStories = $scope.filterDone($scope.stories)
@@ -33,7 +32,7 @@ angular.module('scrumbleApp')
         $scope.load()
 
     $scope.canEditStoryEstimate = (story) ->
-      not story.done and $scope.isScrumMaster
+      not story.done and not story.sprint and $scope.isScrumMaster
 
     $scope.changeStoryEstimate = (story) ->
       modalInstance = $modal.open(
@@ -49,7 +48,8 @@ angular.module('scrumbleApp')
       not story.sprint and $scope.isScrumMaster
 
     $scope.canRemoveUnfinishedStoryFromSprint = (story) ->
-      story.sprint and $scope.isScrumMaster
+      no
+      # story.sprint and $scope.isScrumMaster
 
     $scope.canAddFinishedStoryToSprint = (story) ->
       no
@@ -61,7 +61,7 @@ angular.module('scrumbleApp')
       sprintStory = new SprintStory()
       sprintStory.$update
         projectId: projectId
-        sprintId: $scope.nextSprint.id
+        sprintId: $scope.currentSprint.id
         storyId: story.id
       , $scope.load
 
@@ -77,7 +77,7 @@ angular.module('scrumbleApp')
     restrict: 'E'
     scope:
       story: '='
-      nextSprint: '='
+      currentSprint: '='
       canAddToSprint: '='
       addToSprint: '='
       canRemoveFromSprint: '='
