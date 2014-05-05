@@ -62,7 +62,7 @@ body {
 
 form .ng-invalid {
     // @extend .has-error; .. would have to be on parent
-    border-color: #b94a48;
+    border-color: #b94a48 !important;
 }
 
 .projectsList .chooseButton {
