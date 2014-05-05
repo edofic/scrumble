@@ -9,7 +9,7 @@ import qualified Authorization as Auth
 
 getUsersR :: Handler Value
 getUsersR = do
-  Auth.adminOnly
+  _ <- Auth.currentUser
   users :: [Entity User] <- runDB $ selectList [] [] 
   return $ array $ (toJSON . FlatEntity) `fmap` users
 

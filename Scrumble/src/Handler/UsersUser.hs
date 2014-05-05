@@ -6,7 +6,7 @@ import qualified Authorization as Auth
 
 getUsersUserR :: UserId -> Handler Value
 getUsersUserR userId = do
-  Auth.adminOnly
+  _ <- Auth.currentUser
   userEntity <- runDB $ selectFirst [UserId ==. userId] []
   maybe notFound (return . toJSON . FlatEntity) userEntity
 
