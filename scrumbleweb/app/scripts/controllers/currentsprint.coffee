@@ -133,7 +133,7 @@ angular.module('scrumbleApp')
         sprintStory = new SprintStory()
         promises.push sprintStory.$delete
           projectId: projectId
-          sprintId: story.sprint.id
+          sprintId: story.sprint
           storyId: story.id
 
         $q.all(promises).then ->
