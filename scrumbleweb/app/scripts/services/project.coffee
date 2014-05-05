@@ -85,7 +85,12 @@ angular.module('scrumbleApp')
       query:
         method: 'GET'
         isArray: true
+        interceptor:
+          response: (data) ->
+            _.each data.resource, (task) ->
+              task.remaining = _.sortBy(task.history, (x) -> x.time).slice(-1)[0].remaining
+
+            data.resource
       update:
         method: 'PUT'
     )
-

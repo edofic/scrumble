@@ -17,3 +17,28 @@
   }
 
 }
+
+.task-time-modal {
+  .entry {
+    margin-bottom: 9px;
+  }
+
+  .entry-time {
+    padding-top: 6px;
+    font-weight: bold;
+  }
+
+  .entry-done {
+    input {
+      display: inline;
+      width: 60px;
+    }
+  }
+
+  .entry-remaining {
+    input {
+      display: inline;
+      width: 60px;
+    }
+  }
+}

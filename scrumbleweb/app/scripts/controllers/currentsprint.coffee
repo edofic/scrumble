@@ -148,6 +148,7 @@ angular.module('scrumbleApp')
         controller: 'TaskTimeModalCtrl'
         resolve:
           task: -> task
+          sprint: -> $scope.currentSprint
       )
       modalInstance.result.then ->
         task.$update
@@ -155,7 +156,7 @@ angular.module('scrumbleApp')
           sprintId: $scope.currentSprint.id
           storyId: story.id
           taskId: task.id
-        , null
+        , $scope.load
         , (reason) ->
           growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
           $scope.load()
@@ -180,7 +181,13 @@ angular.module('scrumbleApp')
         taskCopy.user = taskCopy.user.id
         taskCopy.status = 'Assigned'
 
-      taskCopy.remaining = taskCopy.remaining * 100
+      taskCopy.history = [
+        time: new Date().getTime()
+        done: 0
+        remaining: taskCopy.remaining
+      ]
+
+      delete taskCopy.remaining
 
       taskCopy.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
         $modalInstance.close()
@@ -194,21 +201,50 @@ angular.module('scrumbleApp')
     $scope.cancel = ->
       $modalInstance.dismiss()
 
-  .controller 'TaskTimeModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl, task) ->
+  .controller 'TaskTimeModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl, task, sprint) ->
     $scope.task = task
+    $scope.sprint = sprint
 
-    $scope.time =
-      done: 0
-      doneMax: $scope.task.remaining / 100
-      remaining: ->
-        doneTemp = $scope.time.done
-        doneTemp = 0 if !doneTemp?
-        $scope.task.remaining - (doneTemp * 100)
+    tsToStr = (ts) ->
+      d = new Date(ts)
+      d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDay()
+
+    timeMap = _.indexBy task.history, (x) -> tsToStr(x.time)
+
+    $scope.history = []
+
+    end = Math.min(new Date().getTime(), sprint.end)
+    last = _.sortBy(task.history, (x) -> x.time)[0]
+    time = last.time
+    lastRemaining = last.remaining
+
+    while time <= end
+      existing = timeMap[tsToStr(time)]
+
+      entry = if existing?
+        time: existing.time
+        done: existing.done
+        remaining: existing.remaining
+      else
+        time: time
+        done: 0
+        remaining: lastRemaining
+
+      $scope.history.unshift entry
+
+      lastRemaining = entry.remaining
+
+      time += 24 * 60 * 60 * 1000
+
+    $scope.remainingChanged = (entry) ->
+      _.each $scope.history, (x) ->
+        if x.time > entry.time
+          x.remaining = entry.remaining
 
     $scope.save = (invalid) ->
       return if invalid
 
-      $scope.task.remaining = $scope.time.remaining()
+      $scope.task.history = $scope.history
 
       $modalInstance.close()
 

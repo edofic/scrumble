@@ -24,3 +24,13 @@ angular.module('scrumbleApp')
         res.$promise = defer.promise
 
         res
+
+  .directive('onChange', ->
+    (scope, elm, attrs) ->
+      elm.on 'change', ->
+        # we need timeout for angular to update ng-model
+        setTimeout ->
+          scope.$apply ->
+            scope.$eval(attrs.onChange)
+        , 0
+  )
