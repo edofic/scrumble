@@ -196,7 +196,9 @@ angular.module('scrumbleApp')
       done: 0
       doneMax: $scope.task.remaining / 100
       remaining: ->
-        $scope.task.remaining - ($scope.time.done * 100)
+        doneTemp = $scope.time.done
+        doneTemp = 0 if !doneTemp?
+        $scope.task.remaining - (doneTemp * 100)
 
     $scope.save = (invalid) ->
       return if invalid
