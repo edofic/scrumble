@@ -170,6 +170,8 @@ angular.module('scrumbleApp')
       taskCopy = angular.copy $scope.task
       taskCopy.status = 'Unassigned'
 
+      if !taskCopy.user? || !_.isObject(taskCopy.user)
+        delete taskCopy.user
       if taskCopy.user?
         taskCopy.userId = taskCopy.user.id
         taskCopy.user = taskCopy.user.id
