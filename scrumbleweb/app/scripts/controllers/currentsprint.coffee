@@ -13,7 +13,10 @@ angular.module('scrumbleApp')
     getAllDevs = ->
       projectUsers = $scope.currentUser.projects[projectId].users
       devs = _.filter projectUsers, (user) -> 'Developer' in user.roles
-      _.map devs, (user) -> $scope.allUsers[user.user]
+      _.map devs, (user) ->
+        u = $scope.allUsers[user.user]
+        u.joinedName = $scope.$root.formatUser(u)
+        u
 
     User.query (data) ->
       $scope.allUsers = _.indexBy data, 'id'
