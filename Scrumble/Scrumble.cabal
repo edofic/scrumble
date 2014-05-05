@@ -21,6 +21,7 @@ library
                      Model.ProjectRole
                      Model.StoryPriority
                      Model.TaskStatus
+                     Model.TaskWork
                      Settings
                      Settings.StaticFiles
                      Settings.Development
