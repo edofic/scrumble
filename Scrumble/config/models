@@ -46,6 +46,7 @@ Task json
     status TaskStatus
     userId UserId Maybe
     remaining Int64
+    history  [TaskWork]
     deriving Eq Show
 
 ProjectMember json

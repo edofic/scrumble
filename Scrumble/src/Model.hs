@@ -13,6 +13,7 @@ import Model.Role
 import Model.ProjectRole
 import Model.StoryPriority
 import Model.TaskStatus
+import Model.TaskWork
 
 import qualified Data.HashMap.Strict as Hash
 
