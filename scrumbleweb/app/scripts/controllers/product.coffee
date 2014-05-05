@@ -42,10 +42,13 @@ angular.module('scrumbleApp')
           story: -> story
       )
       modalInstance.result.then ->
-        # $scope.load()
+        story.$update
+          projectId: projectId
+          storyId: story.id
+        , $scope.load
 
     $scope.canAddUnfinishedStoryToSprint = (story) ->
-      not story.sprint and $scope.isScrumMaster # and story.estimation > 0
+      not story.sprint and $scope.isScrumMaster and story.points? and story.points > 0
 
     $scope.canRemoveUnfinishedStoryFromSprint = (story) ->
       no
@@ -131,16 +134,14 @@ angular.module('scrumbleApp')
     $scope.story = story
 
     $scope.estimate =
-      estimate: 0
+      points: story.points || 0
 
     $scope.save = (invalid) ->
       return if invalid
 
-      $scope.story.estimate = $scope.estimate.estimate
+      $scope.story.points = $scope.estimate.points
 
       $modalInstance.close()
-
-      growl.addSuccessMessage("Estimate has been saved.")
 
     $scope.cancel = ->
       $modalInstance.dismiss()

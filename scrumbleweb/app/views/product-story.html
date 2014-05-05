@@ -7,7 +7,7 @@
     <p>
       Priority: <strong>{{ $root.storyPriorities[story.priority].label }}</strong> |
       Business value: <strong>{{ story.businessValue }}</strong> |
-      Estimate: {{ story.estimate || "/" }} <span ng-if="canEditEstimate(story)"><a href="" ng-click="changeEstimate(story)"><i class="glyphicon glyphicon-pencil"></i></a></span>
+      Estimate: {{ story.points || "/" }} <span ng-if="canEditEstimate(story)"><a href="" ng-click="changeEstimate(story)"><i class="glyphicon glyphicon-pencil"></i></a></span>
       <span ng-if="story.sprint">| Sprint {{ story.sprint.number }}</span>
     </p>
   </div>

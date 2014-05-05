@@ -46,7 +46,7 @@
           <div class="row">
             <span class="input-group col-sm-3">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-              <input type="text" class="form-control" placeholder="Username" ng-model="newUser.user" typeahead="u as formatUser(u) for u in allUsers | filter:$viewValue | limitTo:8" typeahead-input-formatter="formatUser($model)" typeahead-editable="false" required tabindex="2">
+              <input type="text" class="form-control" placeholder="Username" ng-model="newUser.user" typeahead="u as u.joinedName for u in allUsers | filter:$viewValue | limitTo:8" typeahead-editable="false" required tabindex="2">
             </span>
 
             <span class="btn-group col-sm-6">

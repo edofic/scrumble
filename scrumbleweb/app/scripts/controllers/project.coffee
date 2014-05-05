@@ -15,6 +15,8 @@ angular.module('scrumbleApp')
       $scope.project = Project.get projectId: $routeParams.projectId
       $scope.users = ProjectUser.query projectId: $routeParams.projectId, (users) ->
         $scope.allUsers.$promise.then (allUsers) ->
+          _.each allUsers, (u) -> u.joinedName = $scope.formatUser(u)
+
           allUsersMap = _.zipObject(_.map(allUsers, (u) -> [u.id, u]))
           _.map users, (user) ->
             user.user = allUsersMap[user.user]
