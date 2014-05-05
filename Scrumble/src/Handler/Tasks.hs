@@ -28,8 +28,8 @@ postSprintStoryTasksR projectId sprintId storyId = do
         (isJust storyMby)
       ("sprint", "Sprint does not exist or not part of this project.") `validate`
         (isJust sprintMby)
-      ("remaining", "Remaining work must be more than 0.") `validate`
-        (taskRemaining task > 0)
+      --("remaining", "Remaining work must be more than 0.") `validate`
+      --  (taskRemaining task > 0)
       ("status", "New task should not be Completed.") `validate`
         ((taskStatus task) /= Completed)
       ("status", "New task should not be Accepted.") `validate`
