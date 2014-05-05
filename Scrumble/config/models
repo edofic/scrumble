@@ -45,7 +45,6 @@ Task json
     task Text
     status TaskStatus
     userId UserId Maybe
-    remaining Int64
     history  [TaskWork]
     deriving Eq Show
 

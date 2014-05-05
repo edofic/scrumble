@@ -34,7 +34,7 @@ putSprintStoryTaskR projectId sprintId storyId taskId = do
         let userId = fromJust $ taskUserId task
         roleMby <- selectFirst [ProjectMemberProject ==. projectId, ProjectMemberUser ==. userId] []
         ("userId", "User must have a role on the project.") `validate` (isJust roleMby)
-      ("remaining", "Remaining work must be >= 0.") `validate` ((taskRemaining task) >= 0)
+      --("remaining", "Remaining work must be >= 0.") `validate` ((taskRemaining task) >= 0)
       modifyValications (entityVal existing) task (Just $ entityKey user)
     replace taskId task
     return ()
@@ -55,8 +55,8 @@ modifyValications existing new user = case (taskStatus existing) of
         (((taskUserId existing) == (taskUserId new)) && (isJust $ taskUserId new))
     Completed  -> ("status", "Can not modify completed task") `validate` False
     Accepted   -> do 
-      when ((taskStatus new) == Completed) $
-        ("remaining", "Remaining work must be 0 before task can be completed.") `validate` ((taskRemaining new) == 0)
+      --when ((taskStatus new) == Completed) $
+      --("remaining", "Remaining work must be 0 before task can be completed.") `validate` ((taskRemaining new) == 0)
       when ((taskStatus new) == Accepted) $ ("userId", "Can not change userId on an accepted task.") `validate` 
         (((taskUserId existing) == (taskUserId new)) && (isJust $ taskUserId new))
       when ((taskStatus new) == Unassigned) $ ("status", "Unassigning task should also remove user id.") `validate`

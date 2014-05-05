@@ -12,16 +12,9 @@ import Text.Read
 data TaskWork = TaskWork { time      :: Int64
                          , done      :: Double
                          , remaining :: Double
-                         } deriving (Eq, Generic)
+                         } deriving (Eq, Show, Read, Generic)
 
 instance ToJSON TaskWork
 instance FromJSON TaskWork
-
-instance Show TaskWork where
-  show = unpack . encode
-
-instance Read TaskWork where
-  readsPrec _ = f . lex where
-    f [(input, str)] = [(fromJust $ decode $ pack input, str)]
 
 derivePersistField "TaskWork"
