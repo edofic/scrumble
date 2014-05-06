@@ -124,6 +124,7 @@ angular.module('scrumbleApp')
 
             storyStory = new Story()
             angular.extend storyStory, story
+            storyStory.sprint = storyStory.sprint.id
             promises.push storyStory.$update
               projectId: projectId
               storyId: storyStory.id
