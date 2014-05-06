@@ -23,6 +23,7 @@
         <div ng-show="unfinishedStories.length">
           <h3>Current sprint ({{ currentSprint.start | date }} - {{ currentSprint.end | date }})</h3>
 
+          <p ng-hide="unfinishedCurrentStories.length">No stories in current sprint.<br><br><br></p>
           <product-story
               ng-repeat="story in unfinishedCurrentStories"
               story="story"
@@ -39,6 +40,7 @@
 
           <h3>Remaining stories</h3>
 
+          <p ng-hide="unfinishedRemainingStories.length">No remaining stories.<br><br><br></p>
           <product-story
               ng-repeat="story in unfinishedRemainingStories"
               story="story"

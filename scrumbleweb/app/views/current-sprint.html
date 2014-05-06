@@ -12,6 +12,8 @@
 
   <div>
     <div class="container">
+      <p ng-hide="filterNotDone(currentSprint.stories).length">No stories in current sprint.<br><br><br></p>
+
       <div ng-repeat="story in filterNotDone(currentSprint.stories)">
         <div class="panel story" ng-class="{'panel-default': !storyIsCompleted(story), 'panel-success': storyIsCompleted(story)}">
           <div class="panel-heading">
