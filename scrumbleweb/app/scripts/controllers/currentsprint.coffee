@@ -107,41 +107,6 @@ angular.module('scrumbleApp')
     $scope.storyIsCompleted = (story) ->
       story.tasks? and story.tasks.length > 0 and _.all story.tasks, (task) -> task.status == 'Completed'
 
-    $scope.acceptStory = (story) ->
-      storyStory = new Story()
-      story.done = true
-      angular.extend storyStory, story
-      storyStory.$update
-        projectId: projectId
-        storyId: storyStory.id
-      , null
-      , (reason) ->
-        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while accepting a story"))
-        $scope.load()
-    $scope.rejectStory = (story) ->
-      bbox.prompt 'Add a note?', (note) ->
-        promises = []
-        if note
-          story.notes.push(note)
-
-          storyStory = new Story()
-          angular.extend storyStory, story
-          promises.push storyStory.$update
-            projectId: projectId
-            storyId: storyStory.id
-
-        sprintStory = new SprintStory()
-        promises.push sprintStory.$delete
-          projectId: projectId
-          sprintId: story.sprint
-          storyId: story.id
-
-        $q.all(promises).then ->
-          $scope.load()
-        , (reason) ->
-          growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
-          $scope.load()
-
     $scope.logTime = (task, story) ->
       modalInstance = $modal.open(
         templateUrl: 'views/task-time-modal.html'

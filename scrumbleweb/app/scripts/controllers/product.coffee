@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'ProductCtrl', ($scope, $rootScope, $modal, Story, Project, ProjectUser, Sprint, SprintStory, growl) ->
+  .controller 'ProductCtrl', ($scope, $rootScope, $modal, Story, Project, ProjectUser, Sprint, SprintStory, Task, growl) ->
     projectId = $rootScope.currentUser.activeProject
 
     ProjectUser.get projectId: projectId, userId: $rootScope.currentUser.id, (projectUser) ->
@@ -18,6 +18,11 @@ angular.module('scrumbleApp')
           $scope.unfinishedCurrentStories = _.filter $scope.unfinishedStories, (x) -> x.sprint
           $scope.unfinishedRemainingStories = _.filter $scope.unfinishedStories, (x) -> !x.sprint
 
+          _.each $scope.unfinishedCurrentStories, (story) ->
+            Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
+              story.tasks = tasks
+            , (reason) ->
+              growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading tasks"))
     $scope.load()
 
     $scope.canAddStory = ->
@@ -87,10 +92,53 @@ angular.module('scrumbleApp')
       removeFromSprint: '='
       canEditEstimate: '='
       changeEstimate: '='
+      canAcceptReject: '='
+      load: '='
+      defaultClass: '@'
     replace: yes
     templateUrl: 'views/product-story.html'
-    controller: ($scope) ->
-      
+    controller: ($scope, $filter, $rootScope, $modal, $q, Sprint, Story, SprintStory, Task, User, growl, bbox) ->
+
+      projectId = $scope.$root.currentUser.activeProject
+      $scope.storyIsCompleted = (story) ->
+        story.tasks? and story.tasks.length > 0 and _.all story.tasks, (task) -> task.status == 'Completed'
+      $scope.acceptStory = (story) ->
+        storyStory = new Story()
+        story.done = true
+        angular.extend storyStory, story
+        storyStory.sprint = storyStory.sprint.id
+        storyStory.points = 1 if !storyStory.points
+        storyStory.$update
+          projectId: projectId
+          storyId: storyStory.id
+        , ->
+          $scope.load()
+        , (reason) ->
+          growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while accepting a story"))
+          $scope.load()
+      $scope.rejectStory = (story) ->
+        bbox.prompt 'Add a note?', (note) ->
+          promises = []
+          if note
+            story.notes.push(note)
+
+            storyStory = new Story()
+            angular.extend storyStory, story
+            promises.push storyStory.$update
+              projectId: projectId
+              storyId: storyStory.id
+
+          sprintStory = new SprintStory()
+          promises.push sprintStory.$delete
+            projectId: projectId
+            sprintId: story.sprint.id
+            storyId: story.id
+
+          $q.all(promises).then ->
+            $scope.load()
+          , (reason) ->
+            growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while rejecting a story"))
+            $scope.load()
   )
 
   .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->

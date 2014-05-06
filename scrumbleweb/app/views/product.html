@@ -32,7 +32,9 @@
               can-remove-from-sprint="canRemoveUnfinishedStoryFromSprint"
               remove-from-sprint="removeStoryFromSprint"
               can-edit-estimate="canEditStoryEstimate"
-              change-estimate="changeStoryEstimate">
+              change-estimate="changeStoryEstimate"
+              can-accept-reject="isProductOwner"
+              load="load">
           </product-story>
 
           <h3>Remaining stories</h3>
@@ -63,7 +65,8 @@
             can-remove-from-sprint="canRemoveFinishedStoryFromSprint"
             remove-from-sprint="removeStoryFromSprint"
             can-edit-estimate="canEditStoryEstimate"
-            change-estimate="changeStoryEstimate">
+            change-estimate="changeStoryEstimate"
+            default-class="success">
         </product-story>
       </div>
 
