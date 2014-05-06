@@ -31,7 +31,7 @@ putStoriesStoryR projectId storyId = do
            (SprintStory.validateSprintStoryAssignment story)
 
   runDB $ runValidationHandler $ do
-    existing <- count [StoryTitle ==. (storyTitle story), StoryId !=. storyId]
+    existing <- count [StoryTitle ==. (storyTitle story), StoryId !=. storyId, StoryProject ==. projectId]
     ("title", "Story with supplied title already exists") `validate` (existing == 0)
     when (existing == 0) $ replace storyId story
   return ()
