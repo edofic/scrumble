@@ -48,6 +48,8 @@ angular.module('scrumbleApp')
                 data.resource[currentIdx + 1].next = yes
 
             data.resource
+      update:
+        method: 'PUT'
     )
 
   .factory 'Story', ($resource, $q, richQuery, ApiRoot, Sprint) ->
