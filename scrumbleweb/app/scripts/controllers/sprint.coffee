@@ -38,6 +38,12 @@ angular.module('scrumbleApp')
     $scope.$watch 'currentUser.activeProject', updateFromActiveProject
 
     $scope.autoError = {}
+    $scope.submitSprint = (sprint, invalid) ->
+      if !sprint.id?
+        $scope.createSprint(sprint, invalid)
+      else
+        $scope.updateSprint(sprint, invalid)
+
     $scope.createSprint = (sprint, invalid) ->
       if (invalid)
         return
@@ -59,6 +65,28 @@ angular.module('scrumbleApp')
       $scope.sprint = new Sprint()
 
     $scope.initNewSprint()
+
+    $scope.editSprint = (sprint) ->
+      $scope.sprint = angular.copy(sprint)
+      $scope.sprint.start = new Date($scope.sprint.start)
+      $scope.sprint.end = new Date($scope.sprint.end)
+
+    $scope.updateSprint = (sprint, invalid) ->
+      return if (invalid)
+
+      sprintCopy = angular.copy(sprint)
+      sprintCopy.start = sprintCopy.start.getTime()
+      sprintCopy.end = sprintCopy.end.getTime()
+      sprintCopy.$update {projectId: $scope.currentUser.activeProject}, (data) ->
+        $scope.initNewSprint()
+        humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
+        humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
+        growl.addSuccessMessage("Sprint changed")
+        $scope.autoError.removeErrors()
+        $scope.sprints = Sprint.query {projectId: user.activeProject}
+      , (reason) ->
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while changing sprint"))
+        $scope.autoError.showErrors(reason.data)
 
     # SprintDays affects sprintEnd
     # WorkdayVelocity affects velocity
