@@ -56,6 +56,10 @@ angular.module('scrumbleApp', [
         templateUrl: 'views/product.html'
         controller: 'ProductCtrl'
         resolve: loginRequired
+      .when '/user/:userId',
+        templateUrl: 'views/user.html'
+        controller: 'UserCtrl'
+        resolve: loginRequired
       .otherwise
         redirectTo: '/'
 
