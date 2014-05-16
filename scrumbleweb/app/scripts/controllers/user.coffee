@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'UserCtrl', ($scope, $routeParams, User, UserPassword, growl) ->
+  .controller 'UserCtrl', ($scope, $routeParams, $location, User, UserPassword, growl) ->
 
     $scope.user = User.get userId: $routeParams.userId
     $scope.userRoles =
@@ -13,7 +13,7 @@ angular.module('scrumbleApp')
       if (invalid)
         return
 
-      $scope.user.$update (data) ->
+      $scope.user.$update {userId: user.id}, (data) ->
         growl.addSuccessMessage("Updated user")
         $scope.autoError.removeErrors()
       , (reason) ->
@@ -33,3 +33,10 @@ angular.module('scrumbleApp')
       , (reason) ->
         growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while changing password"))
         $scope.autoError.showErrors(reason.data)
+
+    $scope.deleteUser = (user) ->
+      $scope.user.$delete {userId: user.id}, (data) ->
+        growl.addSuccessMessage("User removed")
+        $location.url('/')
+      , (reason) ->
+        growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while removing user"))
