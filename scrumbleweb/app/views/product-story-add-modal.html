@@ -1,4 +1,4 @@
-<form class="product-story-add-modal" name="storyAddForm" ng-submit="addStory(storyAddForm.$invalid)" autoerror="autoError">
+<form class="product-story-add-modal" name="storyAddForm" ng-submit="submitStory(storyAddForm.$invalid)" autoerror="autoError">
   <div class="modal-header">
     <h3>Add new story</h3>
   </div>
@@ -45,7 +45,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary">Add story</button>
+    <button type="submit" ng-if="!story.id" class="btn btn-primary">Add story</button>
+    <button type="submit" ng-if="story.id" class="btn btn-primary">Save story</button>
+    <button type="button" ng-if="story.id" class="btn btn-danger" ng-click="deleteStory()">Delete story</button>
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
   </div>
 </form>

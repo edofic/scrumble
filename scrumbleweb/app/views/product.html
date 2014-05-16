@@ -2,7 +2,7 @@
   <div class="white-stripe">
     <div class="container">
       <div class="pull-right" ng-show="canAddStory()">
-        <button class="btn btn-primary pull-right new-story-btn" ng-click="addStory()">Add new story</button>
+        <button class="btn btn-primary pull-right new-story-btn" ng-click="addOrEditStory()">Add new story</button>
       </div>
 
       <h2>Product backlog</h2>
@@ -50,7 +50,9 @@
               can-remove-from-sprint="canRemoveUnfinishedStoryFromSprint"
               remove-from-sprint="removeStoryFromSprint"
               can-edit-estimate="canEditStoryEstimate"
-              change-estimate="changeStoryEstimate">
+              change-estimate="changeStoryEstimate"
+              can-edit-story="canAddStory"
+              edit-story="addOrEditStory">
           </product-story>
         </div>
       </div>
