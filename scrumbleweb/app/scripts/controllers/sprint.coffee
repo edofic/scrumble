@@ -77,7 +77,7 @@ angular.module('scrumbleApp')
       sprintCopy = angular.copy(sprint)
       sprintCopy.start = sprintCopy.start.getTime()
       sprintCopy.end = sprintCopy.end.getTime()
-      sprintCopy.$update {projectId: $scope.currentUser.activeProject}, (data) ->
+      sprintCopy.$update {projectId: $scope.currentUser.activeProject, sprintId: sprint.id}, (data) ->
         $scope.initNewSprint()
         humanStart = $filter('date')(data.start, 'dd.MM.yyyy')
         humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
