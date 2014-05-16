@@ -61,6 +61,7 @@
         <div class="col-sm-4" ng-repeat="user in users">
           <div class="panel" ng-class="{'panel-default': user.role !== 'Administrator', 'panel-primary': user.role === 'Administrator'}">
             <div class="panel-heading">
+              <a class="pull-right" ng-href="#/user/{{user.id}}"><i class="glyphicon glyphicon-pencil"></i></a>
               <h3 class="panel-title">{{ user.firstName }} {{ user.lastName }}</h3>
             </div>
 

@@ -83,6 +83,10 @@ form .ng-invalid {
     margin-left: 1ex;
 }
 
+.panel-primary > .panel-heading a {
+    color: #fff;
+}
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
