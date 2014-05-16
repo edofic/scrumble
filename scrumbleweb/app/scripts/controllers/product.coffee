@@ -28,10 +28,12 @@ angular.module('scrumbleApp')
     $scope.canAddStory = ->
       $scope.isProductOwner || $scope.isScrumMaster
 
-    $scope.addStory = ->
+    $scope.addOrEditStory = (story) ->
       modalInstance = $modal.open(
         templateUrl: 'views/product-story-add-modal.html'
         controller: 'ProductStoryAddModalCtrl'
+        resolve:
+          story: -> story
       )
       modalInstance.result.then ->
         $scope.load()
@@ -95,6 +97,8 @@ angular.module('scrumbleApp')
       canAcceptReject: '='
       load: '='
       defaultClass: '@'
+      canEditStory: '='
+      editStory: '='
     replace: yes
     templateUrl: 'views/product-story.html'
     controller: ($scope, $filter, $rootScope, $modal, $q, Sprint, Story, SprintStory, Task, User, growl, bbox) ->
@@ -142,21 +146,34 @@ angular.module('scrumbleApp')
             $scope.load()
   )
 
-  .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl) ->
+  .controller 'ProductStoryAddModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl, story) ->
     projectId = $rootScope.currentUser.activeProject
 
-    $scope.story = new Story
-    $scope.story.tests = [{test: ''}]
-    $scope.story.notes = [{notes: ''}]
-    $scope.story.priority = 'MustHave'
-    $scope.story.businessValue = 0
-    $scope.story.project = projectId
+    if !story
+      $scope.story = new Story
+      $scope.story.tests = [{test: ''}]
+      $scope.story.notes = [{notes: ''}]
+      $scope.story.priority = 'MustHave'
+      $scope.story.businessValue = 0
+      $scope.story.project = projectId
+    else
+      $scope.story = angular.copy story
+      $scope.story.tests = [''] unless $scope.story.tests?.length > 0
+      $scope.story.notes = [''] unless $scope.story.notes?.length > 0
+      $scope.story.tests = _.map $scope.story.tests, (t) -> test: t
+      $scope.story.notes = _.map $scope.story.notes, (t) -> note: t
 
     $scope.autoError = {}
     $scope.addTest = ->
       $scope.story.tests.push({test: ''})
     $scope.addNote = ->
       $scope.story.notes.push({note: ''})
+
+    $scope.submitStory = (invalid) ->
+      if !$scope.story.id?
+        $scope.addStory(invalid)
+      else
+        $scope.updateStory(invalid)
 
     $scope.addStory = (invalid) ->
       if (invalid)
@@ -176,8 +193,40 @@ angular.module('scrumbleApp')
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while adding story"))
         $scope.autoError.showErrors(reason.data)
 
+    $scope.updateStory = (invalid) ->
+      if (invalid)
+        return
+      s = new Story()
+      s.description = ''
+      angular.extend(s, $scope.story)
+      s.tests = _.filter(_.map $scope.story.tests, (t) -> t.test)
+      s.notes = _.filter(_.map $scope.story.notes, (t) -> t.note)
+
+      s.$update
+        projectId: projectId
+        storyId: s.id
+      , ->
+        $modalInstance.close()
+
+        growl.addSuccessMessage("Story has been changed.")
+        $scope.autoError.removeErrors()
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while changing story"))
+        $scope.autoError.showErrors(reason.data)
+
+    $scope.deleteStory = ->
+      $scope.story.$delete
+        projectId: projectId
+        storyId: $scope.story.id
+      , ->
+        $modalInstance.close()
+        growl.addSuccessMessage("Story has been deleted.")
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while deleting story"))
+
     $scope.cancel = ->
       $modalInstance.dismiss()
+
 
   .controller 'ProductStoryEstimateModalCtrl', ($scope, $rootScope, $modalInstance, Story, growl, story) ->
     $scope.story = story
