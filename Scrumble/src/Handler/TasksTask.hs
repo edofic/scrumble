@@ -44,7 +44,7 @@ modifyValications existing new user = case (taskStatus existing) of
       when ((taskStatus new) == Assigned) $ ("userId", "Assigning tasks should also set user id.") `validate`
         (isJust $ taskUserId new)
       when ((taskStatus new) == Completed) $ ("status", "Can not set an unassigned task as complete.") `validate` False
-      when ((taskStatus new) == Unassigned) $ ("status", "Can not unassign an unassigned task.") `validate` False
+      --when ((taskStatus new) == Unassigned) $ ("status", "Can not unassign an unassigned task.") `validate` False
       when ((taskStatus new) == Accepted) $ ("userId", "User must be defined when accepting task.") `validate` 
         ((taskUserId new) == user)
     Assigned   -> do
