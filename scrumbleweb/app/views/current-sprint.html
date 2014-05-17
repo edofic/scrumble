@@ -60,7 +60,7 @@
                         Take
                       </button>
 
-                      <button ng-if="task.status == 'Unassigned' && (isDeveloper() || isScrum())" type="button" class="btn btn-default btn-xs" ng-click="addOrEditTask(story.id, task)">
+                      <button ng-if="(task.status == 'Unassigned' || task.status == 'Assigned') && (isDeveloper() || isScrum())" type="button" class="btn btn-default btn-xs" ng-click="addOrEditTask(story.id, task)">
                         Edit
                       </button>
 

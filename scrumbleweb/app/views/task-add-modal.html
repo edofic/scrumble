@@ -28,6 +28,7 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary" ng-if="!task.id">Add task</button>
     <button type="submit" class="btn btn-primary" ng-if="task.id">Save task</button>
+    <button type="button" class="btn btn-danger" ng-if="task.id" ng-click="deleteTask()">Delete task</button>
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
   </div>
 </form>

@@ -131,8 +131,11 @@ angular.module('scrumbleApp')
 
     $scope.allDevs = allDevs
 
-    $scope.task = task
-    $scope.task = new Task() if !task
+    if !task
+      $scope.task = new Task()
+    else
+      $scope.task = angular.copy task
+      $scope.task.user = _.find $scope.allDevs, id: $scope.task.userId
 
     $scope.autoError = {}
     $scope.submitTask = (invalid) ->
@@ -176,8 +179,7 @@ angular.module('scrumbleApp')
         $scope.autoError.showErrors(reason.data)
 
     $scope.updateTask = (invalid) ->
-      if (invalid)
-        return
+      return if invalid
 
       taskCopy = processTask($scope.task)
 
@@ -189,6 +191,14 @@ angular.module('scrumbleApp')
       , (reason) ->
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while changing task"))
         $scope.autoError.showErrors(reason.data)
+
+    $scope.deleteTask = ->
+      $scope.task.$delete {projectId: projectId, sprintId: sprintId, storyId: storyId, taskId: $scope.task.id}, ->
+        $modalInstance.close()
+
+        growl.addSuccessMessage("Task has been deleted.")
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while deleting a task"))
 
     $scope.cancel = ->
       $modalInstance.dismiss()
