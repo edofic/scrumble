@@ -60,6 +60,10 @@
                         Take
                       </button>
 
+                      <button ng-if="(task.status == 'Unassigned' || task.status == 'Assigned') && (isDeveloper() || isScrum())" type="button" class="btn btn-default btn-xs" ng-click="addOrEditTask(story.id, task)">
+                        Edit
+                      </button>
+
                       <button ng-if="task.status == 'Assigned' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs" ng-click="taskTake(task, story)">
                         Accept
                       </button>
@@ -71,13 +75,14 @@
                       <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id" type="button" class="btn btn-default btn-xs" ng-click="logTime(task, story)">
                         Log time
                       </button>
+
                       <button ng-if="task.status == 'Accepted' && task.userId == currentUser.id && task.remaining == 0" type="button" class="btn btn-success btn-xs" ng-click="taskComplete(task, story)">
                         Complete
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td><button ng-if="isDeveloper() || isScrum()" type="button" class="btn btn-default" ng-click="addTask(story.id)">Add a task</button></td>
+                    <td><button ng-if="isDeveloper() || isScrum()" type="button" class="btn btn-default" ng-click="addOrEditTask(story.id)">Add a task</button></td>
                     <td></td>
                     <td></td>
                     <td></td>
