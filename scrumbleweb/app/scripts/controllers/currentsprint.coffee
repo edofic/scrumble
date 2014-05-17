@@ -49,7 +49,7 @@ angular.module('scrumbleApp')
         $scope.currentSprint.number = currSprintIx + 1
         $scope.load()
 
-    $scope.addTask = (storyId) ->
+    $scope.addOrEditTask = (storyId, task) ->
       modalInstance = $modal.open(
         templateUrl: 'views/task-add-modal.html'
         controller: 'TaskAddModalCtrl'
@@ -58,6 +58,7 @@ angular.module('scrumbleApp')
           sprintId: -> $scope.currentSprint.id
           storyId: -> storyId
           allDevs: -> $scope.allDevs
+          task: -> task
       )
       modalInstance.result.then ->
         $scope.load()
@@ -126,17 +127,22 @@ angular.module('scrumbleApp')
           growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing a task"))
           $scope.load()
 
-  .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs) ->
+  .controller 'TaskAddModalCtrl', ($scope, $rootScope, $modalInstance, Task, growl, projectId, sprintId, storyId, allDevs, task) ->
 
     $scope.allDevs = allDevs
-    $scope.task = new Task()
+
+    $scope.task = task
+    $scope.task = new Task() if !task
 
     $scope.autoError = {}
-    $scope.saveTask = (invalid) ->
-      if (invalid)
-        return
+    $scope.submitTask = (invalid) ->
+      if !$scope.task.id?
+        $scope.saveTask(invalid)
+      else
+        $scope.updateTask(invalid)
 
-      taskCopy = angular.copy $scope.task
+    processTask = (task) ->
+      taskCopy = angular.copy task
       taskCopy.status = 'Unassigned'
 
       if !taskCopy.user? || !_.isObject(taskCopy.user)
@@ -151,8 +157,14 @@ angular.module('scrumbleApp')
         done: 0
         remaining: taskCopy.remaining
       ]
-
       delete taskCopy.remaining
+      return taskCopy
+
+    $scope.saveTask = (invalid) ->
+      if (invalid)
+        return
+
+      taskCopy = processTask($scope.task)
 
       taskCopy.$save {projectId: projectId, sprintId: sprintId, storyId: storyId}, ->
         $modalInstance.close()
@@ -161,6 +173,21 @@ angular.module('scrumbleApp')
         $scope.autoError.removeErrors()
       , (reason) ->
         growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while adding task"))
+        $scope.autoError.showErrors(reason.data)
+
+    $scope.updateTask = (invalid) ->
+      if (invalid)
+        return
+
+      taskCopy = processTask($scope.task)
+
+      taskCopy.$update {projectId: projectId, sprintId: sprintId, storyId: storyId, taskId: taskCopy.id}, ->
+        $modalInstance.close()
+
+        growl.addSuccessMessage("Task has been changed.")
+        $scope.autoError.removeErrors()
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while changing task"))
         $scope.autoError.showErrors(reason.data)
 
     $scope.cancel = ->
