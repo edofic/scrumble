@@ -7,6 +7,7 @@ angular.module('scrumbleApp')
       {path: '/daily', name: 'Daily Scrum'}
       {path: '/sprint', name: 'Sprint Backlog'}
       {path: '/product', name: 'Product Backlog'}
+      {path: '/progress', name: 'Progress'}
     ]
 
     $scope.route = $route

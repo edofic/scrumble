@@ -60,6 +60,10 @@ angular.module('scrumbleApp', [
         templateUrl: 'views/user.html'
         controller: 'UserCtrl'
         resolve: loginRequired
+      .when '/progress',
+        templateUrl: 'views/progress.html'
+        controller: 'ProgressCtrl'
+        resolve: loginRequired
       .otherwise
         redirectTo: '/'
 
