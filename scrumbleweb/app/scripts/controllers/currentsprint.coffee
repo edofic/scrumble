@@ -150,6 +150,7 @@ angular.module('scrumbleApp')
 
       if !taskCopy.user? || !_.isObject(taskCopy.user)
         delete taskCopy.user
+        delete taskCopy.userId
       if taskCopy.user?
         taskCopy.userId = taskCopy.user.id
         taskCopy.user = taskCopy.user.id
