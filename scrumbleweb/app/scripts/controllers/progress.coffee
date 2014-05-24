@@ -68,27 +68,23 @@ angular.module('scrumbleApp')
 
       storyDaily = _.groupBy _.flatten(storyAllWork), (w) ->
         Math.floor(w.time/1000/60/60/24)
-      storyDaily = _.mapValues storyDaily, (w) ->
-        work: w
+      storyDaily = _.mapValues storyDaily, (work) ->
+        console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
 
-      storyDaily
+        cleanWork = _.values _.indexBy(work, 'taskId')
+        tempdone = _.reduce cleanWork, (sum, work) ->
+          sum + work.done
+        , 0
+        remaining = _.reduce cleanWork, (sum, work) ->
+          sum + work.remaining
+        , 0
+        workload = tempdone + remaining
 
-      console.log storyDaily
-      work = storyDaily['16195'].work
-      console.log work
-      console.log _.pluck(work, 'taskId')
-      console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
-
-      cleanWork = {}
-      cleanWork.work = _.values _.indexBy(work, 'taskId')
-      tempdone = _.reduce cleanWork.work, (sum, work) ->
-        sum + work.done
-      , 0
-      cleanWork.remaining = _.reduce cleanWork.work, (sum, work) ->
-        sum + work.remaining
-      , 0
-      cleanWork.workload = tempdone + cleanWork.remaining
-      cleanWork
+        return {
+          work: work
+          workload: workload
+          remaining: remaining
+        }
 
 
 
