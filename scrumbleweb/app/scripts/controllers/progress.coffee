@@ -43,11 +43,12 @@ angular.module('scrumbleApp')
 
     $scope.calcDaily = ->
       allTimes = _.pluck _.flatten($scope.allWork), 'time'
-      firstDay = time2day(_.min(allTimes))-5
-      lastDay = time2day(_.max(allTimes))+1
 
-      today = time2day(Date.now())
-      lastDay = today if today > lastDay
+      $scope.firstDay = time2day(_.min(allTimes))-1
+      firstSprint = time2day(_.min(_.pluck($scope.a.sprints, 'start')))
+      $scope.firstDay = firstSprint if firstSprint < $scope.firstDay
+
+      $scope.lastDay = time2day(Date.now())+1
 
       processedStoryIDs = []
       processStory = (story) ->
@@ -76,10 +77,10 @@ angular.module('scrumbleApp')
             day: parseInt(day)
           }
 
-        estimEnd = lastDay
+        estimEnd = $scope.lastDay+1
         estimEnd = _.min(storyDays) if storyDays.length > 0
 
-        estimateDays = _.range firstDay, estimEnd
+        estimateDays = _.range $scope.firstDay, estimEnd
         estimatedRemaining = story.points * $scope.ptHour
         estimatedDone = 0
         preWork = _.map estimateDays, (day) ->
@@ -88,7 +89,7 @@ angular.module('scrumbleApp')
           day: day
         return preWork if storyDays.length <= 0
 
-        dragDays = _.range lastDay, _.max(storyDays)
+        dragDays = _.range _.max(storyDays)+1, $scope.lastDay+1
         dragRemaining = storyDaily[_.max(storyDays)].remaining
         dragDone = storyDaily[_.max(storyDays)].done
         postWork = _.map dragDays, (day) ->
@@ -109,7 +110,7 @@ angular.module('scrumbleApp')
 
       flatDailys = _.flatten allDailys
       dailys = _.groupBy flatDailys, 'day'
-      _.map dailys, (daily, day) ->
+      dailySums = _.map dailys, (daily, day) ->
         remaining = _.reduce daily, (sum, work) ->
           sum + work.remaining
         , 0
@@ -122,18 +123,31 @@ angular.module('scrumbleApp')
           remaining: remaining
           daily: daily
         }
+      _.each _.rest(dailySums), (d, ix) ->
+        d.done += dailySums[ix].done
+      return dailySums
 
     $scope.draw = ->
       daily = $scope.calcDaily()
       allTimes = _.pluck _.flatten($scope.allWork), 'time'
-      firstDay = time2day(_.min(allTimes))-1
 
       doneFlot = _.map daily, (d) ->
-        [d.day-firstDay+1, d.done]
+        [d.day-$scope.firstDay+1, d.done]
       remainingFlot = _.map daily, (d) ->
-        [d.day-firstDay+1, d.remaining]
+        [d.day-$scope.firstDay+1, d.remaining]
+      workloadFlot = _.map daily, (d) ->
+        [d.day-$scope.firstDay+1, d.done+d.remaining]
 
-      $.plot '.flot', [doneFlot, remainingFlot],
+      $.plot '.flot', [
+        data: workloadFlot
+        label: 'Workload'
+      ,
+        data: remainingFlot
+        label: 'Remaining'
+      ,
+        data: doneFlot
+        label: 'Done'
+      ],
         xaxis:
           tickSize: 2
           tickDecimals: 0
