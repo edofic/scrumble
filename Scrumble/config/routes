@@ -8,7 +8,7 @@
 /                   HomeR           GET
 
 /api/users                   UsersR               GET   POST
-/api/users/#UserId           UsersUserR           GET   PUT   DELETE
+/api/users/#UserId           UsersUserR           GET   DELETE
 /api/users/#UserId/password  UsersUserPasswordR   POST
 /api/projects                ProjectsR            GET   POST
 /api/projects/#ProjectId     ProjectsProjectR     GET   PUT   DELETE 
@@ -17,7 +17,7 @@
 /api/projects/#ProjectId/stories/#StoryId       StoriesStoryR       GET     PUT      DELETE
 
 /api/projects/#ProjectId/sprints            SprintsR     GET   POST
-/api/projects/#ProjectId/sprints/#SprintId  SprintR      GET   PUT
+/api/projects/#ProjectId/sprints/#SprintId  SprintR      GET 
 
 /api/projects/#ProjectId/sprints/#SprintId/stories          SprintStoriesR GET 
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId SprintStoryR PUT DELETE
