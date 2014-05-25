@@ -117,6 +117,11 @@ angular.module('scrumbleApp')
     $scope.draw = ->
       daily = $scope.calcDaily()
 
+      # workloadFlot = [ [day, workload] ]
+      # remainingFlot = [ [day, remaining] ]
+      workloadFlot = _.map daily, (d) ->
+        [d.day, d.workload]
+      remainingFlot = _.map daily, (d) ->
+        [d.day, d.remaining]
 
-
-
+      $.plot '.flot', [workloadFlot, remainingFlot]
