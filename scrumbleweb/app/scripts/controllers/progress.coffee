@@ -116,12 +116,17 @@ angular.module('scrumbleApp')
 
     $scope.draw = ->
       daily = $scope.calcDaily()
+      allTimes = _.pluck _.flatten($scope.allWork), 'time'
+      firstDay = time2day(_.min(allTimes))-1
 
       # workloadFlot = [ [day, workload] ]
       # remainingFlot = [ [day, remaining] ]
       workloadFlot = _.map daily, (d) ->
-        [d.day, d.workload]
+        [d.day-firstDay+1, d.workload]
       remainingFlot = _.map daily, (d) ->
-        [d.day, d.remaining]
+        [d.day-firstDay+1, d.remaining]
 
-      $.plot '.flot', [workloadFlot, remainingFlot]
+      $.plot '.flot', [workloadFlot, remainingFlot],
+        xaxis:
+          tickSize: 2
+          tickDecimals: 0
