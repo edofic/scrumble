@@ -7,8 +7,17 @@
 
       <h3>Burndown diagram</h3>
 
-      <input type="number" ng-model="ptHour">
-      <button ng-click="draw()">Draw</button>
+      <form class="form-inline">
+        <div class="form-group">
+          <label>
+            Estimation points to hours
+          </label>
+          <input class="form-control" type="number" ng-model="ptHour">
+        </div>
+      </form>
+
+      <br>
+      <br>
       <div class="flot"></div>
       <br>
     </div>

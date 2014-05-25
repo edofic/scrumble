@@ -10,16 +10,17 @@ angular.module('scrumbleApp')
     $scope.a = {}
     # a > sprints > a_stories > a_tasks > history
 
-    Story.query {projectId: projectId}, (stories) ->
+    storiesReq = Story.query {projectId: projectId}, (stories) ->
       $scope.a.stories = stories
 
     Sprint.query {projectId: projectId}, (sprints) ->
       $scope.a.sprints = sprints
-      _.map sprints, (sprint) ->
+      defers = _.map sprints, (sprint) ->
+        tasksDone = $q.defer()
         SprintStory.query {projectId: projectId, sprintId: sprint.id}, (sprintStories) ->
           sprint.a_stories = sprintStories
 
-          _.map sprintStories, (story) ->
+          taskReqs = _.map sprintStories, (story) ->
             Task.query {projectId: projectId, sprintId: sprint.id, storyId: story.id}, (tasks) ->
               story.a_tasks = tasks
 
@@ -28,6 +29,14 @@ angular.module('scrumbleApp')
                 t.history
 
               $scope.allWork.push hists
+          $q.all(_.pluck(taskReqs, '$promise')).then ->
+            tasksDone.resolve()
+          , ->
+            tasksDone.reject()
+        tasksDone.promise
+      $q.all(defers.concat(storiesReq.$promise)).then ->
+        $scope.draw()
+
 
     time2day = (time) ->
       Math.floor(time/1000/60/60/24)
@@ -130,3 +139,5 @@ angular.module('scrumbleApp')
         xaxis:
           tickSize: 2
           tickDecimals: 0
+
+    $scope.$watch 'ptHour', $scope.draw
