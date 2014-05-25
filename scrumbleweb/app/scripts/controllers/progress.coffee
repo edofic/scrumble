@@ -62,17 +62,16 @@ angular.module('scrumbleApp')
           console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
 
           cleanWork = _.values _.indexBy(work, 'taskId')
-          tempdone = _.reduce cleanWork, (sum, work) ->
+          done = _.reduce cleanWork, (sum, work) ->
             sum + work.done
           , 0
           remaining = _.reduce cleanWork, (sum, work) ->
             sum + work.remaining
           , 0
-          workload = tempdone + remaining
 
           return {
             work: work
-            workload: workload
+            done: done
             remaining: remaining
             day: parseInt(day)
           }
@@ -82,17 +81,18 @@ angular.module('scrumbleApp')
 
         estimateDays = _.range firstDay, estimEnd
         estimatedRemaining = story.points * $scope.ptHour
+        estimatedDone = 0
         preWork = _.map estimateDays, (day) ->
-          workload: estimatedRemaining
+          done: estimatedDone
           remaining: estimatedRemaining
           day: day
         return preWork if storyDays.length <= 0
 
         dragDays = _.range lastDay, _.max(storyDays)
         dragRemaining = storyDaily[_.max(storyDays)].remaining
-        dragWorkload = storyDaily[_.max(storyDays)].workload
+        dragDone = storyDaily[_.max(storyDays)].done
         postWork = _.map dragDays, (day) ->
-          workload: dragWorkload
+          done: dragDone
           remaining: dragRemaining
           day: day
         return preWork.concat(_.values(storyDaily), postWork)
@@ -113,12 +113,12 @@ angular.module('scrumbleApp')
         remaining = _.reduce daily, (sum, work) ->
           sum + work.remaining
         , 0
-        workload = _.reduce daily, (sum, work) ->
-          sum + work.workload
+        done = _.reduce daily, (sum, work) ->
+          sum + work.done
         , 0
         return {
           day: parseInt(day)
-          workload: workload
+          done: done
           remaining: remaining
           daily: daily
         }
@@ -128,12 +128,12 @@ angular.module('scrumbleApp')
       allTimes = _.pluck _.flatten($scope.allWork), 'time'
       firstDay = time2day(_.min(allTimes))-1
 
-      workloadFlot = _.map daily, (d) ->
-        [d.day-firstDay+1, d.workload]
+      doneFlot = _.map daily, (d) ->
+        [d.day-firstDay+1, d.done]
       remainingFlot = _.map daily, (d) ->
         [d.day-firstDay+1, d.remaining]
 
-      $.plot '.flot', [workloadFlot, remainingFlot],
+      $.plot '.flot', [doneFlot, remainingFlot],
         xaxis:
           tickSize: 2
           tickDecimals: 0
