@@ -42,13 +42,6 @@ angular.module('scrumbleApp')
       Math.floor(time/1000/60/60/24)
 
     $scope.calcDaily = ->
-      estimates = _.compact _.pluck($scope.a.stories, 'points')
-      initEstimate = _.reduce estimates, (sum, estim) ->
-        sum + estim*$scope.ptHour
-      , 0
-
-      console.log 'initEstimate', initEstimate
-
       allTimes = _.pluck _.flatten($scope.allWork), 'time'
       firstDay = time2day(_.min(allTimes))-5
       lastDay = time2day(_.max(allTimes))+1
@@ -144,5 +137,7 @@ angular.module('scrumbleApp')
         xaxis:
           tickSize: 2
           tickDecimals: 0
+        yaxis:
+          min: 0
 
     $scope.$watch 'ptHour', $scope.draw
