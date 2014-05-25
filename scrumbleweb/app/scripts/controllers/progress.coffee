@@ -91,7 +91,7 @@ angular.module('scrumbleApp')
 
         dragDays = _.range _.max(storyDays)+1, $scope.lastDay+1
         dragRemaining = storyDaily[_.max(storyDays)].remaining
-        dragDone = storyDaily[_.max(storyDays)].done
+        dragDone = 0
         postWork = _.map dragDays, (day) ->
           done: dragDone
           remaining: dragRemaining
