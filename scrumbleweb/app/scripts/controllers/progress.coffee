@@ -32,31 +32,7 @@ angular.module('scrumbleApp')
     time2day = (time) ->
       Math.floor(time/1000/60/60/24)
 
-    $scope.calc = ->
-      work = _.flatten $scope.allWork
-      perDay = _.groupBy work, (w) -> time2day(w.time)
-
-      sums = _.map perDay, (day) ->
-        done = _.reduce day, (sum, work) ->
-          sum + work.done
-        , 0
-        remaining = _.reduce day, (sum, work) ->
-          sum + work.remaining
-        , 0
-        return {
-          done: done
-          remaining: remaining
-          onTasks: _.unique _.pluck day, 'taskId'
-        }
-
-      dailySums = _.zip _.keys(perDay), sums
-      dailySums = _.map dailySums, (s) ->
-        day: s[0]
-        sum: s[1]
-      dailySums = _.sortBy dailySums, 'day'
-      $scope.dailySum = dailySums
-
-    $scope.calc2 = ->
+    $scope.calcDaily = ->
       estimates = _.compact _.pluck($scope.a.stories, 'points')
       initEstimate = _.reduce estimates, (sum, estim) ->
         sum + estim*$scope.ptHour
@@ -73,7 +49,7 @@ angular.module('scrumbleApp')
       # $scope.a.sprints[0].a_stories[10]
       # points: 4  =>  24h
       # _.pluck $scope.a.sprints[0].a_stories[10].a_tasks, 'history'
-      _.each $scope.a.sprints, (sprint) ->
+      allDailys = _.map $scope.a.sprints, (sprint) ->
         storyDailys = _.map sprint.a_stories, (story) ->
           storyAllWork = _.flatten _.pluck(story.a_tasks, 'history')
 
@@ -120,25 +96,26 @@ angular.module('scrumbleApp')
 
           return preWork.concat(_.values(storyDaily), postWork)
 
-        storyDailys = _.groupBy _.flatten(storyDailys), 'day'
+        sprint.a_dailys = _.flatten storyDailys
 
-        sprint.a_dailys = _.map storyDailys, (daily, day) ->
-          remaining = _.reduce daily, (sum, work) ->
-            sum + work.remaining
-          , 0
-          workload = _.reduce daily, (sum, work) ->
-            sum + work.workload
-          , 0
-          return {
-            day: parseInt(day)
-            workload: workload
-            remaining: remaining
-            daily: daily
-          }
-        console.log(sprint.a_dailys)
+      flatDailys = _.flatten allDailys
+      dailys = _.groupBy flatDailys, 'day'
+      _.map dailys, (daily, day) ->
+        remaining = _.reduce daily, (sum, work) ->
+          sum + work.remaining
+        , 0
+        workload = _.reduce daily, (sum, work) ->
+          sum + work.workload
+        , 0
+        return {
+          day: parseInt(day)
+          workload: workload
+          remaining: remaining
+          daily: daily
+        }
 
-
-
+    $scope.draw = ->
+      daily = $scope.calcDaily()
 
 
 
