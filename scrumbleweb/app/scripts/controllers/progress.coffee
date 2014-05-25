@@ -146,7 +146,7 @@ angular.module('scrumbleApp')
         label: 'Remaining'
       ,
         data: doneFlot
-        label: 'Done'
+        label: 'Work done'
       ],
         xaxis:
           tickSize: 2
