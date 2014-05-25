@@ -29,10 +29,12 @@ angular.module('scrumbleApp')
 
               $scope.allWork.push hists
 
+    time2day = (time) ->
+      Math.floor(time/1000/60/60/24)
+
     $scope.calc = ->
       work = _.flatten $scope.allWork
-      perDay = _.groupBy work, (w) ->
-        Math.floor(w.time/1000/60/60/24)
+      perDay = _.groupBy work, (w) -> time2day(w.time)
 
       sums = _.map perDay, (day) ->
         done = _.reduce day, (sum, work) ->
@@ -59,34 +61,81 @@ angular.module('scrumbleApp')
       initEstimate = _.reduce estimates, (sum, estim) ->
         sum + estim*$scope.ptHour
 
-      console.log initEstimate
+      console.log 'initEstimate', initEstimate
+
+      allTimes = _.pluck _.flatten($scope.allWork), 'time'
+      firstDay = time2day(_.min(allTimes))-1
+      lastDay = time2day(_.max(allTimes))+1
+
+      today = time2day(Date.now())
+      lastDay = today if today > lastDay
 
       # $scope.a.sprints[0].a_stories[10]
       # points: 4  =>  24h
       # _.pluck $scope.a.sprints[0].a_stories[10].a_tasks, 'history'
-      storyAllWork = _.pluck($scope.a.sprints[0].a_stories[10].a_tasks, 'history')
+      _.each $scope.a.sprints, (sprint) ->
+        storyDailys = _.map sprint.a_stories, (story) ->
+          storyAllWork = _.flatten _.pluck(story.a_tasks, 'history')
 
-      storyDaily = _.groupBy _.flatten(storyAllWork), (w) ->
-        Math.floor(w.time/1000/60/60/24)
-      storyDaily = _.mapValues storyDaily, (work) ->
-        console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
+          storyDays = _.map storyAllWork, (w) -> time2day(w.time)
 
-        cleanWork = _.values _.indexBy(work, 'taskId')
-        tempdone = _.reduce cleanWork, (sum, work) ->
-          sum + work.done
-        , 0
-        remaining = _.reduce cleanWork, (sum, work) ->
-          sum + work.remaining
-        , 0
-        workload = tempdone + remaining
+          storyDaily = _.groupBy storyAllWork, (w) -> time2day(w.time)
+          storyDaily = _.mapValues storyDaily, (work, day) ->
+            console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
 
-        return {
-          work: work
-          workload: workload
-          remaining: remaining
-        }
+            cleanWork = _.values _.indexBy(work, 'taskId')
+            tempdone = _.reduce cleanWork, (sum, work) ->
+              sum + work.done
+            , 0
+            remaining = _.reduce cleanWork, (sum, work) ->
+              sum + work.remaining
+            , 0
+            workload = tempdone + remaining
 
+            return {
+              work: work
+              workload: workload
+              remaining: remaining
+              day: parseInt(day)
+            }
 
+          estimEnd = lastDay
+          estimEnd = _.min(storyDays) if storyDays.length > 0
+
+          estimateDays = _.range firstDay, estimEnd
+          estimatedRemaining = story.points * $scope.ptHour
+          preWork = _.map estimateDays, (day) ->
+            workload: estimatedRemaining
+            remaining: estimatedRemaining
+            day: day
+          return preWork if storyDays.length <= 0
+
+          dragDays = _.range lastDay, _.max(storyDays)
+          dragRemaining = storyDaily[_.max(storyDays)].remaining
+          dragWorkload = storyDaily[_.max(storyDays)].workload
+          postWork = _.map dragDays, (day) ->
+            workload: dragWorkload
+            remaining: dragRemaining
+            day: day
+
+          return preWork.concat(_.values(storyDaily), postWork)
+
+        storyDailys = _.groupBy _.flatten(storyDailys), 'day'
+
+        sprint.a_dailys = _.map storyDailys, (daily, day) ->
+          remaining = _.reduce daily, (sum, work) ->
+            sum + work.remaining
+          , 0
+          workload = _.reduce daily, (sum, work) ->
+            sum + work.workload
+          , 0
+          return {
+            day: parseInt(day)
+            workload: workload
+            remaining: remaining
+            daily: daily
+          }
+        console.log(sprint.a_dailys)
 
 
 
