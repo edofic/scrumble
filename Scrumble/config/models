@@ -54,3 +54,9 @@ ProjectMember json
     roles   [ProjectRole]
     UniqueMember user project
     deriving Eq Show
+
+ProjectDocs json
+    project ProjectId
+    content Text
+    deriving Eq Show
+
