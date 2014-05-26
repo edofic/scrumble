@@ -96,3 +96,11 @@ angular.module('scrumbleApp')
       update:
         method: 'PUT'
     )
+  .factory 'StoryNotes', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/projects/:projectId/stories/:storyId/notes', {},
+      query:
+        method: 'GET'
+        isArray: true
+      update:
+        method: 'PUT'
+    )

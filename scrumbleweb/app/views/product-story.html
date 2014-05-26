@@ -16,6 +16,7 @@
       Business value: <strong>{{ story.businessValue }}</strong> |
       Estimate: {{ story.points || "/" }} <span ng-if="canEditEstimate(story)"><a href="" ng-click="changeEstimate(story)"><i class="glyphicon glyphicon-pencil"></i></a></span>
       <span ng-if="story.sprint">| Sprint {{ story.sprint.number }}</span>
+      | <a href="" ng-click="$root.editStoryNotes(story)">Notes <i class="glyphicon glyphicon-pencil"></i></a>
     </p>
   </div>
   <div class="panel-body">
@@ -23,8 +24,24 @@
     <ul class="tests">
       <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
     </ul>
-    <ul class="notes">
+    <ul class="notes" ng-if="!story.editingNotes">
       <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
     </ul>
+
+    <form class="form-inline" ng-if="story.editingNotes">
+      <ul class="notes">
+        <li ng-repeat="note in story.editingNotes track by $index">
+          --
+          <div class="form-group">
+            <input type="text" class="form-control input-sm" ng-model="note.note" size="100">
+          </div>
+        </li>
+      </ul>
+      <a href="" ng-click="story.editingNotes.push({note: ''});">Add another note</a>
+      <br>
+      <br>
+      <a href="" class="btn btn-default" ng-click="$root.saveStoryNotes(story)">Save</a>
+      <a href="" class="btn btn-default" ng-click="$root.cancelStoryNotes(story)">Cancel</a>
+    </form>
   </div>
 </div>
