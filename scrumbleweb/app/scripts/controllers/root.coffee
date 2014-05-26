@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'RootCtrl', ($scope, $route, growl) ->
+  .controller 'RootCtrl', ($scope, $route, growl, StoryNotes) ->
     # array keeps order
     $scope.navigationPaths = [
       {path: '/daily', name: 'Daily Scrum'}
@@ -59,3 +59,22 @@ angular.module('scrumbleApp')
       {value: 'NotThisTime', label: 'Not this time'}
     ]
     $scope.$root.storyPriorities = _.indexBy($scope.$root.storyPrioritiesOrdered, 'value')
+
+    $scope.$root.editStoryNotes = (story) ->
+      nonEmptyNotes = story.notes
+      nonEmptyNotes = [''] if !nonEmptyNotes? || nonEmptyNotes.length <= 0
+      story.editingNotes = _.map nonEmptyNotes, (note) -> note: note
+    $scope.$root.saveStoryNotes = (story) ->
+      newNotes = _.compact _.map story.editingNotes, (note) -> note.note
+      storyNotes = new StoryNotes()
+      storyNotes.notes = newNotes
+      storyNotes.$update
+        projectId: $scope.currentUser.activeProject
+        storyId: story.id
+      , ->
+        story.notes = newNotes
+        story.editingNotes = false
+      , (reason) ->
+        growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while editing notes"))
+    $scope.$root.cancelStoryNotes = (story) ->
+      story.editingNotes = false
