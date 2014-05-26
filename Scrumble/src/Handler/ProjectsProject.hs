@@ -35,7 +35,9 @@ getProjectsProjectR projectId = do
 deleteProjectsProjectR :: ProjectId -> Handler ()
 deleteProjectsProjectR projectId = do
   Auth.adminOnly
-  runDB $ delete projectId >> return ()
+  runDB $ do
+    deleteWhere [ProjectDocsProject Imp.==. projectId]
+    delete projectId >> return ()
 
 
 putProjectsProjectR :: ProjectId -> Handler ()
