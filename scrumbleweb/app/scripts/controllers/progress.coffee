@@ -41,76 +41,9 @@ angular.module('scrumbleApp')
     time2day = (time) ->
       Math.floor(time/1000/60/60/24)
 
-    $scope.calcDaily = ->
-      allTimes = _.pluck _.flatten($scope.allWork), 'time'
-
-      $scope.firstDay = time2day(_.min(allTimes))-1
-      firstSprint = time2day(_.min(_.pluck($scope.a.sprints, 'start')))
-      $scope.firstDay = firstSprint if firstSprint < $scope.firstDay
-
-      $scope.lastDay = time2day(Date.now())+1
-
-      processedStoryIDs = []
-      processStory = (story) ->
-        processedStoryIDs.push story.id
-
-        storyAllWork = _.flatten _.pluck(story.a_tasks, 'history')
-
-        storyDays = _.map storyAllWork, (w) -> time2day(w.time)
-
-        storyDaily = _.groupBy storyAllWork, (w) -> time2day(w.time)
-        storyDaily = _.mapValues storyDaily, (work, day) ->
-          console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
-
-          cleanWork = _.values _.indexBy(work, 'taskId')
-          done = _.reduce cleanWork, (sum, work) ->
-            sum + work.done
-          , 0
-          remaining = _.reduce cleanWork, (sum, work) ->
-            sum + work.remaining
-          , 0
-
-          return {
-            work: work
-            done: done
-            remaining: remaining
-            day: parseInt(day)
-          }
-
-        estimEnd = $scope.lastDay+1
-        estimEnd = _.min(storyDays) if storyDays.length > 0
-
-        estimateDays = _.range $scope.firstDay, estimEnd
-        estimatedRemaining = story.points * $scope.ptHour
-        estimatedDone = 0
-        preWork = _.map estimateDays, (day) ->
-          done: estimatedDone
-          remaining: estimatedRemaining
-          day: day
-        return preWork if storyDays.length <= 0
-
-        dragDays = _.range _.max(storyDays)+1, $scope.lastDay+1
-        dragRemaining = storyDaily[_.max(storyDays)].remaining
-        dragDone = 0
-        postWork = _.map dragDays, (day) ->
-          done: dragDone
-          remaining: dragRemaining
-          day: day
-        return preWork.concat(_.values(storyDaily), postWork)
-
-
-      allDailys = _.map $scope.a.sprints, (sprint) ->
-        storyDailys = _.map sprint.a_stories, processStory
-        sprint.a_dailys = _.flatten storyDailys
-
-      toProcess = _.reject $scope.a.stories, (story) ->
-        story.id in processedStoryIDs
-      allDailys.push.apply allDailys, _.map(toProcess, processStory)
-
-
-      flatDailys = _.flatten allDailys
-      dailys = _.groupBy flatDailys, 'day'
-      dailySums = _.map dailys, (daily, day) ->
+    sumDaily = (dailys) ->
+      dailysByDay = _.groupBy dailys, 'day'
+      dailySums = _.map dailysByDay, (daily, day) ->
         remaining = _.reduce daily, (sum, work) ->
           sum + work.remaining
         , 0
@@ -127,8 +60,78 @@ angular.module('scrumbleApp')
         d.done += dailySums[ix].done
       return dailySums
 
+    processedStoryIDs = []
+    processStory = (story) ->
+      processedStoryIDs.push story.id
+
+      storyAllWork = _.flatten _.pluck(story.a_tasks, 'history')
+
+      storyDays = _.map storyAllWork, (w) -> time2day(w.time)
+
+      storyDaily = _.groupBy storyAllWork, (w) -> time2day(w.time)
+      storyDaily = _.mapValues storyDaily, (work, day) ->
+        console.log 'Why are there multiple work history logs on same task on the same day? ... Taking last instance..' if _.pluck(work, 'taskId').length != _.unique(_.pluck(work, 'taskId')).length
+
+        cleanWork = _.values _.indexBy(work, 'taskId')
+        done = _.reduce cleanWork, (sum, work) ->
+          sum + work.done
+        , 0
+        remaining = _.reduce cleanWork, (sum, work) ->
+          sum + work.remaining
+        , 0
+
+        return {
+          work: work
+          done: done
+          remaining: remaining
+          day: parseInt(day)
+        }
+
+      estimEnd = $scope.lastDay+1
+      estimEnd = _.min(storyDays) if storyDays.length > 0
+
+      estimateDays = _.range $scope.firstDay, estimEnd
+      estimatedRemaining = story.points * $scope.ptHour
+      estimatedDone = 0
+      preWork = _.map estimateDays, (day) ->
+        done: estimatedDone
+        remaining: estimatedRemaining
+        day: day
+      return preWork if storyDays.length <= 0
+
+      dragDays = _.range _.max(storyDays)+1, $scope.lastDay+1
+      dragRemaining = storyDaily[_.max(storyDays)].remaining
+      dragDone = 0
+      postWork = _.map dragDays, (day) ->
+        done: dragDone
+        remaining: dragRemaining
+        day: day
+      return preWork.concat(_.values(storyDaily), postWork)
+
+    $scope.calcDaily = ->
+      allTimes = _.pluck _.flatten($scope.allWork), 'time'
+
+      $scope.firstDay = time2day(_.min(allTimes))-1
+      firstSprint = time2day(_.min(_.pluck($scope.a.sprints, 'start')))
+      $scope.firstDay = firstSprint if firstSprint < $scope.firstDay
+
+      $scope.lastDay = time2day(Date.now())+1
+
+      processedStoryIDs = []
+
+      allDailys = _.map $scope.a.sprints, (sprint) ->
+        storyDailys = _.map sprint.a_stories, processStory
+        sprint.a_dailys = _.flatten storyDailys
+
+      toProcess = _.reject $scope.a.stories, (story) ->
+        story.id in processedStoryIDs
+      allDailysWithEmptyStories = allDailys.concat _.map(toProcess, processStory)
+
+      return sumDaily _.flatten allDailysWithEmptyStories
+
     $scope.draw = ->
       daily = $scope.calcDaily()
+
       allTimes = _.pluck _.flatten($scope.allWork), 'time'
 
       doneFlot = _.map daily, (d) ->
@@ -153,5 +156,26 @@ angular.module('scrumbleApp')
           tickDecimals: 0
         yaxis:
           min: 0
+
+      $scope.sprintVelocities = $scope.sprintVelocitiesCalc()
+
+    $scope.sprintVelocitiesCalc = ->
+      _.map $scope.a.sprints, (sprint) ->
+        selectedVelocity = _.reduce sprint.a_stories, (sum, story) ->
+          sum + story.points
+        , 0
+        realizedVelocity = _.reduce sprint.a_stories, (sum, story) ->
+          sum + if story.done then story.points else 0
+        , 0
+
+        return {
+          workInput: _.last(sumDaily(sprint.a_dailys))?.done || 0
+          sprintNum: sprint.number
+          selectedVelocity: selectedVelocity
+          estimatedVelocity: sprint.velocity
+          realizedVelocity: realizedVelocity
+        }
+
+
 
     $scope.$watch 'ptHour', $scope.draw
