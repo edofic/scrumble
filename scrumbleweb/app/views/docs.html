@@ -1,0 +1,40 @@
+<div class="daily">
+  <div class="white-stripe">
+    <div class="container">
+      <h2>
+        Documentation
+      </h2>
+
+      <br>
+
+      <ul class="nav nav-tabs">
+        <li><a href="#/daily">Daily Scrum</a></li>
+        <li class="active"><a href="#/docs">Documentation</a></li>
+      </ul>
+
+      <br>
+
+      <div class="pull-right" ng-show="!editing">
+        <button class="btn btn-primary docs-edit-btn" ng-click="edit()">Edit</button>
+      </div>
+
+      <div ng-if="!editing">
+        <div btf-markdown="docs.content"></div>
+      </div>
+
+      <div ng-if="editing">
+        <form ng-submit="editDone()">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <textArea class="form-control" rows="15" ng-model="docsEdit.content"></textArea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-default" ng-click="editCancel()">Cancel</button>
+        </form>
+      </div>
+    </div>
+    <br>
+  </div>
+
+</div>

@@ -17,6 +17,13 @@ angular.module('scrumbleApp')
       update:
         method: 'PUT'
     )
+  .factory 'ProjectDocs', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/projects/:projectId/docs', {},
+      query:
+        method: 'GET'
+      update:
+        method: 'PUT'
+    )
   .factory 'Sprint', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/sprints/:sprintId', {},
       query:

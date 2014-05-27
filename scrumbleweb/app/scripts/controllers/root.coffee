@@ -1,16 +1,17 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'RootCtrl', ($scope, $route, growl, StoryNotes) ->
+  .controller 'RootCtrl', ($scope, $route, $location, growl, StoryNotes) ->
     # array keeps order
     $scope.navigationPaths = [
-      {path: '/daily', name: 'Daily Scrum'}
+      {path: '/daily', name: 'Project wall'}
       {path: '/sprint', name: 'Sprint Backlog'}
       {path: '/product', name: 'Product Backlog'}
       {path: '/progress', name: 'Progress'}
     ]
 
     $scope.route = $route
+    $scope.location = $location
 
     $scope.isActivePath = (path) ->
       path == $route.current?.$$route?.originalPath

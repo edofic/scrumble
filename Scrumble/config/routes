@@ -16,7 +16,7 @@
 /api/projects/#ProjectId/stories                StoriesR            GET     POST
 /api/projects/#ProjectId/stories/#StoryId       StoriesStoryR       GET     PUT      DELETE
 
-/api/projects/#ProjectId/docs                   ProjectDocsR        GET     POST
+/api/projects/#ProjectId/docs                   ProjectDocsR        GET     PUT
 
 /api/projects/#ProjectId/sprints            SprintsR     GET   POST
 /api/projects/#ProjectId/sprints/#SprintId  SprintR      GET 

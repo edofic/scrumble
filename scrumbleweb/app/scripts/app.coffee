@@ -6,7 +6,8 @@ angular.module('scrumbleApp', [
   'ngSanitize',
   'ngRoute',
   'ui.bootstrap',
-  'angular-growl'
+  'angular-growl',
+  'btford.markdown'
 ])
   .config ($routeProvider, $httpProvider) ->
     currentUser = ['$rootScope', '$location', '$q', ($rootScope, $location, $q) ->
@@ -63,6 +64,10 @@ angular.module('scrumbleApp', [
       .when '/progress',
         templateUrl: 'views/progress.html'
         controller: 'ProgressCtrl'
+        resolve: loginRequired
+      .when '/docs',
+        templateUrl: 'views/docs.html'
+        controller: 'DocsCtrl'
         resolve: loginRequired
       .otherwise
         redirectTo: '/'
