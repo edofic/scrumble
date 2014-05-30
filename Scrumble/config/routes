@@ -7,8 +7,8 @@
 
 /                   HomeR           GET
 
-/api/users                   UsersR               GET   POST
-/api/users/#UserId           UsersUserR           GET   DELETE
+/api/users                   UsersR               GET   POST 
+/api/users/#UserId           UsersUserR           GET   DELETE PUT
 /api/users/#UserId/password  UsersUserPasswordR   POST
 /api/projects                ProjectsR            GET   POST
 /api/projects/#ProjectId     ProjectsProjectR     GET   PUT   DELETE 
