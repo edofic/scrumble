@@ -6,6 +6,7 @@ module Handler.Sprints
 import Import 
 import Model.ProjectRole
 import Validation
+import Handler.Sprint (validateSprint)
 import qualified Authorization as Auth
 
 getSprintsR :: ProjectId -> Handler Value
@@ -18,19 +19,12 @@ postSprintsR :: ProjectId -> Handler Value
 postSprintsR projectId = do
   Auth.assert $ Auth.roleOnProject ScrumMaster projectId
   newSprint :: Sprint <- requireJsonBodyWith [("project", toJSON projectId)]
-  currentTime <- liftIO $ currentTimestamp
-  runValidationHandler $ do
-    ("velocity", "Velocity should be non-negative") `validate` 
-      (sprintVelocity newSprint >= 0)
-    ("start", "Start time should be in the future") `validate`
-      (sprintStart newSprint >= currentTime)
-    ("end", "End time should be after start time") `validate` 
-      (sprintEnd newSprint >= sprintStart newSprint)
+  runValidationHandler $ validateSprint newSprint
   sprintId <- runDB $ runValidationHandler $ do
     existing <- count (overlapping newSprint) 
     ("start", "Sprint should not overlap with existing sprints") `validate`
       (existing == 0)
-    insert newSprint
+    insert newSprint    
   return $ toJSON $ FlatEntity $ Entity sprintId newSprint
   where
     overlapping (Sprint {sprintStart=start, sprintEnd=end}) = 
