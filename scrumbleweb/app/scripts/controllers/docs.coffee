@@ -49,7 +49,6 @@ angular.module('scrumbleApp')
               parts.push("**#{story.description}**")
 
           if elements.tests
-            console.log story.tests
             parts.push(_.map(story.tests, (x) -> x + '.').join(' '))
 
           if elements.notes
