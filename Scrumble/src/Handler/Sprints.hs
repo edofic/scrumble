@@ -19,7 +19,7 @@ postSprintsR :: ProjectId -> Handler Value
 postSprintsR projectId = do
   Auth.assert $ Auth.roleOnProject ScrumMaster projectId
   newSprint :: Sprint <- requireJsonBodyWith [("project", toJSON projectId)]
-  runValidationHandler $ validateSprint newSprint
+  runValidationHandler $ validateSprint False newSprint
   sprintId <- runDB $ runValidationHandler $ do
     existing <- count (overlapping newSprint) 
     ("start", "Sprint should not overlap with existing sprints") `validate`

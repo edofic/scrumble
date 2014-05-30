@@ -23,7 +23,7 @@ putSprintR :: ProjectId -> SprintId -> Handler ()
 putSprintR projectId sprintId = do
   Auth.assert $ Auth.roleOnProject ScrumMaster projectId
   newSprint :: Sprint <- requireJsonBodyWith [("project", toJSON projectId)]
-  runValidationHandler $ validateSprint newSprint
+  runValidationHandler $ validateSprint False newSprint
   runDB $ runValidationHandler $ do
     existing <- count $ overlapping newSprint ++ [SprintId !=. sprintId]
     ("start", "Sprint should not overlap with existing sprints") `validate`
@@ -36,12 +36,12 @@ putSprintR projectId sprintId = do
     wraps x = [SprintStart <=. x, SprintEnd >=. x]
     covers start end = [SprintStart >=. start, SprintEnd <=. end]
 
-validateSprint :: MonadIO m => Validation m Sprint
-validateSprint newSprint = do
+validateSprint :: MonadIO m => Bool -> Validation m Sprint
+validateSprint new newSprint = do
     currentTime <- liftIO $ currentTimestamp
     ("velocity", "Velocity should be non-negative") `validate` 
       (sprintVelocity newSprint >= 0)
-    ("start", "Start time should be in the future") `validate`
+    when new $ ("start", "Start time should be in the future") `validate`
       (sprintStart newSprint >= currentTime)
     ("end", "End time should be after start time") `validate` 
       (sprintEnd newSprint >= sprintStart newSprint)
