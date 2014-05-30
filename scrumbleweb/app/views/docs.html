@@ -29,8 +29,11 @@
               <textArea class="form-control" rows="15" ng-model="docsEdit.content"></textArea>
             </div>
           </div>
+          <div class="pull-right">
+            <button type="button" class="btn btn-default" ng-click="generate()">Import user stories</button>
+          </div>
           <button type="submit" class="btn btn-primary">Save</button>
-          <button type="submit" class="btn btn-default" ng-click="editCancel()">Cancel</button>
+          <button type="button" class="btn btn-default" ng-click="editCancel()">Cancel</button>
         </form>
       </div>
     </div>

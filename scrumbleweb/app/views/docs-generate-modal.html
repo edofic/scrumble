@@ -1,0 +1,33 @@
+<form class="docs-generate-modal" name="docsGenerateForm" ng-submit="generateSubmit(docsGenerateForm.$invalid)">
+  <div class="modal-header">
+    <h3>Import users stories</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal">
+      <div class="form-group fake-row">
+        <label class="col-sm-3 control-label">Insert stories:</label>
+        <div class="col-sm-9">
+          <select ng-model="data.position" class="form-control" ng-options="position.position as position.text for position in positions">
+          </select>
+        </div>
+      </div>
+      <div class="form-group fake-row">
+        <label class="col-sm-3 control-label">Stories:</label>
+        <div class="col-sm-9">
+          <select ng-model="data.stories" class="form-control" ng-options="story as story.title for story in stories" multiple></select>
+          <a href="" ng-click="selectAllStories()">select all</a>
+        </div>
+      </div>
+      <div class="form-group fake-row">
+        <label class="col-sm-3 control-label">What to import:</label>
+        <div class="col-sm-9">
+          <select ng-model="data.elements" class="form-control" ng-options="element.element as element.text for element in elements" multiple></select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Import</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+  </div>
+</form>
