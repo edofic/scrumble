@@ -24,6 +24,18 @@ angular.module('scrumbleApp')
       update:
         method: 'PUT'
     )
+  .factory 'ProjectPost', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/projects/:projectId/posts/:postId', {},
+      query:
+        method: 'GET'
+        isArray: true
+    )
+  .factory 'ProjectPostComment', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/projects/:projectId/posts/:postId/comments/:commentId', {},
+      query:
+        method: 'GET'
+        isArray: true
+    )
   .factory 'Sprint', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/sprints/:sprintId', {},
       query:

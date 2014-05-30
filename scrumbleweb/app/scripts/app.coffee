@@ -69,6 +69,10 @@ angular.module('scrumbleApp', [
         templateUrl: 'views/docs.html'
         controller: 'DocsCtrl'
         resolve: loginRequired
+      .when '/discussion',
+        templateUrl: 'views/wall.html'
+        controller: 'WallCtrl'
+        resolve: loginRequired
       .otherwise
         redirectTo: '/'
 

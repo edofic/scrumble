@@ -1,0 +1,80 @@
+<div class="daily">
+  <div class="white-stripe">
+    <div class="container">
+      <h2>
+        Discussion
+      </h2>
+
+      <br>
+
+      <ul class="nav nav-tabs">
+        <li><a href="#/daily">Daily Scrum</a></li>
+        <li class="active"><a href="#/discussion">Discussion</a></li>
+        <li><a href="#/docs">Documentation</a></li>
+      </ul>
+
+      <br>
+
+      <form ng-submit="newPostSubmit()">
+        <div class="row">
+          <div class="form-group">
+            <div class="col-sm-6">
+              <h5>New post:</h5>
+              <textarea class="form-control" rows="4" ng-model="newPost.content"></textarea>
+            </div>
+          </div>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Post to wall</button>
+      </form>
+
+      <hr>
+
+      <div ng-repeat="post in posts">
+        <div class="panel story panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-2">
+                <p><strong>{{ post.user }}</strong></p>
+                <p><small>{{ post.date | date: 'medium' }}</small></p>
+                <p ng-if="canRemovePost(post)"><small><a href="" ng-click="removePost(post)">delete</a></small></p>
+              </div>
+              <div class="col-sm-10">
+                <p>{{ post.content }}</p>
+                
+                <hr>
+                
+                <p ng-if="!post.comments.length"><small>No comments yet.</small></p>
+
+                <div class="panel story panel-default" ng-repeat="comment in post.comments">
+                  <div class="panel-body">
+                    <div class="pull-right" ng-if="postCanRemoveComment(post, comment)"><small><a href="" ng-click="postRemoveComment(post, comment)">delete</a></small></div>
+                    <p><strong>{{ comment.user }}</strong>: {{ comment.content }}</p>
+                    <p><small>{{ comment.date | date: 'medium' }}</small></p>
+                  </div>
+                </div>
+
+                <p><a href="" ng-click="postAddComment(post)" ng-if="!post.newComment">add comment</a></p>
+
+                <form ng-submit="postAddCommentSubmit(post)" ng-if="post.newComment">
+                  <div class="row">
+                    <div class="form-group">
+                      <div class="col-sm-6">
+                        <textarea class="form-control" rows="4" ng-model="post.newComment.content"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <button type="submit" class="btn btn-primary">Add comment</button>
+                  <button type="button" class="btn btn-default" ng-click="postAddCommentCancel(post)">Cancel</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+
+</div>
