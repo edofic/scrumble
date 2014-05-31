@@ -74,3 +74,9 @@ ProjectPostComment json
     date Int64
     deriving Eq Show
 
+Poker json
+    project ProjectId
+    lastModified Int64
+    content Text
+    UniquePokerProject project
+    deriving Eq Show

@@ -49,6 +49,7 @@ library
                      Handler.TasksTask
                      Handler.ProjectDocs
                      Handler.ProjectPosts
+                     Handler.Poker
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

@@ -34,6 +34,8 @@
 /api/projects/#ProjectId/users            ProjectUsersR   GET            POST
 /api/projects/#ProjectId/users/#UserId    ProjectUserR    GET      PUT   DELETE
 
+/api/projects/#ProjectId/poker            PokerR GET PUT
+
 /api/login          AuthenticationR  POST
 /api/logout         AuthLogoutR      POST
 /api/user           AuthUserR        GET
