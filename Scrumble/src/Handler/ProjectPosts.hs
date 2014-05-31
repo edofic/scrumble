@@ -4,6 +4,7 @@ import Import
 import qualified Authorization as Auth
 import Data.Maybe (isJust)
 import Validation
+import Model.ProjectRole
 
 getProjectPostsR :: ProjectId -> Handler Value
 getProjectPostsR projectId = do
@@ -51,4 +52,24 @@ postProjectPostsCommentsR projectId postId = do
   getProjectPostsR projectId
 
 
+deleteProjectPostsPostR :: ProjectId -> ProjectPostId -> Handler Value
+deleteProjectPostsPostR projectId postId = do
+  Auth.assert $ Auth.roleOnProject ScrumMaster projectId
+  _ <- runDB $ do
+    post <- selectFirst [ProjectPostId ==. postId, ProjectPostProject ==. projectId] []
+    runValidationHandler $ do
+      ("projectId", "Post should be a part of the project refered by projectId in the path.") `validate` (isJust post)
+    deleteWhere $ [ProjectPostCommentPost ==. postId] 
+    deleteWhere $ [ProjectPostId ==. postId, ProjectPostProject ==. projectId]
+  getProjectPostsR projectId
 
+
+deleteProjectPostsCommentR :: ProjectId -> ProjectPostId -> ProjectPostCommentId -> Handler Value
+deleteProjectPostsCommentR projectId postId commentId = do
+  Auth.assert $ Auth.roleOnProject ScrumMaster projectId
+  _ <- runDB $ do
+    post <- selectFirst [ProjectPostId ==. postId, ProjectPostProject ==. projectId] []
+    runValidationHandler $ do
+      ("projectId", "Post should be a part of the project refered by projectId in the path.") `validate` (isJust post)
+    deleteWhere $ [ProjectPostCommentId ==. commentId] 
+  getProjectPostsR projectId
