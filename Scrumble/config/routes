@@ -18,6 +18,10 @@
 
 /api/projects/#ProjectId/docs                   ProjectDocsR        GET     PUT
 
+/api/projects/#ProjectId/posts                                                  ProjectPostsR           GET     POST
+/api/projects/#ProjectId/posts/#ProjectPostId/comments                          ProjectPostsCommentsR   POST
+
+
 /api/projects/#ProjectId/sprints            SprintsR     GET   POST
 /api/projects/#ProjectId/sprints/#SprintId  SprintR      GET   PUT
 
