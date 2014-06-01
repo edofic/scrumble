@@ -12,7 +12,7 @@ getUsersUserR userId = do
 
 putUsersUserR :: UserId -> Handler ()
 putUsersUserR userId = do
-  Auth.adminOnly
+  Auth.assert $ Auth.hasUserId userId
   user <- requireJsonBody
   runDB $ do
     replace userId user
