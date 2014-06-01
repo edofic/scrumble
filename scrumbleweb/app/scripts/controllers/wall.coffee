@@ -6,7 +6,6 @@ angular.module('scrumbleApp')
 
     ProjectUser.get projectId: projectId, userId: $rootScope.currentUser.id, (projectUser) ->
       $scope.isScrumMaster = 'ScrumMaster' in projectUser.roles
-      $scope.isScrumMaster = no
 
     $scope.posts = []
 
