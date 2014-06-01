@@ -19,7 +19,7 @@
               <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
               </span>
-              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" placeholder="Sprint start" ng-model="sprint.start" date-less-than="{{sprint.end.toISOString()}}" min="addDays(today, 1)" max="addDays(sprint.end, -1)" datepicker-options="dateOptions" show-button-bar="false" required tabindex="1" date-parse-input>
+              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" placeholder="Sprint start" ng-model="sprint.start" date-less-than="{{sprint.end.toISOString()}}" min="addDays(today, 1)" max="addDays(sprint.end, -1)" datepicker-options="dateOptions" show-button-bar="false" required tabindex="1" date-parse-input is-open="sprintStartOpen" ng-click="sprintStartOpen = true">
 
             </span>
             <span class="col-sm-3 col-xs-6 input-group">
@@ -27,7 +27,7 @@
               <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
               </span>
-              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" placeholder="Sprint end" ng-model="sprint.end" datepicker-options="dateOptions" show-button-bar="false" required tabindex="1" min="addDays(sprint.start, 1) || addDays(today,2)" date-parse-input>
+              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" placeholder="Sprint end" ng-model="sprint.end" datepicker-options="dateOptions" show-button-bar="false" required tabindex="1" min="addDays(sprint.start, 1) || addDays(today,2)" date-parse-input date-parse-input is-open="sprintEndOpen" ng-click="sprintEndOpen = true">
 
             </span>
           </h3>
