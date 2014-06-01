@@ -39,6 +39,7 @@ library
                      Handler.AuthUser
                      Handler.Stories
                      Handler.StoriesStory
+                     Handler.StoriesStoryNotes
                      Handler.Sprint
                      Handler.Sprints
                      Handler.SprintStory

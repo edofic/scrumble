@@ -16,6 +16,8 @@ LLLL/static StaticR Static getStatic
 /api/projects/#ProjectId/stories                StoriesR            GET     POST
 /api/projects/#ProjectId/stories/#StoryId       StoriesStoryR       GET     PUT      DELETE
 
+/api/projects/#ProjectId/stories/#StoryId/notes         StoriesStoryNotesR       PUT
+
 /api/projects/#ProjectId/stories/#StoryId/poker         PokerR GET PUT
 
 

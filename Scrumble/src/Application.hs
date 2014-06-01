@@ -43,6 +43,7 @@ import Handler.UsersUserPassword
 import Handler.AuthUser
 import Handler.Stories
 import Handler.StoriesStory
+import Handler.StoriesStoryNotes
 import Handler.Sprint
 import Handler.Sprints
 import Handler.SprintStory
