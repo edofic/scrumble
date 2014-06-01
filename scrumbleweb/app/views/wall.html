@@ -35,7 +35,7 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-sm-2">
-                <p><strong>{{ post.user }}</strong></p>
+                <p><strong>{{ post.user.firstName }} {{ post.user.lastName }}</strong></p>
                 <p><small>{{ post.date | date: 'medium' }}</small></p>
                 <p ng-if="canRemovePost(post)"><small><a href="" ng-click="removePost(post)">delete</a></small></p>
               </div>
@@ -49,7 +49,7 @@
                 <div class="panel story panel-default" ng-repeat="comment in post.comments">
                   <div class="panel-body">
                     <div class="pull-right" ng-if="postCanRemoveComment(post, comment)"><small><a href="" ng-click="postRemoveComment(post, comment)">delete</a></small></div>
-                    <p><strong>{{ comment.user }}</strong>: {{ comment.content }}</p>
+                    <p><strong>{{ comment.user.firstName }} {{ comment.user.lastName }}</strong>: {{ comment.content }}</p>
                     <p><small>{{ comment.date | date: 'medium' }}</small></p>
                   </div>
                 </div>

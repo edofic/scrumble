@@ -1,59 +1,50 @@
 'use strict'
 
 angular.module('scrumbleApp')
-  .controller 'WallCtrl', ($scope, $rootScope, ProjectUser, ProjectPost, ProjectPostComment) ->
+  .controller 'WallCtrl', ($scope, $rootScope, ProjectUser, ProjectPost, ProjectPostComment, bbox) ->
     projectId = $rootScope.currentUser.activeProject
 
     ProjectUser.get projectId: projectId, userId: $rootScope.currentUser.id, (projectUser) ->
       $scope.isScrumMaster = 'ScrumMaster' in projectUser.roles
       $scope.isScrumMaster = no
 
-    $scope.posts = [
-      id: 1
-      user: 'Post Author'
-      userId: 42
-      date: new Date().getTime()
-      content: 'New post'
-      comments: [
-        id: 1
-        user: 'Comment author'
-        userId: 43
-        date: new Date().getTime()
-        content: 'New comment'
-      ]
-    ]
+    $scope.posts = []
+
+    $scope.load = ->
+      ProjectPost.query projectId: projectId, (posts) ->
+        $scope.posts = _.sortBy(posts, (x) -> x.date)
+        $scope.posts.reverse()
+
+    $scope.load()
 
     $scope.newPost =
       content: ''
 
     $scope.newPostSubmit = ->
-      $scope.posts.push
-        user: $scope.$root.currentUser.firstName + ' ' + $rootScope.currentUser.lastName
-        userId: $scope.$root.currentUser.id
-        date: new Date().getTime()
-        content: $scope.newPost.content
-        comments: []
-
-      $scope.newPost.content = ''
+      newPost = new ProjectPost()
+      newPost.content = $scope.newPost.content
+      newPost.$save projectId: projectId, ->
+        $scope.newPost.content = ''
+        $scope.load()
 
     $scope.canRemovePost = (post) ->
       $scope.isScrumMaster or post.userId == $rootScope.currentUser.id
 
     $scope.removePost = (post) ->
-      $scope.posts.splice($scope.posts.indexOf(post), 1)
+      bbox.confirm "Are you sure you want to delete this post?", (ok) ->
+        if ok?
+          post.$delete projectId: projectId, postId: post.id, $scope.load
 
     $scope.postAddComment = (post) ->
       post.newComment =
         content: ''
 
     $scope.postAddCommentSubmit = (post) ->
-      post.comments.push
-        user: $scope.$root.currentUser.firstName + ' ' + $scope.$root.currentUser.lastName
-        userId: $scope.$root.currentUser.id
-        date: new Date().getTime()
-        content: post.newComment.content
-
-      post.newComment = null
+      newComment = new ProjectPostComment()
+      newComment.content = post.newComment.content
+      newComment.$save projectId: projectId, postId: post.id, ->
+        post.newComment = null
+        $scope.load()
 
     $scope.postAddCommentCancel = (post) ->
       post.newComment = null
@@ -62,4 +53,6 @@ angular.module('scrumbleApp')
       $scope.isScrumMaster or comment.userId == $rootScope.currentUser.id
 
     $scope.postRemoveComment = (post, comment) ->
-      post.comments.splice(post.comments.indexOf(comment), 1)
+      bbox.confirm "Are you sure you want to delete this comment?", (ok) ->
+        if ok?
+          ProjectPostComment.delete projectId: projectId, postId: post.id, commentId: comment.id, $scope.load
