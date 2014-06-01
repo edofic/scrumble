@@ -19,8 +19,6 @@ angular.module('scrumbleApp')
     )
   .factory 'ProjectDocs', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/docs', {},
-      query:
-        method: 'GET'
       update:
         method: 'PUT'
     )
