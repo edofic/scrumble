@@ -28,17 +28,17 @@ getProjectPostsR projectId = do
           return $ toJSONWith comment (toJSON . FlatEntity) [("user", userJson)]
 
 
-postProjectPostsR :: ProjectId -> Handler Value
+postProjectPostsR :: ProjectId -> Handler ()
 postProjectPostsR projectId = do
   Auth.assert $ Auth.memberOfProject projectId
   currentTime :: Integer <- liftIO $ currentTimestamp
   user <- Auth.currentUser
   post :: ProjectPost <- requireJsonBodyWith [("project", toJSON projectId), ("userId", toJSON $ entityKey user), ("date", toJSON currentTime)]
   _ <- runDB $ insert post
-  getProjectPostsR projectId
+  return ()
 
 
-postProjectPostsCommentsR :: ProjectId -> ProjectPostId -> Handler Value
+postProjectPostsCommentsR :: ProjectId -> ProjectPostId -> Handler ()
 postProjectPostsCommentsR projectId postId = do
   Auth.assert $ Auth.memberOfProject projectId
   currentTime :: Integer <- liftIO $ currentTimestamp
@@ -49,10 +49,9 @@ postProjectPostsCommentsR projectId postId = do
     runValidationHandler $ do
       ("projectId", "Post should be a part of the project refered by projectId in the path.") `validate` (isJust post)
     insert comment
-  getProjectPostsR projectId
+  return ()
 
-
-deleteProjectPostsPostR :: ProjectId -> ProjectPostId -> Handler Value
+deleteProjectPostsPostR :: ProjectId -> ProjectPostId -> Handler ()
 deleteProjectPostsPostR projectId postId = do
   Auth.assert $ Auth.roleOnProject ScrumMaster projectId
   _ <- runDB $ do
@@ -61,10 +60,10 @@ deleteProjectPostsPostR projectId postId = do
       ("projectId", "Post should be a part of the project refered by projectId in the path.") `validate` (isJust post)
     deleteWhere $ [ProjectPostCommentPost ==. postId] 
     deleteWhere $ [ProjectPostId ==. postId, ProjectPostProject ==. projectId]
-  getProjectPostsR projectId
+  return ()
 
 
-deleteProjectPostsCommentR :: ProjectId -> ProjectPostId -> ProjectPostCommentId -> Handler Value
+deleteProjectPostsCommentR :: ProjectId -> ProjectPostId -> ProjectPostCommentId -> Handler ()
 deleteProjectPostsCommentR projectId postId commentId = do
   Auth.assert $ Auth.roleOnProject ScrumMaster projectId
   _ <- runDB $ do
@@ -72,4 +71,4 @@ deleteProjectPostsCommentR projectId postId commentId = do
     runValidationHandler $ do
       ("projectId", "Post should be a part of the project refered by projectId in the path.") `validate` (isJust post)
     deleteWhere $ [ProjectPostCommentId ==. commentId] 
-  getProjectPostsR projectId
+  return ()
