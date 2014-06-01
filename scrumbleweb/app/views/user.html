@@ -30,7 +30,7 @@
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
               <input type="text" class="form-control" placeholder="Username" ng-model="user.username" required tabindex="2">
             </div>
-            <div class="btn-group col-sm-3" ng-if="isAdmin()">
+            <div class="btn-group col-sm-9" ng-if="isAdmin()">
               <button type="button" class="btn btn-default" ng-repeat="(role, roleLabel) in userRoles"
                 ng-model="user.role" btn-radio="'{{role}}'" tabindex="3">
                 {{ roleLabel }}
