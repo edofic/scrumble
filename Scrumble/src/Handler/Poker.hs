@@ -26,16 +26,16 @@ parsePoker :: StoryId -> PokerValue -> Poker
 parsePoker storyId (PokerValue modified content) = 
   Poker storyId modified $ decodeUtf8 $ toStrict $ encode content
 
-getPokerR :: ProjectId -> SprintId -> StoryId -> Handler Value
-getPokerR projectId _ storyId = do
+getPokerR :: ProjectId -> StoryId -> Handler Value
+getPokerR projectId storyId = do
   Auth.assert $ Auth.memberOfProject projectId
   pokerEM <- runDB $ getBy $ UniquePokerStory storyId
   maybe (notFound)
         (return . toJSON . renderPoker)
         (pokerEM)
 
-putPokerR :: ProjectId -> SprintId -> StoryId -> Handler ()
-putPokerR projectId _ storyId = do
+putPokerR :: ProjectId -> StoryId -> Handler ()
+putPokerR projectId storyId = do
   Auth.assert $ Auth.memberOfProject projectId
   val :: PokerValue <- requireJsonBody
   runDB $ do 

@@ -16,6 +16,9 @@ LLLL/static StaticR Static getStatic
 /api/projects/#ProjectId/stories                StoriesR            GET     POST
 /api/projects/#ProjectId/stories/#StoryId       StoriesStoryR       GET     PUT      DELETE
 
+/api/projects/#ProjectId/stories/#StoryId/poker         PokerR GET PUT
+
+
 /api/projects/#ProjectId/docs                   ProjectDocsR        GET     PUT
 
 /api/projects/#ProjectId/posts                                                  ProjectPostsR           GET     POST
@@ -31,8 +34,6 @@ LLLL/static StaticR Static getStatic
 
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/tasks SprintStoryTasksR GET    POST
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/tasks/#TaskId SprintStoryTaskR GET PUT
-
-/api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/poker         PokerR GET PUT
 
 /api/projects/#ProjectId/users            ProjectUsersR   GET            POST
 /api/projects/#ProjectId/users/#UserId    ProjectUserR    GET      PUT   DELETE
