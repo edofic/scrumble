@@ -1,4 +1,4 @@
-/static StaticR Static getStatic
+LLLL/static StaticR Static getStatic
 
 /auth   AuthR   Auth   getAuth
 
@@ -32,10 +32,11 @@
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/tasks SprintStoryTasksR GET    POST
 /api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/tasks/#TaskId SprintStoryTaskR GET PUT
 
+/api/projects/#ProjectId/sprints/#SprintId/stories/#StoryId/poker         PokerR GET PUT
+
 /api/projects/#ProjectId/users            ProjectUsersR   GET            POST
 /api/projects/#ProjectId/users/#UserId    ProjectUserR    GET      PUT   DELETE
 
-/api/projects/#ProjectId/poker            PokerR GET PUT
 
 /api/login          AuthenticationR  POST
 /api/logout         AuthLogoutR      POST
