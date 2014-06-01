@@ -8,6 +8,8 @@ angular.module('scrumbleApp')
       $scope.isProductOwner = 'ProductOwner' in projectUser.roles
       $scope.isScrumMaster = 'ScrumMaster' in projectUser.roles
 
+      $scope.load()
+
     $scope.load = ->
       $scope.sprints = Sprint.query projectId: projectId, (sprints) ->
         $scope.currentSprint = _.find sprints, (x) -> x.current
@@ -23,7 +25,6 @@ angular.module('scrumbleApp')
               story.tasks = tasks
             , (reason) ->
               growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading tasks"))
-    $scope.load()
 
     $scope.canAddStory = ->
       $scope.isProductOwner || $scope.isScrumMaster
