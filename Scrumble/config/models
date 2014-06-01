@@ -75,8 +75,8 @@ ProjectPostComment json
     deriving Eq Show
 
 Poker json
-    project ProjectId
+    story StoryId
     lastModified Int64
     content Text
-    UniquePokerProject project
+    UniquePokerStory story
     deriving Eq Show

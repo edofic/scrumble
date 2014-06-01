@@ -22,23 +22,23 @@ renderPoker (Entity _ (Poker _ modified txt)) =
   PokerValue modified val where
     Just val = decodeStrict $ encodeUtf8 txt
 
-parsePoker :: ProjectId -> PokerValue -> Poker
-parsePoker projectId (PokerValue modified content) = 
-  Poker projectId modified $ decodeUtf8 $ toStrict $ encode content
+parsePoker :: StoryId -> PokerValue -> Poker
+parsePoker storyId (PokerValue modified content) = 
+  Poker storyId modified $ decodeUtf8 $ toStrict $ encode content
 
-getPokerR :: ProjectId -> Handler Value
-getPokerR projectId = do
+getPokerR :: ProjectId -> SprintId -> StoryId -> Handler Value
+getPokerR projectId _ storyId = do
   Auth.assert $ Auth.memberOfProject projectId
-  pokerEM <- runDB $ getBy $ UniquePokerProject projectId
+  pokerEM <- runDB $ getBy $ UniquePokerStory storyId
   maybe (notFound)
         (return . toJSON . renderPoker)
         (pokerEM)
 
-putPokerR :: ProjectId -> Handler ()
-putPokerR projectId = do
+putPokerR :: ProjectId -> SprintId -> StoryId -> Handler ()
+putPokerR projectId _ storyId = do
   Auth.assert $ Auth.memberOfProject projectId
   val :: PokerValue <- requireJsonBody
   runDB $ do 
-    deleteBy $ UniquePokerProject projectId
-    _ <- insert $ parsePoker projectId val
+    deleteBy $ UniquePokerStory storyId
+    _ <- insert $ parsePoker storyId val
     return ()
