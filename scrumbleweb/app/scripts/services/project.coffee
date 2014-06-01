@@ -91,6 +91,12 @@ angular.module('scrumbleApp')
 
     Story
 
+  .factory 'StoryPoker', ($resource, ApiRoot) ->
+    $resource(ApiRoot + '/api/projects/:projectId/stories/:storyId/poker', {},
+      update:
+        method: 'PUT'
+    )
+
   .factory 'SprintStory', ($resource, ApiRoot) ->
     $resource(ApiRoot + '/api/projects/:projectId/sprints/:sprintId/stories/:storyId', {},
       query:
