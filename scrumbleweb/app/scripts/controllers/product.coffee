@@ -17,8 +17,8 @@ angular.module('scrumbleApp')
         $scope.stories = Story.query projectId: projectId, ->
           $scope.finishedStories = $scope.filterDone($scope.stories)
           $scope.unfinishedStories = $scope.filterNotDone($scope.stories)
-          $scope.unfinishedCurrentStories = _.filter $scope.unfinishedStories, (x) -> x.sprint == $scope.currentSprint
-          $scope.unfinishedRemainingStories = _.filter $scope.unfinishedStories, (x) -> x.sprint != $scope.currentSprint
+          $scope.unfinishedCurrentStories = _.filter $scope.unfinishedStories, (x) -> x.sprint?.id == $scope.currentSprint?.id
+          $scope.unfinishedRemainingStories = _.filter $scope.unfinishedStories, (x) -> x.sprint?.id != $scope.currentSprint?.id
 
           _.each $scope.unfinishedCurrentStories, (story) ->
             Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
@@ -40,7 +40,7 @@ angular.module('scrumbleApp')
         $scope.load()
 
     $scope.canEditStoryEstimate = (story) ->
-      not story.done and not story.sprint and $scope.isScrumMaster
+      not story.done and $scope.isScrumMaster
 
     $scope.changeStoryEstimate = (story) ->
       modalInstance = $modal.open(
@@ -56,7 +56,7 @@ angular.module('scrumbleApp')
         , $scope.load
 
     $scope.canPlayPoker = (story) ->
-      not story.done and not story.sprint
+      not story.done
 
     $scope.playPoker = (story) ->
       modalInstance = $modal.open(
@@ -74,7 +74,7 @@ angular.module('scrumbleApp')
       )
 
     $scope.canAddUnfinishedStoryToSprint = (story) ->
-      not story.sprint and $scope.isScrumMaster and story.points? and story.points > 0
+      $scope.isScrumMaster and story.points? and story.points > 0
 
     $scope.canRemoveUnfinishedStoryFromSprint = (story) ->
       no

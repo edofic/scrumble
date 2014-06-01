@@ -1,7 +1,7 @@
 <div class="panel story" class="panel story" ng-class="storyIsCompleted(story) ? 'panel-success' : 'panel-{{defaultClass || 'default'}}'">
   <div class="panel-heading">
     <button class="btn btn-primary pull-right space-left" type="button" ng-if="canAddToSprint(story)" ng-click="addToSprint(story)">Add to sprint {{ currentSprint.number }}</button>
-    <button class="btn btn-danger pull-right" type="button" ng-if="canRemoveFromSprint(story)" ng-click="removeFromSprint(story)">Remove from sprint {{ story.sprint.number }}</button>
+    <button class="btn btn-primary pull-right space-left" type="button" ng-if="canEditStory() && !canAddToSprint(story) && canEditEstimate(story)" ng-click="changeEstimate(story)">Set estimate</button>
 
     <div class="btn-group pull-right" ng-if="canAcceptReject">
       <button class="btn btn-success" type="button" ng-if="storyIsCompleted(story)" ng-click="acceptStory(story)">Accept</button>
