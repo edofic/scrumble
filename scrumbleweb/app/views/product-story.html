@@ -9,6 +9,8 @@
     </div>
 
     <button class="btn btn-default pull-right" type="button" ng-if="canEditStory()" ng-click="editStory(story)">Edit</button>
+    <span class="pull-right">&nbsp;</span>
+    <button class="btn btn-default pull-right" type="button" ng-if="canPlayPoker(story)" ng-click="playPoker(story)">Planning poker</button>
 
     <h3 class="panel-title">{{ story.title }}</h3>
     <p>

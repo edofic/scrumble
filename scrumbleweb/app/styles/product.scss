@@ -4,39 +4,38 @@
   .new-story-btn {
     margin-top: 20px;
   }
-  
-  .story {
-    .panel-heading {
-      p {
-        margin: 2px 0 0;
-        font-size: 12px;
-      }
-    }
+}
 
-    .description {
-      margin-bottom: 7px;
-    }
-
-    .tests {
-      margin-bottom: 0;
-      padding: 0;
-
-      li {
-        list-style: none;
-        color: $brand-primary;
-      }
-    }
-    .notes {
-      margin-bottom: 0;
-      padding: 0;
-
-      li {
-        list-style: none;
-        color: $brand-warning;
-      }
+.story {
+  .panel-heading {
+    p {
+      margin: 2px 0 0;
+      font-size: 12px;
     }
   }
 
+  .description {
+    margin-bottom: 7px;
+  }
+
+  .tests {
+    margin-bottom: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+      color: $brand-primary;
+    }
+  }
+  .notes {
+    margin-bottom: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+      color: $brand-warning;
+    }
+  }
 }
 
 .product-story-add-modal {
@@ -44,5 +43,55 @@
     h3 {
       margin: 0;
     }
+  }
+}
+
+.product-story-poker-modal {
+  .modal-header {
+    h3 {
+      margin: 0;
+    }
+  }
+
+  .estimate-cards,
+  .estimate-results {
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+      float: left;
+      margin: 0 5px 7px 0;
+      padding: 0;
+    }
+  }
+
+  .estimate-results {
+    li {
+      width: 90px;
+      text-align: center;
+
+      .estimate-card {
+        margin-bottom: 12px;
+      }
+    }
+  }
+
+  .estimate-card {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    width: 70px;
+    height: 95px;
+    border: 3px solid #d60000;
+    border-radius: 8px;
+    @include box-shadow(2px 2px 6px rgba(0,0,0,.175));
+    @include gradient-vertical($start-color: #ffffff, $end-color: #d3d3d3);
+    font-size: 23px;
+    text-align: center;
+    line-height: 95px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: auto;
   }
 }

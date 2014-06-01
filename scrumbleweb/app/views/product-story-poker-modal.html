@@ -1,0 +1,72 @@
+<div class="product-story-poker-modal">
+  <div class="modal-header">
+    <div class="pull-right" ng-if="story.points">
+      <h5><small>Estimate: {{ story.points }}</span></small></h5>
+    </div>
+    <h3>Planning poker for {{ story.title }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="story">
+      <p class="description">{{ story.description }}</p>
+      <ul class="tests">
+        <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
+      </ul>
+      <ul class="notes">
+        <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <div ng-if="poker">
+      <div class="pull-right" ng-if="canStartNewGame()">
+        <button type="button" class="btn btn-default btn-xs" ng-click="startNewGame()">Start new game</button>
+      </div>
+
+      <p><strong>Participants:</strong> <span ng-repeat="estimate in lastRound().estimates"><span class="label label-default">{{ estimate.user }}</span>&nbsp;</span></p>
+
+      <p ng-if="poker.estimate != null"><strong>Estimate:</strong> {{ poker.estimate }}</p>
+
+      <hr>
+
+      <div ng-repeat="round in poker.rounds">
+        <div ng-if="canShowRound(round)">
+          <ul class="estimate-results clearfix">
+            <li ng-repeat="estimate in round.estimates">
+              <span class="estimate-card"><span ng-if="canShowEstimate(round, estimate)">{{ estimate.estimate }}</span></span>
+              <span>{{ estimate.user }}</span>
+            </li>
+          </ul>
+          <hr>
+        </div>
+      </div>
+
+      <div ng-if="canSelectEstimate()">
+        <ul class="estimate-cards clearfix">
+          <li ng-repeat="estimate in estimates">
+            <a href="" class="estimate-card" ng-click="selectEstimate(estimate)">{{ estimate }}</a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+
+      <div ng-if="canSetFinalEstimate()">
+        <form class="form-inline" ng-submit="setFinalEstimate()">
+          <div class="form-group">
+            <input type="number" class="form-control" placeholder="Estimate" ng-model="final.estimate">
+          </div>
+          <button type="submit" class="btn btn-primary">Accept</button>
+          &nbsp;&nbsp;or&nbsp;&nbsp;
+          <button type="button" class="btn btn-default" ng-click="startNewRound()">Start new round</button>
+        </form>
+      </div>
+    </div>
+
+    <div ng-if="!poker">
+      <p>There is currently no active game</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+  </div>
+</form>

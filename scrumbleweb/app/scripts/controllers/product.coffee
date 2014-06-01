@@ -8,6 +8,8 @@ angular.module('scrumbleApp')
       $scope.isProductOwner = 'ProductOwner' in projectUser.roles
       $scope.isScrumMaster = 'ScrumMaster' in projectUser.roles
 
+      $scope.load()
+
     $scope.load = ->
       $scope.sprints = Sprint.query projectId: projectId, (sprints) ->
         $scope.currentSprint = _.find sprints, (x) -> x.current
@@ -23,7 +25,6 @@ angular.module('scrumbleApp')
               story.tasks = tasks
             , (reason) ->
               growl.addErrorMessage($scope.$root.backupError(reason.data.message, "An error occured while loading tasks"))
-    $scope.load()
 
     $scope.canAddStory = ->
       $scope.isProductOwner || $scope.isScrumMaster
@@ -53,6 +54,24 @@ angular.module('scrumbleApp')
           projectId: projectId
           storyId: story.id
         , $scope.load
+
+    $scope.canPlayPoker = (story) ->
+      not story.done and not story.sprint
+
+    $scope.playPoker = (story) ->
+      modalInstance = $modal.open(
+        templateUrl: 'views/product-story-poker-modal.html'
+        controller: 'ProductStoryPokerModalCtrl'
+        resolve:
+          story: -> story
+          isScrumMaster: -> $scope.isScrumMaster
+          storyUpdate: ->
+            (story) ->
+              story.$update
+                projectId: projectId
+                storyId: story.id
+              , $scope.load
+      )
 
     $scope.canAddUnfinishedStoryToSprint = (story) ->
       not story.sprint and $scope.isScrumMaster and story.points? and story.points > 0
@@ -99,6 +118,8 @@ angular.module('scrumbleApp')
       defaultClass: '@'
       canEditStory: '='
       editStory: '='
+      canPlayPoker: '='
+      playPoker: '='
     replace: yes
     templateUrl: 'views/product-story.html'
     controller: ($scope, $filter, $rootScope, $modal, $q, Sprint, Story, SprintStory, Task, User, growl, bbox) ->
@@ -243,3 +264,148 @@ angular.module('scrumbleApp')
 
     $scope.cancel = ->
       $modalInstance.dismiss()
+
+
+  .controller 'ProductStoryPokerModalCtrl', ($scope, $rootScope, $modalInstance, Story, StoryPoker, growl, story, isScrumMaster, storyUpdate) ->
+    $scope.story = story
+
+    $scope.estimates = ["0", "0.5", "1", "2", "3", "5", "8", "13", "20", "40", "100", "???"]
+
+    $scope.loaded = no
+    $scope.poker = null
+    $scope.lastModified = null
+    $scope.final =
+      estimate: null
+
+    $scope.update = ->
+      pokerUpdate = new StoryPoker
+        lastModified: $scope.lastModified
+        content: $scope.poker
+
+      pokerUpdate.$update projectId: story.project, storyId: story.id, $scope.load
+
+    $scope.lastRound = ->
+      if $scope.poker?
+        $scope.poker.rounds.slice(-1)[0]
+
+    $scope.addSelfToRound = ->
+      round = $scope.lastRound()
+      return if not round?
+
+      if not _.find(round.estimates, (x) -> x.userId == $rootScope.currentUser.id)
+        round.estimates.push
+          userId: $rootScope.currentUser.id
+          user: $rootScope.currentUser.firstName + ' ' + $rootScope.currentUser.lastName
+          estimate: null
+
+        $scope.update()
+
+    $scope.myEstimate = ->
+      round = $scope.lastRound()
+      return if not round?
+
+      _.find(round.estimates, (x) -> x.userId == $rootScope.currentUser.id).estimate
+
+    $scope.canSelectEstimate = ->
+      $scope.myEstimate() == null
+
+    $scope.selectEstimate = (value) ->
+      round = $scope.lastRound()
+      return if not round?
+
+      estimate = _.find(round.estimates, (x) -> x.userId == $rootScope.currentUser.id)
+      estimate.estimate = value
+
+      $scope.update()
+
+    $scope.allParticipantsSelected = ->
+      round = $scope.lastRound()
+      return if not round?
+
+      _.filter(round.estimates, (x) -> x.estimate == null).length == 0
+
+    $scope.canShowRound = (round) ->
+      if round == $scope.lastRound()
+        $scope.myEstimate() != null
+      else
+        yes
+
+    $scope.canShowEstimate = (round, estimate) ->
+      if estimate.userId == $rootScope.currentUser.id
+        yes
+      else if round == $scope.lastRound()
+        $scope.allParticipantsSelected()
+      else
+        yes
+
+    $scope.canSetFinalEstimate = ->
+      isScrumMaster && $scope.poker.estimate == null && $scope.allParticipantsSelected()
+
+    $scope.setFinalEstimate = ->
+      $scope.poker.estimate = $scope.final.estimate
+      story.points = $scope.poker.estimate
+      storyUpdate(story)
+      $scope.final.estimate = null
+      $scope.update()
+
+    $scope.canStartNewRound = ->
+      isScrumMaster && $scope.poker.estimate == null && $scope.allParticipantsSelected()
+
+    $scope.startNewRound = ->
+      $scope.poker.rounds.push
+        estimates: []
+
+      $scope.addSelfToRound()
+
+    $scope.canStartNewGame = ->
+      isScrumMaster
+
+    $scope.startNewGame = ->
+      $scope.poker = null
+      $scope.update()
+
+    $scope.load = ->
+      process = (newPoker) ->
+        if newPoker and newPoker.content
+          $scope.poker = newPoker.content
+          $scope.lastModified = newPoker.lastModified
+        else
+          if isScrumMaster
+            $scope.lastModified = new Date().getTime()
+            $scope.poker =
+              rounds: [
+                estimates: []
+              ]
+              estimate: null
+          else
+            $scope.poker = null
+
+        if $scope.poker?
+          $scope.addSelfToRound()
+
+      StoryPoker.get projectId: story.project, storyId: story.id, (poker) ->
+        $scope.loaded = yes
+        process(poker)
+      , (res) ->
+        $scope.loaded = yes
+        process(null)
+
+    $scope.load()
+
+    interval = null
+
+    startRefreshing = ->
+      interval = setInterval $scope.load, 500
+
+    startRefreshing()
+
+    stopRefreshing = ->
+      if interval?
+        clearInterval(interval)
+        interval = null
+
+    $scope.$on '$destroy', ->
+      stopRefreshing()
+
+    $scope.close = ->
+      $modalInstance.close()

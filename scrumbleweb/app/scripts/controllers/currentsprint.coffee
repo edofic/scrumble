@@ -210,7 +210,7 @@ angular.module('scrumbleApp')
 
     tsToStr = (ts) ->
       d = new Date(ts)
-      d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDay()
+      d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
 
     timeMap = _.indexBy task.history, (x) -> tsToStr(x.time)
 
