@@ -11,7 +11,7 @@
       <ul class="tests">
         <li ng-repeat="test in story.tests track by $index"># {{ test }}</li>
       </ul>
-      <ul class="notes" ng-if="!story.editingNotes">
+      <ul class="notes">
         <li ng-repeat="note in story.notes track by $index">-- {{ note }}</li>
       </ul>
     </div>
