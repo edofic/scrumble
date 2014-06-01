@@ -15,8 +15,8 @@ angular.module('scrumbleApp')
         $scope.stories = Story.query projectId: projectId, ->
           $scope.finishedStories = $scope.filterDone($scope.stories)
           $scope.unfinishedStories = $scope.filterNotDone($scope.stories)
-          $scope.unfinishedCurrentStories = _.filter $scope.unfinishedStories, (x) -> x.sprint
-          $scope.unfinishedRemainingStories = _.filter $scope.unfinishedStories, (x) -> !x.sprint
+          $scope.unfinishedCurrentStories = _.filter $scope.unfinishedStories, (x) -> x.sprint == $scope.currentSprint
+          $scope.unfinishedRemainingStories = _.filter $scope.unfinishedStories, (x) -> x.sprint != $scope.currentSprint
 
           _.each $scope.unfinishedCurrentStories, (story) ->
             Task.query {projectId: projectId, sprintId: $scope.currentSprint.id, storyId: story.id}, (tasks) ->
