@@ -28,8 +28,7 @@ putSprintR projectId sprintId = do
     existing <- count $ overlapping newSprint ++ [SprintId !=. sprintId]
     ("start", "Sprint should not overlap with existing sprints") `validate`
       (existing == 0)
-    _ <- insert newSprint    
-    return ()
+    replace sprintId newSprint
   where
     overlapping (Sprint {sprintStart=start, sprintEnd=end}) = 
       (wraps start ||. wraps end ||. covers start end) ++ [SprintProject ==. projectId]
