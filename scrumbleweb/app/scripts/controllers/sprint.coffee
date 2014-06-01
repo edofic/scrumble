@@ -83,7 +83,7 @@ angular.module('scrumbleApp')
         humanEnd = $filter('date')(data.end, 'dd.MM.yyyy')
         growl.addSuccessMessage("Sprint changed")
         $scope.autoError.removeErrors()
-        $scope.sprints = Sprint.query {projectId: user.activeProject}
+        $scope.sprints = Sprint.query {projectId: $scope.currentUser.activeProject}
       , (reason) ->
         growl.addErrorMessage($scope.backupError(reason.data.message, "An error occured while changing sprint"))
         $scope.autoError.showErrors(reason.data)
