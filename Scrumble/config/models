@@ -60,3 +60,23 @@ ProjectDocs json
     content Text
     deriving Eq Show
 
+ProjectPost json
+    project ProjectId
+    userId UserId
+    content Text
+    date Int64
+    deriving Eq Show
+
+ProjectPostComment json
+    post ProjectPostId
+    userId UserId
+    content Text
+    date Int64
+    deriving Eq Show
+
+Poker json
+    project ProjectId
+    lastModified Int64
+    content Text
+    UniquePokerProject project
+    deriving Eq Show

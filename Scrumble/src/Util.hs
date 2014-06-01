@@ -2,6 +2,7 @@ module Util
 ( (.||.)
 , (.&&.)
 , requireJsonBodyWith
+, toJSONWith
 , currentTimestamp
 ) where
 
@@ -27,6 +28,11 @@ requireJsonBodyWith additions = liftHandlerT $ do
   case fromJSON raw of 
     Success a -> return a
     Error msg -> sendResponseStatus badRequest400 msg
+
+toJSONWith :: a -> (a -> Value) ->  [(Text, Value)] -> Value
+toJSONWith obj tojson additions = go (tojson obj) where
+  go (Object objmap) = Object $ objmap `HM.union` HM.fromList additions
+  go other = other
 
 currentTimestamp :: Integral b => IO b
 currentTimestamp = (round . (*1000)) `fmap` getPOSIXTime

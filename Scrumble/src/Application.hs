@@ -50,6 +50,8 @@ import Handler.SprintStories
 import Handler.Tasks
 import Handler.TasksTask
 import Handler.ProjectDocs
+import Handler.ProjectPosts
+import Handler.Poker
 import Model.Role
 
 addCORS :: W.Middleware
